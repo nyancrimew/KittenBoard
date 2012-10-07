@@ -38,7 +38,9 @@
                  U+1F0F: "Ἇ" GREEK CAPITAL LETTER ALPHA WITH DASIA AND PERISPOMENI -->
             <Key
                 latin:keySpec="&#x0391;"
-                latin:moreKeys="&#x0386;,&#x1FBA;,&#x1F08;,&#x1F09;,&#x1F04;,&#x1F05;,&#x1F0A;,&#x1F0B;,&#x1F0E;,&#x1F0F;" />
+                latin:moreKeys="&#x0386;,&#x1FBA;,&#x1F08;,&#x1F09;,&#x1F04;,&#x1F05;,&#x1F0A;,&#x1F0B;,&#x1F0E;,&#x1F0F;"
+                latin:keyHintLabel="\@"
+                latin:additionalMoreKeys="\\@" />
         </case>
         <default>
             <!-- U+03B1: "α" GREEK SMALL LETTER ALPHA
@@ -67,21 +69,31 @@
                  U+1F87: "ᾇ" GREEK SMALL LETTER ALPHA WITH DASIA AND PERISPOMENI AND YPOGEGRAMMENI -->
             <Key
                 latin:keySpec="&#x03B1;"
-                latin:moreKeys="&#x03AC;,&#x1F70;,&#x1FB6;,&#x1F00;,&#x1F01;,&#x1F04;,&#x1F05;,&#x1F02;,&#x1F03;,&#x1F06;,&#x1F07;,&#x1FB3;,&#x1FB4;,&#x1FB2;,&#x1FB7;,&#x1F80;,&#x1F81;,&#x1F84;,&#x1F85;,&#x1F82;,&#x1F83;,&#x1F86;,&#x1F87;" />
+                latin:moreKeys="&#x03AC;,&#x1F70;,&#x1FB6;,&#x1F00;,&#x1F01;,&#x1F04;,&#x1F05;,&#x1F02;,&#x1F03;,&#x1F06;,&#x1F07;,&#x1FB3;,&#x1FB4;,&#x1FB2;,&#x1FB7;,&#x1F80;,&#x1F81;,&#x1F84;,&#x1F85;,&#x1F82;,&#x1F83;,&#x1F86;,&#x1F87;"
+                latin:keyHintLabel="\@"
+                latin:additionalMoreKeys="\\@" />
         </default>
     </switch>
     <!-- U+03C3: "σ" GREEK SMALL LETTER SIGMA -->
     <Key
-        latin:keySpec="&#x03C3;" />
+        latin:keySpec="&#x03C3;"
+        latin:keyHintLabel="#"
+        latin:additionalMoreKeys="#" />
     <!-- U+03B4: "δ" GREEK SMALL LETTER DELTA -->
     <Key
-        latin:keySpec="&#x03B4;" />
+        latin:keySpec="&#x03B4;"
+        latin:keyHintLabel="€"
+        latin:additionalMoreKeys="€" />
     <!-- U+03C6: "φ" GREEK SMALL LETTER PHI -->
     <Key
-        latin:keySpec="&#x03C6;" />
+        latin:keySpec="&#x03C6;"
+        latin:keyHintLabel="%"
+        latin:additionalMoreKeys="%" />
     <!-- U+03B3: "γ" GREEK SMALL LETTER GAMMA -->
     <Key
-        latin:keySpec="&#x03B3;" />
+        latin:keySpec="&#x03B3;"
+        latin:keyHintLabel="&amp;"
+        latin:additionalMoreKeys="&amp;" />
     <switch>
         <case
             latin:keyboardLayoutSetElement="alphabetManualShifted|alphabetShiftLockShifted"
@@ -99,7 +111,9 @@
                  U+1F2F: "Ἧ" GREEK CAPITAL LETTER ETA WITH DASIA AND PERISPOMENI -->
             <Key
                 latin:keySpec="&#x0397;"
-                latin:moreKeys="&#x0389;,&#x1FCA;,&#x1F28;,&#x1F29;,&#x1F2C;,&#x1F2D;,&#x1F2A;,&#x1F2B;,&#x1F2E;,&#x1F2F;" />
+                latin:moreKeys="&#x0389;,&#x1FCA;,&#x1F28;,&#x1F29;,&#x1F2C;,&#x1F2D;,&#x1F2A;,&#x1F2B;,&#x1F2E;,&#x1F2F;"
+                latin:keyHintLabel="-"
+                latin:additionalMoreKeys="-" />
         </case>
         <default>
             <!-- U+03B7: "η" GREEK SMALL LETTER ETA
@@ -128,16 +142,24 @@
                  U+1F97: "ᾗ" GREEK SMALL LETTER ETA WITH DASIA AND PERISPOMENI AND YPOGEGRAMMENI -->
             <Key
                 latin:keySpec="&#x03B7;"
-                latin:moreKeys="&#x03AE;,&#x1F74;,&#x1FC6;,&#x1F20;,&#x1F21;,&#x1F24;,&#x1F25;,&#x1F22;,&#x1F23;,&#x1F26;,&#x1F27;,&#x1FC3;,&#x1FC4;,&#x1FC2;,&#x1FC7;,&#x1F90;,&#x1F91;,&#x1F94;,&#x1F95;,&#x1F92;,&#x1F93;,&#x1F96;,&#x1F97;" />
+                latin:moreKeys="&#x03AE;,&#x1F74;,&#x1FC6;,&#x1F20;,&#x1F21;,&#x1F24;,&#x1F25;,&#x1F22;,&#x1F23;,&#x1F26;,&#x1F27;,&#x1FC3;,&#x1FC4;,&#x1FC2;,&#x1FC7;,&#x1F90;,&#x1F91;,&#x1F94;,&#x1F95;,&#x1F92;,&#x1F93;,&#x1F96;,&#x1F97;"
+                latin:keyHintLabel="-"
+                latin:additionalMoreKeys="-" />
         </default>
     </switch>
     <!-- U+03BE: "ξ" GREEK SMALL LETTER XI -->
     <Key
-        latin:keySpec="&#x03BE;" />
+        latin:keySpec="&#x03BE;"
+        latin:keyHintLabel="+"
+        latin:additionalMoreKeys="+" />
     <!-- U+03BA: "κ" GREEK SMALL LETTER KAPPA -->
     <Key
-        latin:keySpec="&#x03BA;" />
+        latin:keySpec="&#x03BA;"
+        latin:keyHintLabel="("
+        latin:additionalMoreKeys="(" />
     <!-- U+03BB: "λ" GREEK SMALL LETTER LAMDA -->
     <Key
-        latin:keySpec="&#x03BB;" />
+        latin:keySpec="&#x03BB;"
+        latin:keyHintLabel=")"
+        latin:additionalMoreKeys=")" />
 </merge>

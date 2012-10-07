@@ -2,7 +2,7 @@
 <!--
 /*
 **
-** Copyright 2014, The Android Open Source Project
+** Copyright 2012, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -21,17 +21,10 @@
 <merge
     xmlns:latin="http://schemas.android.com/apk/res/com.android.inputmethod.latin"
 >
-    <Key
-        latin:keySpec="b"
-        latin:keyHintLabel=";"
-        latin:additionalMoreKeys=";" />
-    <Key
-        latin:keySpec="n"
-        latin:keyHintLabel="!"
-        latin:additionalMoreKeys="!"
-        latin:moreKeys="!text/morekeys_n" />
-    <Key
-        latin:keySpec="m"
-        latin:keyHintLabel="\?"
-        latin:additionalMoreKeys="\\?" />
+    <!-- a,s,d,f,g -->
+    <include
+        latin:keyboardLayout="@xml/rowkeys_qwertz2_left5" />
+    <!-- h,j,k,l -->
+    <include
+        latin:keyboardLayout="@xml/rowkeys_qwertz2_right4" />
 </merge>
