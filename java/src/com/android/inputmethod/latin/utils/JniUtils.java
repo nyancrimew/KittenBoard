@@ -23,11 +23,18 @@ import com.android.inputmethod.latin.define.JniLibName;
 public final class JniUtils {
     private static final String TAG = JniUtils.class.getSimpleName();
 
+    public static boolean sHaveGestureLib = false;
     static {
         try {
-            System.loadLibrary(JniLibName.JNI_LIB_NAME);
-        } catch (UnsatisfiedLinkError ule) {
-            Log.e(TAG, "Could not load native library " + JniLibName.JNI_LIB_NAME, ule);
+            System.loadLibrary(JniLibName.JNI_LIB_NAME2);
+            sHaveGestureLib = true;
+        } catch (UnsatisfiedLinkError ue) {
+            Log.e(TAG, "Could not load native library " + JniLibName.JNI_LIB_NAME2, ue);
+            try {
+                System.loadLibrary(JniLibName.JNI_LIB_NAME);
+            } catch (UnsatisfiedLinkError ule) {
+                Log.e(TAG, "Could not load native library " + JniLibName.JNI_LIB_NAME, ule);
+            }
         }
     }
 
