@@ -106,6 +106,10 @@
     />
     <subtype
             android:label="@string/subtype_generic"
+            android:subtypeLocale="lb"
+    />
+    <subtype
+            android:label="@string/subtype_generic"
             android:subtypeLocale="lt"
     />
     <subtype
