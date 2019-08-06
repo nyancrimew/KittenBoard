@@ -45,6 +45,7 @@ public class ScriptUtils {
     public static final int SCRIPT_TAMIL = 15;
     public static final int SCRIPT_TELUGU = 16;
     public static final int SCRIPT_THAI = 17;
+    public static final int SCRIPT_BULGARIAN = 18;
 
     private static final TreeMap<String, Integer> mLanguageCodeToScriptCode;
 
@@ -101,6 +102,7 @@ public class ScriptUtils {
         case SCRIPT_BENGALI:
             // Bengali unicode block is U+0980..U+09FF
             return (codePoint >= 0x980 && codePoint <= 0x9FF);
+        case SCRIPT_BULGARIAN:
         case SCRIPT_CYRILLIC:
             // All Cyrillic characters are in the 400~52F block. There are some in the upper
             // Unicode range, but they are archaic characters that are not used in modern
