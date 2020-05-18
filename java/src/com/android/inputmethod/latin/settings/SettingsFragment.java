@@ -26,6 +26,8 @@ import android.provider.Settings.Secure;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 
 import com.android.inputmethod.latin.R;
 import com.android.inputmethod.latin.define.ProductionFlags;
@@ -60,6 +62,16 @@ public final class SettingsFragment extends InputMethodSettingsFragment {
             final Preference gesturePreference = findPreference(Settings.SCREEN_GESTURE);
             preferenceScreen.removePreference(gesturePreference);
         }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        // remove dividers
+        View rootView = getView();
+        ListView list = (ListView) rootView.findViewById(android.R.id.list);
+        list.setDivider(null);
     }
 
     @Override

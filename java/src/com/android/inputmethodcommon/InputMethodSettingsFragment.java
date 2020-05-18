@@ -19,13 +19,14 @@ package com.android.inputmethodcommon;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
+
+import com.android.inputmethod.latin.settings.CustomPreferenceFragment;
 
 /**
  * This is a helper class for an IME's settings preference fragment. It's recommended for every
  * IME to have its own settings preference fragment which inherits this class.
  */
-public abstract class InputMethodSettingsFragment extends PreferenceFragment
+public abstract class InputMethodSettingsFragment extends CustomPreferenceFragment
         implements InputMethodSettingsInterface {
     private final InputMethodSettingsImpl mSettings = new InputMethodSettingsImpl();
     @Override
