@@ -26,4 +26,6 @@ language among those that use the Latin alphabet. This keyboard is laid out in t
 disposition rather than other common dispositions for Latin languages. [CHAR LIMIT=25] -->
     <string name="subtype_no_language_bepo">Alphabet (Bépo)</string>
     <string name="subtype_hu_ZZ">Hungarian (QWERTY)</string>
+
+    <string name="keyboard_theme_follow_system">Follow system settings</string>
 </resources>
