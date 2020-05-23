@@ -59,7 +59,7 @@ public final class SettingsActivity extends PreferenceActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (mShowHomeAsUp && item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

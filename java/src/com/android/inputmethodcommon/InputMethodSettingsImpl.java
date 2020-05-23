@@ -40,6 +40,7 @@ import java.util.List;
     private Drawable mSubtypeEnablerIcon;
     private InputMethodManager mImm;
     private InputMethodInfo mImi;
+    private boolean mSpawnAsNewActivity = true;
 
     /**
      * Initialize internal states of this object.
@@ -55,9 +56,11 @@ import java.util.List;
         }
         final Intent intent = new Intent(Settings.ACTION_INPUT_METHOD_SUBTYPE_SETTINGS);
         intent.putExtra(Settings.EXTRA_INPUT_METHOD_ID, mImi.getId());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if (mSpawnAsNewActivity) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
         mSubtypeEnablerPreference = new Preference(context);
         mSubtypeEnablerPreference.setIntent(intent);
         prefScreen.addPreference(mSubtypeEnablerPreference);
@@ -175,5 +178,9 @@ import java.util.List;
         } else {
             pref.setIcon(mSubtypeEnablerIcon);
         }
+    }
+
+    public void setSpawnAsNewActivity(boolean spawnAsNew) {
+        mSpawnAsNewActivity = spawnAsNew;
     }
 }
