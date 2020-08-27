@@ -28,4 +28,7 @@ disposition rather than other common dispositions for Latin languages. [CHAR LIM
     <string name="subtype_hu_ZZ">Hungarian (QWERTY)</string>
 
     <string name="keyboard_theme_follow_system">Follow system settings</string>
+
+    <!-- Title of the settings for setting keyboard height -->
+    <string name="prefs_keyboard_height_scale">Keyboard height scale</string>
 </resources>
