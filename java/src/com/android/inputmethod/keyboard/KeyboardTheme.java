@@ -119,7 +119,10 @@ public final class KeyboardTheme implements Comparable<KeyboardTheme> {
     }
 
     public static String getKeyboardThemeName(final int themeId) {
-        final KeyboardTheme theme = searchKeyboardThemeById(themeId, KEYBOARD_THEMES);
+        KeyboardTheme theme = searchKeyboardThemeById(themeId, KEYBOARD_THEMES);
+        if (theme == null) {
+            theme = searchKeyboardThemeById(DEFAULT_THEME_ID, KEYBOARD_THEMES);
+        }
         return theme.mThemeName;
     }
 
