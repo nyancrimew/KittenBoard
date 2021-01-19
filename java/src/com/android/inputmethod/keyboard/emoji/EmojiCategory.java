@@ -184,7 +184,7 @@ final class EmojiCategory {
                 addShownCategoryId(EmojiCategory.ID_EIGHT_ACTIVITY);
                 addShownCategoryId(EmojiCategory.ID_EIGHT_OBJECTS);
                 addShownCategoryId(EmojiCategory.ID_EIGHT_SYMBOLS);
-                addShownCategoryId(EmojiCategory.ID_FLAGS); // Exclude combinations without glyphs.
+                addShownCategoryId(EmojiCategory.ID_EIGHT_FLAGS);
             } else {
                 defaultCategoryId = EmojiCategory.ID_PEOPLE;
                 addShownCategoryId(EmojiCategory.ID_PEOPLE);
