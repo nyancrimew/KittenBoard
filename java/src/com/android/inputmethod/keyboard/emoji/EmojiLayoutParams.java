@@ -25,8 +25,6 @@ import com.android.inputmethod.latin.R;
 import com.android.inputmethod.latin.utils.ResourceUtils;
 
 final class EmojiLayoutParams {
-    private static final int DEFAULT_KEYBOARD_ROWS = 4;
-
     public final int mEmojiPagerHeight;
     private final int mEmojiPagerBottomMargin;
     public final int mEmojiKeyboardHeight;
@@ -52,7 +50,9 @@ final class EmojiLayoutParams {
                 (int) (res.getDimension(R.dimen.config_emoji_category_page_id_height));
         final int baseheight = defaultKeyboardHeight - mBottomPadding - mTopPadding
                 + mKeyVerticalGap;
-        mEmojiActionBarHeight = baseheight / DEFAULT_KEYBOARD_ROWS
+        final int mNumberOfRows = (int) (1.0f / res.getFraction(
+                R.fraction.config_emoji_keyboard_row_height, 1, 1)) + 1;
+        mEmojiActionBarHeight = baseheight / mNumberOfRows
                 - (mKeyVerticalGap - mBottomPadding) / 2;
         mEmojiPagerHeight = defaultKeyboardHeight - mEmojiActionBarHeight
                 - mEmojiCategoryPageIdViewHeight;
