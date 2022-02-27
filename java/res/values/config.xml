@@ -38,6 +38,7 @@
 
     <fraction name="config_keyboard_top_padding_holo">2.335%p</fraction>
     <fraction name="config_keyboard_bottom_padding_holo">4.669%p</fraction>
+    <fraction name="config_key_vertical_gap_you">3.5%p</fraction>
     <fraction name="config_key_vertical_gap_holo">6.127%p</fraction>
     <fraction name="config_key_horizontal_gap_holo">1.739%p</fraction>
     <!-- config_more_keys_keyboard_key_height x -0.5 -->
@@ -46,9 +47,13 @@
     <dimen name="config_key_preview_height_holo">80dp</dimen>
     <dimen name="config_key_preview_offset_lxx">50.0dp</dimen>
     <dimen name="config_key_preview_height_lxx">122dp</dimen>
+    <dimen name="config_key_preview_offset_you">10.0dp</dimen>
+    <dimen name="config_key_preview_height_you">60dp</dimen>
     <fraction name="config_key_preview_text_ratio">82%</fraction>
+    <fraction name="config_key_preview_text_ratio_you">70%</fraction>
     <fraction name="config_key_letter_ratio_holo">55%</fraction>
     <fraction name="config_key_letter_ratio_lxx">55%</fraction>
+    <fraction name="config_key_letter_ratio_you">52%</fraction>
     <fraction name="config_key_large_letter_ratio_holo">65%</fraction>
     <fraction name="config_key_large_letter_ratio_lxx">90%</fraction>
     <fraction name="config_key_label_ratio_holo">34%</fraction>
@@ -62,6 +67,8 @@
     <fraction name="config_language_on_spacebar_text_ratio">33.735%</fraction>
     <dimen name="config_key_hint_letter_padding">1dp</dimen>
     <dimen name="config_key_hint_letter_padding_vertical">0dp</dimen>
+    <dimen name="config_key_hint_letter_padding_you">3dp</dimen>
+    <dimen name="config_key_hint_letter_padding_vertical_you">1.5dp</dimen>
     <dimen name="config_key_shifted_letter_hint_padding">2dp</dimen>
 
     <!-- For 5-row keyboard -->

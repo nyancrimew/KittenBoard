@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <color name="keyboard_background_you">@android:color/system_accent3_10</color>
+    <color name="keyboard_key_normal_color_you">@android:color/system_neutral1_100</color>
+    <color name="keyboard_key_pressed_color_you">@android:color/system_neutral1_200</color>
+    <color name="keyboard_key_text_color_you">@android:color/system_accent1_900</color>
+    <color name="functional_text_color_you">@color/keyboard_key_text_color_you</color>
+    <color name="category_page_indicator_color">@android:color/system_accent3_200</color>
+    <color name="icon_color_you">@android:color/system_accent3_800</color>
+    <color name="functional_normal_color_you">@android:color/system_neutral2_100</color>
+    <color name="functional_pressed_color_you">@android:color/system_neutral2_200</color>
+    <color name="shift_normal_color_you">@android:color/system_neutral1_800</color>
+    <color name="shift_locked_color_you">@android:color/system_accent1_1000</color>
+    <color name="key_hint_letter_color_you">@color/key_hint_letter_color_lxx_light</color>
+    <color name="typed_word_color_you">@color/typed_word_color_lxx_light</color>
+    <color name="auto_correct_color_you">@color/auto_correct_color_lxx_light</color>
+    <color name="suggested_word_color_you">@color/suggested_word_color_lxx_light</color>
+    <color name="highlight_color_you">@color/highlight_color_lxx_light</color>
+</resources>
