@@ -52,6 +52,7 @@ import javax.annotation.Nullable;
  * @attr ref R.styleable#KeyboardView_spacebarIconWidthRatio
  * @attr ref R.styleable#Keyboard_Key_keyLabelFlags
  * @attr ref R.styleable#KeyboardView_keyHintLetterPadding
+ * @attr ref R.styleable#KeyboardView_keyHintLetterPaddingVertical
  * @attr ref R.styleable#KeyboardView_keyPopupHintLetter
  * @attr ref R.styleable#KeyboardView_keyPopupHintLetterPadding
  * @attr ref R.styleable#KeyboardView_keyShiftedLetterHintPadding
@@ -83,7 +84,8 @@ public class KeyboardView extends View {
     // Default keyLabelFlags from {@link KeyboardTheme}.
     // Currently only "alignHintLabelToBottom" is supported.
     private final int mDefaultKeyLabelFlags;
-    private final float mKeyHintLetterPadding;
+    private final float mKeyHintLetterPaddingX;
+    private final float mKeyHintLetterPaddingY;
     private final String mKeyPopupHintLetter;
     private final float mKeyPopupHintLetterPadding;
     private final float mKeyShiftedLetterHintPadding;
@@ -142,8 +144,10 @@ public class KeyboardView extends View {
         mSpacebarBackground = (spacebarBackground != null) ? spacebarBackground : mKeyBackground;
         mSpacebarIconWidthRatio = keyboardViewAttr.getFloat(
                 R.styleable.KeyboardView_spacebarIconWidthRatio, 1.0f);
-        mKeyHintLetterPadding = keyboardViewAttr.getDimension(
+        mKeyHintLetterPaddingX = keyboardViewAttr.getDimension(
                 R.styleable.KeyboardView_keyHintLetterPadding, 0.0f);
+        mKeyHintLetterPaddingY = keyboardViewAttr.getDimension(
+                R.styleable.KeyboardView_keyHintLetterPaddingVertical, 0.0f);
         mKeyPopupHintLetter = keyboardViewAttr.getString(
                 R.styleable.KeyboardView_keyPopupHintLetter);
         mKeyPopupHintLetterPadding = keyboardViewAttr.getDimension(
@@ -467,9 +471,9 @@ public class KeyboardView extends View {
                 // The hint letter is placed at top-right corner of the key. Used mainly on phone.
                 final float hintDigitWidth = TypefaceUtils.getReferenceDigitWidth(paint);
                 final float hintLabelWidth = TypefaceUtils.getStringWidth(hintLabel, paint);
-                hintX = keyWidth - mKeyHintLetterPadding
+                hintX = keyWidth - mKeyHintLetterPaddingX
                         - Math.max(hintDigitWidth, hintLabelWidth) / 2.0f;
-                hintBaseline = -paint.ascent();
+                hintBaseline = -paint.ascent() + mKeyHintLetterPaddingY;
                 paint.setTextAlign(Align.CENTER);
             }
             final float adjustmentY = params.mHintLabelVerticalAdjustment * labelCharHeight;
@@ -514,7 +518,7 @@ public class KeyboardView extends View {
         paint.setTextSize(params.mHintLetterSize);
         paint.setColor(params.mHintLabelColor);
         paint.setTextAlign(Align.CENTER);
-        final float hintX = keyWidth - mKeyHintLetterPadding
+        final float hintX = keyWidth - mKeyHintLetterPaddingX
                 - TypefaceUtils.getReferenceCharWidth(paint) / 2.0f;
         final float hintY = keyHeight - mKeyPopupHintLetterPadding;
         canvas.drawText(mKeyPopupHintLetter, hintX, hintY, paint);
