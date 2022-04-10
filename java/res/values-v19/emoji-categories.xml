@@ -1319,8 +1319,8 @@
         <item>2733,FE0F</item>
         <item>2734,FE0F</item>
         <item>2747,FE0F</item>
-        <!-- Removed for lack of color glyph support.  <item>00A9</item>  -->
-        <!-- Removed for lack of color glyph support.  <item>00AE</item>  -->
+        <item>00A9,FE0F</item>
+        <item>00AE,FE0F</item>
         <item>2122,FE0F</item>
         <!-- keycap -->
         <item>0023,FE0F,20E3</item>
@@ -1395,12 +1395,12 @@
         <item>1F7EB</item>
         <item>2B1B</item>
         <item>2B1C</item>
-        <!-- Removed for lack of color glyph support.  <item>25FC</item>  -->
-        <!-- Removed for lack of color glyph support.  <item>25FB</item>  -->
+        <item>25FC,FE0F</item>
+        <item>25FB,FE0F</item>
         <item>25FE</item>
         <item>25FD</item>
-        <!-- Removed for lack of color glyph support.  <item>25AA</item>  -->
-        <!-- Removed for lack of color glyph support.  <item>25AB</item>  -->
+        <item>25AA,FE0F</item>
+        <item>25AB,FE0F</item>
         <item>1F536</item>
         <item>1F537</item>
         <item>1F538</item>
@@ -1522,6 +1522,7 @@
         <item>1F988</item>
         <item>1F419</item>
         <item>1F41A</item>
+        <item>1FAB8</item>
         <!-- animal-bug -->
         <item>1F40C</item>
         <item>1F98B</item>
@@ -1543,6 +1544,7 @@
         <item>1F490</item>
         <item>1F338</item>
         <item>1F4AE</item>
+        <item>1FAB7</item>
         <item>1F3F5</item>
         <item>1F339</item>
         <item>1F940</item>
@@ -1564,6 +1566,8 @@
         <item>1F341</item>
         <item>1F342</item>
         <item>1F343</item>
+        <item>1FAB9</item>
+        <item>1FABA</item>
     </array>
     <array
         name="emoji_eight_smiley_people"
@@ -1580,6 +1584,7 @@
         <item>1F602</item>
         <item>1F642</item>
         <item>1F643</item>
+        <item>1FAE0</item>
         <item>1F609</item>
         <item>1F60A</item>
         <item>1F607</item>
@@ -1603,18 +1608,24 @@
         <!-- face-hand -->
         <item>1F917</item>
         <item>1F92D</item>
+        <item>1FAE2</item>
+        <item>1FAE3</item>
         <item>1F92B</item>
         <item>1F914</item>
+        <item>1FAE1</item>
         <!-- face-neutral-skeptical -->
         <item>1F910</item>
         <item>1F928</item>
         <item>1F610</item>
         <item>1F611</item>
         <item>1F636</item>
+        <item>1FAE5</item>
+        <item>1F636,200D,1F32B,FE0F</item>
         <item>1F60F</item>
         <item>1F612</item>
         <item>1F644</item>
         <item>1F62C</item>
+        <item>1F62E,200D,1F4A8</item>
         <item>1F925</item>
         <!-- face-sleepy -->
         <item>1F60C</item>
@@ -1633,6 +1644,7 @@
         <item>1F976</item>
         <item>1F974</item>
         <item>1F635</item>
+        <item>1F635,200D,1F4AB</item>
         <item>1F92F</item>
         <!-- face-hat -->
         <item>1F920</item>
@@ -1644,6 +1656,7 @@
         <item>1F9D0</item>
         <!-- face-concerned -->
         <item>1F615</item>
+        <item>1FAE4</item>
         <item>1F61F</item>
         <item>1F641</item>
         <item>2639,FE0F</item>
@@ -1652,6 +1665,7 @@
         <item>1F632</item>
         <item>1F633</item>
         <item>1F97A</item>
+        <item>1F979</item>
         <item>1F626</item>
         <item>1F627</item>
         <item>1F628</item>
@@ -1712,6 +1726,8 @@
         <item>1F49F</item>
         <item>2763,FE0F</item>
         <item>1F494</item>
+        <item>2764,FE0F,200D,1F525</item>
+        <item>2764,FE0F,200D,1FA79</item>
         <item>2764</item>
         <item>1F9E1</item>
         <item>1F49B</item>
@@ -1741,12 +1757,17 @@
         <item>1F590</item>
         <item>270B</item>
         <item>1F596</item>
+        <item>1FAF1</item>
+        <item>1FAF2</item>
+        <item>1FAF3</item>
+        <item>1FAF4</item>
         <!-- hand-fingers-partial -->
         <item>1F44C</item>
         <item>1F90C</item>
         <item>1F90F</item>
         <item>270C</item>
         <item>1F91E</item>
+        <item>1FAF0</item>
         <item>1F91F</item>
         <item>1F918</item>
         <item>1F919</item>
@@ -1757,6 +1778,7 @@
         <item>1F595</item>
         <item>1F447</item>
         <item>261D</item>
+        <item>1FAF5</item>
         <!-- hand-fingers-closed -->
         <item>1F44D</item>
         <item>1F44E</item>
@@ -1767,6 +1789,7 @@
         <!-- hands -->
         <item>1F44F</item>
         <item>1F64C</item>
+        <item>1FAF6</item>
         <item>1F450</item>
         <item>1F932</item>
         <item>1F91D</item>
@@ -1793,6 +1816,7 @@
         <item>1F441</item>
         <item>1F445</item>
         <item>1F444</item>
+        <item>1FAE6</item>
         <!-- person -->
         <item>1F476</item>
         <item>1F9D2</item>
@@ -1802,6 +1826,8 @@
         <item>1F471</item>
         <item>1F468</item>
         <item>1F9D4</item>
+        <item>1F9D4,200D,2642,FE0F</item>
+        <item>1F9D4,200D,2640,FE0F</item>
         <item>1F468,200D,1F9B0</item>
         <item>1F468,200D,1F9B1</item>
         <item>1F468,200D,1F9B3</item>
@@ -1913,6 +1939,7 @@
         <item>1F477</item>
         <item>1F477,200D,2642,FE0F</item>
         <item>1F477,200D,2640,FE0F</item>
+        <item>1FAC5</item>
         <item>1F934</item>
         <item>1F478</item>
         <item>1F473</item>
@@ -1927,6 +1954,8 @@
         <item>1F470,200D,2642,FE0F</item>
         <item>1F470,200D,2640,FE0F</item>
         <item>1F930</item>
+        <item>1FAC3</item>
+        <item>1FAC4</item>
         <item>1F931</item>
         <item>1F469,200D,1F37C</item>
         <item>1F468,200D,1F37C</item>
@@ -1963,6 +1992,7 @@
         <item>1F9DF</item>
         <item>1F9DF,200D,2642,FE0F</item>
         <item>1F9DF,200D,2640,FE0F</item>
+        <item>1F9CC</item>
         <!-- person-activity -->
         <item>1F486</item>
         <item>1F486,200D,2642,FE0F</item>
@@ -2683,6 +2713,7 @@
         <item>1F9C5</item>
         <item>1F344</item>
         <item>1F95C</item>
+        <item>1FAD8</item>
         <item>1F330</item>
         <!-- food-prepared -->
         <item>1F35E</item>
@@ -2773,6 +2804,7 @@
         <item>1F37B</item>
         <item>1F942</item>
         <item>1F943</item>
+        <item>1FAD7</item>
         <item>1F964</item>
         <item>1F9CB</item>
         <item>1F9C3</item>
@@ -2784,6 +2816,7 @@
         <item>1F374</item>
         <item>1F944</item>
         <item>1F52A</item>
+        <item>1FAD9</item>
         <item>1F3FA</item>
     </array>
     <array
@@ -2875,6 +2908,7 @@
         <item>1F4E0</item>
         <!-- computer -->
         <item>1F50B</item>
+        <item>1FAAB</item>
         <item>1F50C</item>
         <item>1F4BB</item>
         <item>1F5A5</item>
@@ -3025,7 +3059,9 @@
         <item>1FA78</item>
         <item>1F48A</item>
         <item>1FA79</item>
+        <item>1FA7C</item>
         <item>1FA7A</item>
+        <item>1FA7B</item>
         <!-- household -->
         <item>1F6AA</item>
         <item>1F6D7</item>
@@ -3047,6 +3083,7 @@
         <item>1F9FB</item>
         <item>1FAA3</item>
         <item>1F9FC</item>
+        <item>1FAE7</item>
         <item>1FAA5</item>
         <item>1F9FD</item>
         <item>1F9EF</item>
@@ -3058,6 +3095,7 @@
         <item>26B1,FE0F</item>
         <item>1F5FF</item>
         <item>1FAA7</item>
+        <item>1FAAA</item>
     </array>
     <array
         name="emoji_eight_activity"
@@ -3128,6 +3166,7 @@
         <item>1F52E</item>
         <item>1FA84</item>
         <item>1F9FF</item>
+        <item>1FAAC</item>
         <item>1F3AE</item>
         <item>1F579</item>
         <item>1F3B0</item>
@@ -3135,6 +3174,7 @@
         <item>1F9E9</item>
         <item>1F9F8</item>
         <item>1FA85</item>
+        <item>1FAA9</item>
         <item>1FA86</item>
         <item>2660</item>
         <item>2665</item>
@@ -3223,6 +3263,7 @@
         <item>1F309</item>
         <item>2668,FE0F</item>
         <item>1F3A0</item>
+        <item>1F6DD</item>
         <item>1F3A1</item>
         <item>1F3A2</item>
         <item>1F488</item>
@@ -3272,6 +3313,7 @@
         <item>1F6E4</item>
         <item>1F6E2</item>
         <item>26FD</item>
+        <item>1F6DE</item>
         <item>1F6A8</item>
         <item>1F6A5</item>
         <item>1F6A6</item>
@@ -3279,6 +3321,7 @@
         <item>1F6A7</item>
         <!-- transport-water -->
         <item>2693</item>
+        <item>1F6DF</item>
         <item>26F5</item>
         <item>1F6F6</item>
         <item>1F6A4</item>
