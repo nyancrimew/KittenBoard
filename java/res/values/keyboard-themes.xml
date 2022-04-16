@@ -22,7 +22,7 @@
     <string-array name="keyboard_theme_names" translatable="false">
         <item>@string/keyboard_theme_material_light</item>
         <item>@string/keyboard_theme_material_dark</item>
-        <item>@string/keyboard_theme_follow_system</item>
+        <item>@string/keyboard_theme_material_follow_system</item>
         <item>@string/keyboard_theme_material_you</item>
     </string-array>
     <!-- An element must be a keyboard theme id of
