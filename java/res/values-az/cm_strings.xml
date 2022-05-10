@@ -16,6 +16,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="subtype_no_language_bepo">Əlifba (Bépo)</string>
     <string name="subtype_hu_ZZ">Macarca (QWERTY)</string>
-    <string name="keyboard_theme_follow_system">Sistem tənzimləmələrini izlə</string>
+    <string name="keyboard_theme_material_follow_system">Material - sistem tənzimləmələrini izlə</string>
     <string name="prefs_keyboard_height_scale">Klaviaturanın hündürlüyü</string>
 </resources>

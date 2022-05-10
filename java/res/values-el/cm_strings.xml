@@ -16,6 +16,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="subtype_no_language_bepo">Αλφάβητο (Bépo)</string>
     <string name="subtype_hu_ZZ">Ουγγρικά (QWERTY)</string>
-    <string name="keyboard_theme_follow_system">Ακολουθήστε τις ρυθμίσεις συστήματος</string>
+    <string name="keyboard_theme_material_follow_system">Material - ακολουθήστε τις ρυθμίσεις συστήματος</string>
     <string name="prefs_keyboard_height_scale">Κλίμακα ύψους πληκτρολογίου</string>
 </resources>

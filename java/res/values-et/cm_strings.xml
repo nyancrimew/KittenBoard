@@ -15,6 +15,6 @@
  -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="subtype_no_language_bepo">Tähestik (Bépo)</string>
-    <string name="keyboard_theme_follow_system">Järgi süsteemi seadeid</string>
+    <string name="keyboard_theme_material_follow_system">Materiaalne - järgi süsteemi seadeid</string>
     <string name="prefs_keyboard_height_scale">Klaviatuuri kõrgusskaala</string>
 </resources>

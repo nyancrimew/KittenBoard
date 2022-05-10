@@ -16,6 +16,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="subtype_no_language_bepo">알파벳 (Bépo)</string>
     <string name="subtype_hu_ZZ">헝가리어 (QWERTY)</string>
-    <string name="keyboard_theme_follow_system">시스템 설정에 따름</string>
     <string name="prefs_keyboard_height_scale">키보드 높이</string>
 </resources>
