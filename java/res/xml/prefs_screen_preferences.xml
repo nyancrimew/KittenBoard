@@ -50,4 +50,10 @@
         android:title="@string/voice_input"
         android:defaultValue="true"
         android:persistent="true" />
+    <CheckBoxPreference
+        android:key="pref_show_language_switch_key"
+        android:title="@string/show_language_switch_key"
+        android:summary="@string/language_switch_key_summary"
+        android:defaultValue="true"
+        android:persistent="true" />
 </PreferenceScreen>
