@@ -49,7 +49,7 @@
     <permission android:name="gay.crimew.inputmethod.latin.HIDE_SOFT_INPUT"
          android:protectionLevel="signature"/>
 
-    <application android:label="@string/english_ime_name"
+    <application android:label="@string/english_ime_name_kitten"
          android:icon="@mipmap/ic_launcher"
          android:supportsRtl="true"
          android:allowBackup="true"
@@ -58,7 +58,7 @@
 
         <!-- Services -->
         <service android:name="com.android.inputmethod.latin.LatinIME"
-             android:label="@string/english_ime_name"
+             android:label="@string/english_ime_name_kitten"
              android:permission="android.permission.BIND_INPUT_METHOD"
              android:exported="true">
             <intent-filter>
@@ -69,7 +69,7 @@
         </service>
 
         <service android:name="com.android.inputmethod.latin.spellcheck.AndroidSpellCheckerService"
-             android:label="@string/spell_checker_service_name"
+             android:label="@string/spell_checker_service_name_kitten"
              android:permission="android.permission.BIND_TEXT_SERVICE"
              android:exported="true">
             <intent-filter>
@@ -86,8 +86,7 @@
         <!-- Activities -->
         <activity android:name="com.android.inputmethod.latin.setup.SetupActivity"
              android:theme="@style/platformActivityTheme"
-             android:label="@string/english_ime_name"
-             android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/ic_launcher"
              android:launchMode="singleTask"
              android:noHistory="true"
              android:exported="true">
@@ -105,8 +104,7 @@
 
         <activity android:name="com.android.inputmethod.latin.setup.SetupWizardActivity"
              android:theme="@style/platformActivityTheme"
-             android:label="@string/english_ime_name"
-             android:clearTaskOnLaunch="true"
+            android:clearTaskOnLaunch="true"
              android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -115,7 +113,7 @@
 
         <activity android:name="com.android.inputmethod.latin.settings.SettingsActivity"
              android:theme="@style/platformSettingsTheme"
-             android:label="@string/english_ime_settings"
+             android:label="@string/english_ime_settings_kitten"
              android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -124,7 +122,7 @@
 
         <activity android:name="com.android.inputmethod.latin.spellcheck.SpellCheckerSettingsActivity"
              android:theme="@style/platformSettingsTheme"
-             android:label="@string/android_spell_checker_settings"
+             android:label="@string/android_spell_checker_settings_kitten"
              android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

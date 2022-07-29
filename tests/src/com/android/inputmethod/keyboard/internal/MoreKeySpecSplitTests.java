@@ -46,7 +46,7 @@ public class MoreKeySpecSplitTests {
         final Context targetContext = InstrumentationRegistry.getTargetContext();
         final Resources targetRes = targetContext.getResources();
         final String targetPackageName = targetRes.getResourcePackageName(
-                R.string.english_ime_name);
+                R.string.english_ime_name_kitten);
         mTextsSet.setLocale(TEST_LOCALE, targetRes, targetPackageName);
     }
 
