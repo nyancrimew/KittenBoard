@@ -30,7 +30,7 @@ import com.android.inputmethod.keyboard.Key;
 import com.android.inputmethod.keyboard.Keyboard;
 import com.android.inputmethod.keyboard.KeyboardId;
 import com.android.inputmethod.keyboard.KeyboardLayoutSet;
-import com.android.inputmethod.latin.R;
+import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.settings.Settings;
 
 import java.util.ArrayList;

@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Locale;
 
+import gay.crimew.inputmethod.latin.R;
+
 /**
  * Factory for dictionary instances.
  */

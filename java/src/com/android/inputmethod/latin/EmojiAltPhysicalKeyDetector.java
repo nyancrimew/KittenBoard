@@ -31,6 +31,8 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import gay.crimew.inputmethod.latin.R;
+
 /**
  * A class for detecting Emoji-Alt physical key.
  */

@@ -20,7 +20,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodSubtype;
 
-import com.android.inputmethod.latin.R;
+import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.utils.SubtypeLocaleUtils;
 
 @LargeTest

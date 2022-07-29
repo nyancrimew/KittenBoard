@@ -15,7 +15,7 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.inputmethod.latin.tests">
+    package="gay.crimew.inputmethod.latin.tests">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
@@ -26,7 +26,7 @@
     </application>
 
     <instrumentation android:name="androidx.test.runner.AndroidJUnitRunner"
-        android:targetPackage="com.android.inputmethod.latin"
+        android:targetPackage="gay.crimew.inputmethod.latin"
         android:label="LatinIME tests">
     </instrumentation>
 </manifest>

@@ -22,7 +22,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.util.SparseIntArray;
 
-import com.android.inputmethod.latin.R;
+import gay.crimew.inputmethod.latin.R;
 
 import java.util.HashMap;
 

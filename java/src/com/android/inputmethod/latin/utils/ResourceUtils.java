@@ -25,7 +25,7 @@ import android.util.Log;
 import android.util.TypedValue;
 
 import com.android.inputmethod.annotations.UsedForTesting;
-import com.android.inputmethod.latin.R;
+import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.settings.SettingsValues;
 
 import java.util.ArrayList;

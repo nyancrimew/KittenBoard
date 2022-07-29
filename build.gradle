@@ -28,8 +28,8 @@ android {
         versionName "1.0"
         versionCode 30
 
-        applicationId 'com.android.inputmethod.latin'
-        testApplicationId 'com.android.inputmethod.latin.tests'
+        applicationId 'gay.crimew.inputmethod.latin'
+        testApplicationId 'gay.crimew.inputmethod.latin.tests'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = false
 

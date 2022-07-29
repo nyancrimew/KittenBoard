@@ -111,6 +111,8 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import gay.crimew.inputmethod.latin.R;
+
 /**
  * Input method implementation for Qwerty'ish keyboard.
  */
@@ -130,13 +132,13 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
      * A broadcast intent action to hide the software keyboard.
      */
     static final String ACTION_HIDE_SOFT_INPUT =
-            "com.android.inputmethod.latin.HIDE_SOFT_INPUT";
+            "gay.crimew.inputmethod.latin.HIDE_SOFT_INPUT";
 
     /**
      * A custom permission for external apps to send {@link #ACTION_HIDE_SOFT_INPUT}.
      */
     static final String PERMISSION_HIDE_SOFT_INPUT =
-            "com.android.inputmethod.latin.HIDE_SOFT_INPUT";
+            "gay.crimew.inputmethod.latin.HIDE_SOFT_INPUT";
 
     /**
      * The name of the scheme used by the Package Manager to warn of a new package installation,

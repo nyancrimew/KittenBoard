@@ -25,7 +25,7 @@ import android.graphics.RectF;
 import android.text.TextUtils;
 
 import com.android.inputmethod.keyboard.PointerTracker;
-import com.android.inputmethod.latin.R;
+import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.SuggestedWords;
 import com.android.inputmethod.latin.common.CoordinateUtils;
 

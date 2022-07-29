@@ -21,7 +21,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.android.inputmethod.keyboard.Key;
-import com.android.inputmethod.latin.R;
+import gay.crimew.inputmethod.latin.R;
 
 // Handling long press timer to show a more keys keyboard.
 final class AccessibilityLongPressTimer extends Handler {

@@ -28,6 +28,8 @@ import android.content.pm.ProviderInfo;
 import android.net.Uri;
 import android.util.Log;
 
+import gay.crimew.inputmethod.latin.R;
+
 /**
  * Receives broadcasts pertaining to dictionary management and takes the appropriate action.
  *

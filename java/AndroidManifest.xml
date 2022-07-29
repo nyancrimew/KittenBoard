@@ -15,8 +15,7 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-     coreApp="true"
-     package="com.android.inputmethod.latin">
+    package="gay.crimew.inputmethod.latin">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
@@ -37,17 +36,17 @@
                  To use this, add the following line into calling application's AndroidManifest.xml
          <pre>
                       {@code
-         <uses-permission android:name="com.android.inputmethod.latin.HIDE_SOFT_INPUT"/>
+         <uses-permission android:name="gay.crimew.inputmethod.latin.HIDE_SOFT_INPUT"/>
                       }
          </pre>
                       then call {@link android.content.Context#sendBroadcast(Intent)} as follows:
          <pre>
                       {@code
-                      sendBroadcast(new Intent("com.android.inputmethod.latin.HIDE_SOFT_INPUT")
+                      sendBroadcast(new Intent("gay.crimew.inputmethod.latin.HIDE_SOFT_INPUT")
                               .setPackage("com.android.inputmethod.latin"));
                       }
          </pre> -->
-    <permission android:name="com.android.inputmethod.latin.HIDE_SOFT_INPUT"
+    <permission android:name="gay.crimew.inputmethod.latin.HIDE_SOFT_INPUT"
          android:protectionLevel="signature"/>
 
     <application android:label="@string/english_ime_name"
@@ -58,7 +57,7 @@
          android:directBootAware="true">
 
         <!-- Services -->
-        <service android:name="LatinIME"
+        <service android:name="com.android.inputmethod.latin.LatinIME"
              android:label="@string/english_ime_name"
              android:permission="android.permission.BIND_INPUT_METHOD"
              android:exported="true">
@@ -69,7 +68,7 @@
                  android:resource="@xml/method"/>
         </service>
 
-        <service android:name=".spellcheck.AndroidSpellCheckerService"
+        <service android:name="com.android.inputmethod.latin.spellcheck.AndroidSpellCheckerService"
              android:label="@string/spell_checker_service_name"
              android:permission="android.permission.BIND_TEXT_SERVICE"
              android:exported="true">
@@ -85,7 +84,7 @@
         </service>
 
         <!-- Activities -->
-        <activity android:name=".setup.SetupActivity"
+        <activity android:name="com.android.inputmethod.latin.setup.SetupActivity"
              android:theme="@style/platformActivityTheme"
              android:label="@string/english_ime_name"
              android:icon="@mipmap/ic_launcher"
@@ -98,13 +97,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".permissions.PermissionsActivity"
+        <activity android:name="com.android.inputmethod.latin.permissions.PermissionsActivity"
              android:theme="@android:style/Theme.Translucent.NoTitleBar"
              android:exported="false"
              android:taskAffinity="">
         </activity>
 
-        <activity android:name=".setup.SetupWizardActivity"
+        <activity android:name="com.android.inputmethod.latin.setup.SetupWizardActivity"
              android:theme="@style/platformActivityTheme"
              android:label="@string/english_ime_name"
              android:clearTaskOnLaunch="true"
@@ -114,7 +113,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".settings.SettingsActivity"
+        <activity android:name="com.android.inputmethod.latin.settings.SettingsActivity"
              android:theme="@style/platformSettingsTheme"
              android:label="@string/english_ime_settings"
              android:exported="true">
@@ -123,7 +122,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".spellcheck.SpellCheckerSettingsActivity"
+        <activity android:name="com.android.inputmethod.latin.spellcheck.SpellCheckerSettingsActivity"
              android:theme="@style/platformSettingsTheme"
              android:label="@string/android_spell_checker_settings"
              android:exported="true">
@@ -152,11 +151,11 @@
         </activity>
 
         <!-- Unexported activity used for tests. -->
-        <activity android:name=".settings.TestFragmentActivity"
+        <activity android:name="com.android.inputmethod.latin.settings.TestFragmentActivity"
              android:exported="false"/>
 
         <!-- Broadcast receivers -->
-        <receiver android:name="SystemBroadcastReceiver"
+        <receiver android:name="com.android.inputmethod.latin.SystemBroadcastReceiver"
              android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
@@ -166,7 +165,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="DictionaryPackInstallBroadcastReceiver"
+        <receiver android:name="com.android.inputmethod.latin.DictionaryPackInstallBroadcastReceiver"
              android:exported="false">
             <intent-filter>
                 <action android:name="com.android.inputmethod.dictionarypack.aosp.UNKNOWN_CLIENT"/>
@@ -184,7 +183,7 @@
         </receiver>
 
         <!-- Broadcast receiver for AccountManager#LOGIN_ACCOUNTS_CHANGED_ACTION. -->
-        <receiver android:name=".accounts.AccountsChangedReceiver"
+        <receiver android:name="com.android.inputmethod.latin.accounts.AccountsChangedReceiver"
              android:exported="true">
             <intent-filter>
                 <action android:name="android.accounts.LOGIN_ACCOUNTS_CHANGED"/>
