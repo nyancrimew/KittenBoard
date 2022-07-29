@@ -109,6 +109,7 @@
         name="EmojiPalettesView.You"
         parent="MainKeyboardView.You"
     >
+        <item name="keyBackground">@drawable/btn_keyboard_key_transparent</item>
         <item name="categoryIndicatorEnabled">false</item>
         <item name="categoryPageIndicatorColor">@color/category_page_indicator_color</item>
         <item name="categoryPageIndicatorBackground">@null</item>

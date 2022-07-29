@@ -59,7 +59,7 @@ final class EmojiPageKeyboardView extends KeyboardView implements
     private KeyboardAccessibilityDelegate<EmojiPageKeyboardView> mAccessibilityDelegate;
 
     public EmojiPageKeyboardView(final Context context, final AttributeSet attrs) {
-        this(context, attrs, R.attr.keyboardViewStyle);
+        this(context, attrs, R.attr.emojiPalettesViewStyle);
     }
 
     public EmojiPageKeyboardView(final Context context, final AttributeSet attrs,

@@ -81,6 +81,7 @@
         name="EmojiPalettesView.LXX_Light"
         parent="MainKeyboardView.LXX_Light"
     >
+        <item name="keyBackground">@drawable/btn_keyboard_key_transparent</item>
         <item name="categoryIndicatorEnabled">false</item>
         <item name="categoryPageIndicatorColor">@color/highlight_color_lxx_light</item>
         <item name="categoryPageIndicatorBackground">@color/emoji_tab_page_indicator_background_lxx_light</item>
