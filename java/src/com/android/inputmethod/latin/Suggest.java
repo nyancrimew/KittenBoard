@@ -33,9 +33,12 @@ import com.android.inputmethod.latin.utils.SuggestionResults;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.Nonnull;
+
+import gay.crimew.inputmethod.latin.emojisearch.EmojiSearch;
 
 /**
  * This class loads a dictionary and provides a list of suggestions for a given sequence of
@@ -258,6 +261,20 @@ public final class Suggest {
             suggestionsContainer.add(0, typedWordInfo);
         }
 
+        if (!TextUtils.isEmpty(typedWordString)) {
+            List<String> results = EmojiSearch.getInstance().searchExact(typedWordString);
+            if (!results.isEmpty()) {
+                for (int idx = 0; idx < Math.min(2, results.size()); idx++) {
+                    suggestionsContainer.add(idx + 1, new SuggestedWordInfo(results.get(idx),
+                            "", SuggestedWordInfo.MAX_SCORE,
+                            SuggestedWordInfo.KIND_HARDCODED,
+                            Dictionary.DICTIONARY_HARDCODED,
+                            SuggestedWordInfo.NOT_AN_INDEX,
+                            SuggestedWordInfo.NOT_A_CONFIDENCE));
+                }
+            }
+        }
+
         final ArrayList<SuggestedWordInfo> suggestionsList;
         if (DBG && !suggestionsContainer.isEmpty()) {
             suggestionsList = getSuggestionsInfoListWithDebugInfo(typedWordString,
@@ -326,6 +343,21 @@ public final class Suggest {
         for (int i = suggestionsContainer.size() - 1; i >= 0; --i) {
             if (suggestionsContainer.get(i).mScore < SUPPRESS_SUGGEST_THRESHOLD) {
                 suggestionsContainer.remove(i);
+            }
+        }
+
+        String typedWordString = wordComposer.getTypedWord();
+        if (!TextUtils.isEmpty(typedWordString)) {
+            List<String> results = EmojiSearch.getInstance().searchExact(typedWordString);
+            if (!results.isEmpty()) {
+                for (int idx = 0; idx < Math.min(3, results.size()); idx++) {
+                    suggestionsContainer.add(idx, new SuggestedWordInfo(results.get(idx),
+                            "", SuggestedWordInfo.MAX_SCORE,
+                            SuggestedWordInfo.KIND_HARDCODED,
+                            Dictionary.DICTIONARY_HARDCODED,
+                            SuggestedWordInfo.NOT_AN_INDEX,
+                            SuggestedWordInfo.NOT_A_CONFIDENCE));
+                }
             }
         }
 

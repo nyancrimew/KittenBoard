@@ -112,6 +112,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import gay.crimew.inputmethod.latin.R;
+import gay.crimew.inputmethod.latin.emojisearch.EmojiSearch;
 
 /**
  * Input method implementation for Qwerty'ish keyboard.
@@ -607,6 +608,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         final WindowManager wm = getSystemService(WindowManager.class);
         mDisplayContext = getDisplayContext();
         KeyboardSwitcher.init(this);
+        EmojiSearch.init(this);
         super.onCreate();
 
         mHandler.onCreate();

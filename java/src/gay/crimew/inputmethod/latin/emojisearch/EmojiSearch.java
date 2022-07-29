@@ -30,22 +30,31 @@ public class EmojiSearch {
         data = loadData(context);
     }
 
-    public static EmojiSearch getInstance(Context context) {
-        if (instance == null) {
-            instance = new EmojiSearch(context);
-        }
+    public static EmojiSearch getInstance() {
         return instance;
+    }
+
+    public static void init(Context context) {
+        instance = new EmojiSearch(context);
     }
 
     public List<String> search(String query) {
         List<String> results = new ArrayList<>();
-        for (Map.Entry<String, Integer> r :  extract(query.toLowerCase())) {
+        for (Map.Entry<String, Integer> r :  extract(query.toLowerCase(), false)) {
             results.add(r.getKey());
         }
         return results;
     }
 
-    private static List<Map.Entry<String, Integer>> extract(String query) {
+    public List<String> searchExact(String query) {
+        List<String> results = new ArrayList<>();
+        for (Map.Entry<String, Integer> r :  extract(query.toLowerCase(), true)) {
+            results.add(r.getKey());
+        }
+        return results;
+    }
+
+    private static List<Map.Entry<String, Integer>> extract(String query, boolean exact) {
         Map<String, Integer> yields = new HashMap<>();
         for (Map.Entry<String, List<String>> e : data.entrySet()) {
             if (e.getValue().size() == 0) {
@@ -54,22 +63,30 @@ public class EmojiSearch {
 
             int maxScore = 0;
             for (String keyword : e.getValue()) {
-                int score;
+                int score = 0;
                 if (keyword.equals(query)) {
                     score = 100;
-                } else if (keyword.startsWith(query)) {
-                    score = 95;
-                } else if (keyword.contains(query)) {
-                    score = 90;
-                } else {
-                    // TODO: we probably want faster partial search
-                    if (query.contains(" ") || keyword.contains(" ")) {
-                        score = PARTIAL_RATIO.apply(query, keyword);
+                } else if (!exact) {
+                    if (keyword.startsWith(query)) {
+                        score = 95;
+                    } else if (keyword.contains(query)) {
+                        score = 90;
                     } else {
-                        score = RATIO.apply(query, keyword);
+                        // TODO: we probably want faster partial search
+                        if (query.contains(" ") || keyword.contains(" ")) {
+                            score = PARTIAL_RATIO.apply(query, keyword);
+                        } else {
+                            score = RATIO.apply(query, keyword);
+                        }
                     }
+                } else if (keyword.startsWith(query + "_")) {
+                    // accept partial matches for subsections even in exact mode
+                    score = 99;
                 }
                 maxScore = Math.max(score, maxScore);
+                if (maxScore == 100) {
+                    break;
+                }
             }
 
             if (maxScore >= CUTOFF) {
