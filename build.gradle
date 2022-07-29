@@ -1,3 +1,6 @@
+def Properties properties = new Properties()
+properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
 buildscript {
     ext.kotlin_version = '1.6.21'
 
@@ -41,8 +44,23 @@ android {
     }
 
     signingConfigs {
+        var localKeystore = properties.getProperty("keystore.path", System.getenv("KEYSTORE_PATH"))
         debug {
             storeFile file("java/shared.keystore")
+            if (localKeystore != null) {
+                storeFile = file(localKeystore)
+                storePassword = properties.getProperty("keystore.pass", System.getenv("KEYSTORE_PASS"))
+                keyAlias = properties.getProperty("keystore.alias", System.getenv("KEYSTORE_ALIAS"))
+                keyPassword = properties.getProperty("keystore.keyPass", System.getenv("KEYSTORE_KEYPASS"))
+            }
+        }
+        release {
+            if (localKeystore != null) {
+                storeFile = file(localKeystore)
+                storePassword = properties.getProperty("keystore.pass", System.getenv("KEYSTORE_PASS"))
+                keyAlias = properties.getProperty("keystore.alias", System.getenv("KEYSTORE_ALIAS"))
+                keyPassword = properties.getProperty("keystore.keyPass", System.getenv("KEYSTORE_KEYPASS"))
+            }
         }
     }
 
