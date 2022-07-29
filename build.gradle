@@ -62,6 +62,7 @@ android {
         main {
             res.srcDirs = ['java/res']
             java.srcDirs = ['common/src', 'java/src']
+            assets.srcDirs = ['java/assets']
             manifest.srcFile 'java/AndroidManifest.xml'
         }
 
@@ -99,6 +100,8 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.core:core:1.8.0'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+    implementation 'me.xdrop:fuzzywuzzy:1.4.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation "org.mockito:mockito-core:4.4.0"
