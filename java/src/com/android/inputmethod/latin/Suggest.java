@@ -262,7 +262,7 @@ public final class Suggest {
         }
 
         if (!TextUtils.isEmpty(typedWordString)) {
-            List<String> results = EmojiSearch.getInstance().searchExact(typedWordString);
+            List<String> results = EmojiSearch.searchExact(typedWordString);
             if (!results.isEmpty()) {
                 for (int idx = 0; idx < Math.min(2, results.size()); idx++) {
                     suggestionsContainer.add(idx + 1, new SuggestedWordInfo(results.get(idx),
@@ -348,7 +348,7 @@ public final class Suggest {
 
         String typedWordString = wordComposer.getTypedWord();
         if (!TextUtils.isEmpty(typedWordString)) {
-            List<String> results = EmojiSearch.getInstance().searchExact(typedWordString);
+            List<String> results = EmojiSearch.searchExact(typedWordString);
             if (!results.isEmpty()) {
                 for (int idx = 0; idx < Math.min(3, results.size()); idx++) {
                     suggestionsContainer.add(idx, new SuggestedWordInfo(results.get(idx),

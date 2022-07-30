@@ -610,7 +610,6 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         final WindowManager wm = getSystemService(WindowManager.class);
         mDisplayContext = getDisplayContext();
         KeyboardSwitcher.init(this);
-        EmojiSearch.init(this);
         EmojiCompat.init(new BundledEmojiCompatConfig(this));
         super.onCreate();
 
