@@ -19,13 +19,10 @@ package com.android.inputmethod.keyboard.emoji;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.Build;
 import android.util.Log;
 import android.util.Pair;
 
-import com.android.inputmethod.compat.BuildCompatUtils;
 import com.android.inputmethod.keyboard.Key;
 import com.android.inputmethod.keyboard.Keyboard;
 import com.android.inputmethod.keyboard.KeyboardId;
@@ -172,33 +169,16 @@ final class EmojiCategory {
                     sCategoryTabIconAttr[i], 0);
         }
 
-        int defaultCategoryId = EmojiCategory.ID_SYMBOLS;
         addShownCategoryId(EmojiCategory.ID_RECENTS);
-        if (BuildCompatUtils.EFFECTIVE_SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (canShowUnicodeEightEmoji()) {
-                defaultCategoryId = EmojiCategory.ID_EIGHT_SMILEY_PEOPLE;
-                addShownCategoryId(EmojiCategory.ID_EIGHT_SMILEY_PEOPLE);
-                addShownCategoryId(EmojiCategory.ID_EIGHT_ANIMALS_NATURE);
-                addShownCategoryId(EmojiCategory.ID_EIGHT_FOOD_DRINK);
-                addShownCategoryId(EmojiCategory.ID_EIGHT_TRAVEL_PLACES);
-                addShownCategoryId(EmojiCategory.ID_EIGHT_ACTIVITY);
-                addShownCategoryId(EmojiCategory.ID_EIGHT_OBJECTS);
-                addShownCategoryId(EmojiCategory.ID_EIGHT_SYMBOLS);
-                addShownCategoryId(EmojiCategory.ID_EIGHT_FLAGS);
-            } else {
-                defaultCategoryId = EmojiCategory.ID_PEOPLE;
-                addShownCategoryId(EmojiCategory.ID_PEOPLE);
-                addShownCategoryId(EmojiCategory.ID_OBJECTS);
-                addShownCategoryId(EmojiCategory.ID_NATURE);
-                addShownCategoryId(EmojiCategory.ID_PLACES);
-                addShownCategoryId(EmojiCategory.ID_SYMBOLS);
-                if (canShowFlagEmoji()) {
-                    addShownCategoryId(EmojiCategory.ID_FLAGS);
-                }
-            }
-        } else {
-            addShownCategoryId(EmojiCategory.ID_SYMBOLS);
-        }
+        int defaultCategoryId = EmojiCategory.ID_EIGHT_SMILEY_PEOPLE;
+        addShownCategoryId(EmojiCategory.ID_EIGHT_SMILEY_PEOPLE);
+        addShownCategoryId(EmojiCategory.ID_EIGHT_ANIMALS_NATURE);
+        addShownCategoryId(EmojiCategory.ID_EIGHT_FOOD_DRINK);
+        addShownCategoryId(EmojiCategory.ID_EIGHT_TRAVEL_PLACES);
+        addShownCategoryId(EmojiCategory.ID_EIGHT_ACTIVITY);
+        addShownCategoryId(EmojiCategory.ID_EIGHT_OBJECTS);
+        addShownCategoryId(EmojiCategory.ID_EIGHT_SYMBOLS);
+        addShownCategoryId(EmojiCategory.ID_EIGHT_FLAGS);
         addShownCategoryId(EmojiCategory.ID_EMOTICONS);
 
         DynamicGridKeyboard recentsKbd =
@@ -436,35 +416,5 @@ final class EmojiCategory {
             retval[i / maxPageCount][i % maxPageCount] = keys.get(i);
         }
         return retval;
-    }
-
-    private static boolean canShowFlagEmoji() {
-        Paint paint = new Paint();
-        String switzerland = "\uD83C\uDDE8\uD83C\uDDED"; //  U+1F1E8 U+1F1ED Flag for Switzerland
-        try {
-            return paint.hasGlyph(switzerland);
-        } catch (NoSuchMethodError e) {
-            // Compare display width of single-codepoint emoji to width of flag emoji to determine
-            // whether flag is rendered as single glyph or two adjacent regional indicator symbols.
-            float flagWidth = paint.measureText(switzerland);
-            float standardWidth = paint.measureText("\uD83D\uDC27"); //  U+1F427 Penguin
-            return flagWidth < standardWidth * 1.25;
-            // This assumes that a valid glyph for the flag emoji must be less than 1.25 times
-            // the width of the penguin.
-        }
-    }
-
-    private static boolean canShowUnicodeEightEmoji() {
-        Paint paint = new Paint();
-        String cheese = "\uD83E\uDDC0"; //  U+1F9C0 Cheese wedge
-        try {
-            return paint.hasGlyph(cheese);
-        } catch (NoSuchMethodError e) {
-            float cheeseWidth = paint.measureText(cheese);
-            float tofuWidth = paint.measureText("\uFFFE");
-            return cheeseWidth > tofuWidth;
-            // This assumes that a valid glyph for the cheese wedge must be greater than the width
-            // of the noncharacter.
-        }
     }
 }
