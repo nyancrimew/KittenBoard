@@ -56,6 +56,12 @@ pub extern "C" fn Java_gay_crimew_inputmethod_latin_emojisearch_EmojiSearch_sear
                         }
                     } else if keyword.starts_with(format!("{}_", query).as_str()) {
                         99
+                    } else if keyword.ends_with(format!("_{}", query).as_str()) {
+                        97
+                    } else if !should_ignore_exact_query(&query)
+                        && keyword.contains(format!("_{}_", query).as_str())
+                    {
+                        96
                     } else {
                         0
                     }
@@ -93,4 +99,8 @@ fn mismatch_chunks<const N: usize>(xs: &[u8], ys: &[u8]) -> usize {
     off + iter::zip(&xs[off..], &ys[off..])
         .take_while(|(x, y)| x == y)
         .count()
+}
+
+fn should_ignore_exact_query(query: &String) -> bool {
+    vec!["with", "in", "no", "and", "of", "the", "me", "on", "a"].contains(&query.as_str())
 }
