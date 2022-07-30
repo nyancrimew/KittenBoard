@@ -119,10 +119,14 @@ repositories {
 }
 
 dependencies {
+    def emoji_version = '1.1.0'
+
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "androidx.emoji2:emoji2:$emoji_version"
+    implementation "androidx.emoji2:emoji2-bundled:$emoji_version"
 
     implementation 'me.xdrop:fuzzywuzzy:1.4.0'
 

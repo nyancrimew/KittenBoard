@@ -28,9 +28,15 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
+import android.text.Layout;
+import android.text.Spannable;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.emoji2.text.EmojiCompat;
 
 import com.android.inputmethod.keyboard.internal.KeyDrawParams;
 import com.android.inputmethod.keyboard.internal.KeyVisualAttributes;
@@ -392,6 +398,15 @@ public class KeyboardView extends View {
         float labelBaseline = centerY;
         final String label = key.getLabel();
         if (label != null) {
+            Spannable compatEmoji = null;
+            boolean emojiCompat = false;
+            if (EmojiCompat.get().hasEmojiGlyph(label)) {
+                CharSequence em = EmojiCompat.get().process(label);
+                if (em instanceof Spannable) {
+                    compatEmoji = (Spannable) em;
+                    emojiCompat = true;
+                }
+            }
             paint.setTypeface(key.selectTypeface(params));
             paint.setTextSize(key.selectTextSize(params));
             final float labelCharHeight = TypefaceUtils.getReferenceCharHeight(paint);
@@ -401,7 +416,7 @@ public class KeyboardView extends View {
             labelBaseline = centerY + labelCharHeight / 2.0f;
 
             // Horizontal label text alignment
-            if (key.isAlignLabelOffCenter()) {
+            if (key.isAlignLabelOffCenter() || emojiCompat) {
                 // The label is placed off center of the key. Used mainly on "phone number" layout.
                 labelX = centerX + params.mLabelOffCenterRatio * labelCharWidth;
                 paint.setTextAlign(Align.LEFT);
@@ -409,7 +424,7 @@ public class KeyboardView extends View {
                 labelX = centerX;
                 paint.setTextAlign(Align.CENTER);
             }
-            if (key.needsAutoXScale()) {
+            if (key.needsAutoXScale() && !emojiCompat) {
                 final float ratio = Math.min(1.0f, (keyWidth * MAX_LABEL_RATIO) /
                         TypefaceUtils.getStringWidth(label, paint));
                 if (key.needsAutoScale()) {
@@ -434,7 +449,16 @@ public class KeyboardView extends View {
                 paint.clearShadowLayer();
             }
             blendAlpha(paint, params.mAnimAlpha);
-            canvas.drawText(label, 0, label.length(), labelX, labelBaseline, paint);
+            if (emojiCompat) {
+                StaticLayout compatEmojiView = new StaticLayout(compatEmoji, new TextPaint(paint), 1, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+                canvas.save();
+                canvas.translate(centerX - (compatEmojiView.getLineWidth(0) / 2f), centerY - (compatEmojiView.getHeight() / 2f));
+                compatEmojiView.draw(canvas);
+                canvas.restore();
+            } else {
+                canvas.drawText(label, 0, label.length(), labelX, labelBaseline, paint);
+            }
+
             // Turn off drop shadow and reset x-scale.
             paint.clearShadowLayer();
             paint.setTextScaleX(1.0f);

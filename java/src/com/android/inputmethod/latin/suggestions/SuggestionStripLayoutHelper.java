@@ -43,6 +43,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.emoji2.text.EmojiCompat;
+
 import com.android.inputmethod.accessibility.AccessibilityUtils;
 import com.android.inputmethod.annotations.UsedForTesting;
 import com.android.inputmethod.latin.PunctuationSuggestions;
@@ -421,7 +423,10 @@ final class SuggestionStripLayoutHelper {
      */
     private TextView layoutWord(final Context context, final int positionInStrip, final int width) {
         final TextView wordView = mWordViews.get(positionInStrip);
-        final CharSequence word = wordView.getText();
+        CharSequence word = wordView.getText();
+        if (EmojiCompat.get().hasEmojiGlyph(word)) {
+            word = EmojiCompat.get().process(word);
+        }
         if (positionInStrip == mCenterPositionInStrip && mMoreSuggestionsAvailable) {
             // TODO: This "more suggestions hint" should have a nicely designed icon.
             wordView.setCompoundDrawablesWithIntrinsicBounds(
