@@ -1,13 +1,16 @@
-use crate::log::log_d;
 use jni::objects::{JClass, JList, JMap, JObject, JString, JValue};
 use jni::sys::jboolean;
 use jni::JNIEnv;
 use lazy_static::lazy_static;
+use levenshtein::levenshtein;
 use std::borrow::Borrow;
+use std::cmp::min;
 use std::collections::HashMap;
+use std::iter;
 use std::sync::RwLock;
 
-const CUTOFF: i32 = 60;
+const SCORE_CUTOFF: i32 = 87;
+const SCORE_MAX: i32 = 100;
 
 lazy_static! {
     static ref DATA: RwLock<HashMap<String, Vec<String>>> = RwLock::new(HashMap::new());
@@ -38,35 +41,54 @@ pub extern "C" fn Java_gay_crimew_inputmethod_latin_emojisearch_EmojiSearch_sear
 
     let d = DATA.read().unwrap();
 
+    let len_query = query.chars().count();
     let mut results: Vec<(&String, i32)> = d
         .iter()
-        .map(|e| {
-            let score =
-                e.1.iter()
-                    .map(|keyword| {
-                        let keyword = keyword.borrow();
-                        if keyword == query {
-                            100
-                        } else if !exact {
-                            if keyword.starts_with(query.as_str()) {
-                                95
-                            } else if keyword.contains(query.as_str()) {
-                                90
+        // TODO: somehow exit early when score 100 reached
+        .filter_map(|e| {
+            let score = e
+                .1
+                .iter()
+                .map(|keyword| {
+                    let keyword = keyword.borrow();
+
+                    if keyword == query {
+                        SCORE_MAX
+                    } else if !exact {
+                        let len_keyword = keyword.chars().count();
+                        if keyword.starts_with(query.as_str()) {
+                            let (len_long, len_short) = if len_keyword > len_query {
+                                (len_keyword, len_query)
                             } else {
-                                0
-                            }
-                        } else if keyword.starts_with(format!("{}_", query).as_str()) {
-                            99
+                                (len_query, len_keyword)
+                            };
+                            SCORE_MAX - ((len_long as f32 / len_short as f32) * 10.0).round() as i32
+                        } else if keyword.contains(query.as_str()) {
+                            // TODO: calculate more appropriate score here
+                            90
                         } else {
-                            // TODO: fuzzy matching
-                            0
+                            // TODO: split up keyword/query for partial match calculation (?)
+                            let distance = levenshtein(query.as_str(), keyword);
+                            let lensum = len_query + len_keyword;
+                            let ratio = (lensum - distance) as f32 / lensum as f32;
+                            // boost result based on how much of the beginnings match
+                            let bonus = mismatch(query.as_bytes(), keyword.as_bytes()) as f32;
+                            min(SCORE_MAX, (ratio * 100.0 + bonus * 5.5).round() as i32)
                         }
-                    })
-                    .max()
-                    .unwrap();
-            (e.0, score)
+                    } else if keyword.starts_with(format!("{}_", query).as_str()) {
+                        99
+                    } else {
+                        0
+                    }
+                })
+                .max()
+                .unwrap();
+            if score >= SCORE_CUTOFF {
+                Some((e.0, score))
+            } else {
+                None
+            }
         })
-        .filter(|e| e.1 >= CUTOFF)
         .collect();
     results.sort_by_key(|e| e.1);
     results.reverse();
@@ -105,4 +127,18 @@ fn get_data(env: &JNIEnv, emoji_search_class: JClass) -> HashMap<String, Vec<Str
             (key, values)
         })
         .collect()
+}
+
+fn mismatch(xs: &[u8], ys: &[u8]) -> usize {
+    mismatch_chunks::<128>(xs, ys)
+}
+
+fn mismatch_chunks<const N: usize>(xs: &[u8], ys: &[u8]) -> usize {
+    let off = iter::zip(xs.chunks_exact(N), ys.chunks_exact(N))
+        .take_while(|(x, y)| x == y)
+        .count()
+        * N;
+    off + iter::zip(&xs[off..], &ys[off..])
+        .take_while(|(x, y)| x == y)
+        .count()
 }

@@ -10,23 +10,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import me.xdrop.fuzzywuzzy.Ratio;
-import me.xdrop.fuzzywuzzy.ratios.PartialRatio;
-import me.xdrop.fuzzywuzzy.ratios.SimpleRatio;
 
 public class EmojiSearch {
     static {
         JniUtils.loadNativeLibrary();
     }
-
-    private static final Ratio RATIO = new SimpleRatio();
-    private static final Ratio PARTIAL_RATIO = new PartialRatio();
-    private static final int CUTOFF = 60;
 
     private static EmojiSearch instance;
 
@@ -49,67 +40,17 @@ public class EmojiSearch {
 
     public List<String> search(String query) {
         List<String> results = new ArrayList<>();
-        for (Map.Entry<String, Integer> r :  extract(query.toLowerCase(), false)) {
-            results.add(r.getKey());
-        }
+        searchNative(query.toLowerCase(), false, results);
         return results;
     }
 
     public List<String> searchExact(String query) {
         List<String> results = new ArrayList<>();
-        searchNative(query, true, results);
+        searchNative(query.toLowerCase(), true, results);
         return results;
     }
 
     private native void searchNative(String query, boolean exact, List<String> outArray);
-
-    private static List<Map.Entry<String, Integer>> extract(String query, boolean exact) {
-        Map<String, Integer> yields = new HashMap<>();
-        for (Map.Entry<String, List<String>> e : data.entrySet()) {
-            if (e.getValue().size() == 0) {
-                continue;
-            }
-
-            int maxScore = 0;
-            for (String keyword : e.getValue()) {
-                int score = 0;
-                if (keyword.equals(query)) {
-                    score = 100;
-                } else if (!exact) {
-                    if (keyword.startsWith(query)) {
-                        score = 95;
-                    } else if (keyword.contains(query)) {
-                        score = 90;
-                    } else {
-                        // TODO: we probably want faster partial search
-                        if (query.contains(" ") || keyword.contains(" ")) {
-                            score = PARTIAL_RATIO.apply(query, keyword);
-                        } else {
-                            score = RATIO.apply(query, keyword);
-                        }
-                    }
-                } else if (keyword.startsWith(query + "_")) {
-                    // accept partial matches for subsections even in exact mode
-                    score = 99;
-                }
-                maxScore = Math.max(score, maxScore);
-                if (maxScore == 100) {
-                    break;
-                }
-            }
-
-            if (maxScore >= CUTOFF) {
-                yields.put(e.getKey(), maxScore);
-            }
-        }
-        // sort
-        List<Map.Entry<String, Integer>> entries = new ArrayList<>(yields.entrySet());
-        Collections.sort(entries, Collections.reverseOrder((o1, o2) -> {
-            return Integer.compare(o1.getValue(), o2.getValue());
-        }));
-
-        return entries;
-    }
 
     /**
      * Loads emoji data from data json (grabbed from https://github.com/muan/emojilib)
