@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.JsonReader;
 import android.util.JsonToken;
 
+import com.android.inputmethod.latin.utils.JniUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,16 +20,21 @@ import me.xdrop.fuzzywuzzy.ratios.PartialRatio;
 import me.xdrop.fuzzywuzzy.ratios.SimpleRatio;
 
 public class EmojiSearch {
+    static {
+        JniUtils.loadNativeLibrary();
+    }
+
     private static final Ratio RATIO = new SimpleRatio();
     private static final Ratio PARTIAL_RATIO = new PartialRatio();
     private static final int CUTOFF = 60;
 
     private static EmojiSearch instance;
 
-    private static Map<String, List<String>> data;
+    public static Map<String, List<String>> data;
 
     private EmojiSearch(Context context) {
         data = loadData(context);
+        initNative();
     }
 
     public static EmojiSearch getInstance() {
@@ -37,6 +44,8 @@ public class EmojiSearch {
     public static void init(Context context) {
         instance = new EmojiSearch(context);
     }
+
+    private native void initNative();
 
     public List<String> search(String query) {
         List<String> results = new ArrayList<>();
@@ -48,11 +57,11 @@ public class EmojiSearch {
 
     public List<String> searchExact(String query) {
         List<String> results = new ArrayList<>();
-        for (Map.Entry<String, Integer> r :  extract(query.toLowerCase(), true)) {
-            results.add(r.getKey());
-        }
+        searchNative(query, true, results);
         return results;
     }
+
+    private native void searchNative(String query, boolean exact, List<String> outArray);
 
     private static List<Map.Entry<String, Integer>> extract(String query, boolean exact) {
         Map<String, Integer> yields = new HashMap<>();

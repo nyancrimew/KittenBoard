@@ -7,16 +7,19 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'org.mozilla.rust-android-gradle:plugin:0.9.3'
     }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
+def buildType
 android {
     compileSdkVersion 32
 
@@ -109,6 +112,27 @@ android {
         }
     }
     ndkVersion '21.4.7075529'
+
+    applicationVariants.all { variant ->
+        buildType = variant.buildType.name
+    }
+}
+
+apply plugin: 'org.mozilla.rust-android-gradle.rust-android'
+cargo {
+    module  = "native/rust"
+    libname = "latinimers"
+    targets = ["arm", "arm64", "x86", "x86_64"]
+
+    if (buildType == "release") {
+        profile = 'release'
+    }
+}
+
+tasks.whenTaskAdded { task ->
+    if ((task.name == 'javaPreCompileDebug' || task.name == 'javaPreCompileRelease')) {
+        task.dependsOn 'cargoBuild'
+    }
 }
 
 repositories {
