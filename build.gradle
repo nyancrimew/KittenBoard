@@ -19,7 +19,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
-def buildType
+def rustProfile
 android {
     compileSdkVersion 32
 
@@ -70,9 +70,11 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
+            rustProfile = 'debug'
         }
         release {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.flags'
+            rustProfile = 'release'
         }
     }
 
@@ -112,10 +114,6 @@ android {
         }
     }
     ndkVersion '21.4.7075529'
-
-    applicationVariants.all { variant ->
-        buildType = variant.buildType.name
-    }
 }
 
 apply plugin: 'org.mozilla.rust-android-gradle.rust-android'
@@ -123,10 +121,7 @@ cargo {
     module  = "native/rust"
     libname = "latinimers"
     targets = ["arm", "arm64", "x86", "x86_64"]
-
-    if (buildType == "release") {
-        profile = 'release'
-    }
+    profile = rustProfile
 }
 
 tasks.whenTaskAdded { task ->
