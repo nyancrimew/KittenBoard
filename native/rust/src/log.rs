@@ -1,6 +1,7 @@
 use jni::objects::{JObject, JValue};
 use jni::JNIEnv;
 
+#[allow(dead_code)]
 pub fn log_d(env: &JNIEnv, tag: &str, message: &str) {
     let class = env.find_class("android/util/Log").unwrap();
     let tag = env.new_string(String::from(tag)).unwrap();
@@ -14,9 +15,11 @@ pub fn log_d(env: &JNIEnv, tag: &str, message: &str) {
             JValue::Object(JObject::from(tag)),
             JValue::Object(JObject::from(message)),
         ],
-    );
+    )
+    .unwrap();
 }
 
+#[allow(dead_code)]
 pub fn log_e(env: &JNIEnv, tag: &str, message: &str) {
     let class = env.find_class("android/util/Log").unwrap();
     let tag = env.new_string(String::from(tag)).unwrap();
@@ -30,9 +33,11 @@ pub fn log_e(env: &JNIEnv, tag: &str, message: &str) {
             JValue::Object(JObject::from(tag)),
             JValue::Object(JObject::from(message)),
         ],
-    );
+    )
+    .unwrap();
 }
 
+#[allow(dead_code)]
 pub fn log_i(env: &JNIEnv, tag: &str, message: &str) {
     let class = env.find_class("android/util/Log").unwrap();
     let tag = env.new_string(String::from(tag)).unwrap();
@@ -46,5 +51,6 @@ pub fn log_i(env: &JNIEnv, tag: &str, message: &str) {
             JValue::Object(JObject::from(tag)),
             JValue::Object(JObject::from(message)),
         ],
-    );
+    )
+    .unwrap();
 }
