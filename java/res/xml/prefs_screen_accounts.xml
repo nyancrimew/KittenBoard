@@ -30,7 +30,7 @@
         android:enabled="false" />
 
     <!-- Summary will be set programmatically to reflect the account status -->
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="pref_enable_cloud_sync"
         android:title="@string/cloud_sync_title"
         android:defaultValue="false"
@@ -52,7 +52,7 @@
         android:dependency="pref_enable_cloud_sync" />
 
     <!-- Title will be set programmatically to embed application name -->
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="pref_enable_metrics_logging"
         android:summary="@string/enable_metrics_logging_summary"
         android:defaultValue="true"

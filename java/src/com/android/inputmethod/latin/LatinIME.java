@@ -277,12 +277,12 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
                 break;
             case MSG_RESUME_SUGGESTIONS:
                 latinIme.mInputLogic.restartSuggestionsOnWordTouchedByCursor(
-                        latinIme.mSettings.getCurrent(), false /* forStartInput */,
+                        latinIme.mSettings.getCurrent(),
                         latinIme.mKeyboardSwitcher.getCurrentKeyboardScriptId());
                 break;
             case MSG_RESUME_SUGGESTIONS_FOR_START_INPUT:
                 latinIme.mInputLogic.restartSuggestionsOnWordTouchedByCursor(
-                        latinIme.mSettings.getCurrent(), true /* forStartInput */,
+                        latinIme.mSettings.getCurrent(),
                         latinIme.mKeyboardSwitcher.getCurrentKeyboardScriptId());
                 break;
             case MSG_REOPEN_DICTIONARIES:
@@ -816,10 +816,6 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
      * @see android.content.Context#createDisplayContext(Display)
      */
     private @NonNull Context getDisplayContext() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            // createDisplayContext is not available.
-            return this;
-        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
             // IME context sources is now managed by WindowProviderService from Android 12L.
             return this;

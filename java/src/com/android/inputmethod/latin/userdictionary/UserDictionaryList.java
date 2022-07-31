@@ -29,7 +29,6 @@ import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.common.LocaleUtils;
 import com.android.inputmethod.latin.settings.CustomPreferenceFragment;
 
@@ -38,6 +37,8 @@ import java.util.Locale;
 import java.util.TreeSet;
 
 import javax.annotation.Nullable;
+
+import gay.crimew.inputmethod.latin.R;
 
 // Caveat: This class is basically taken from
 // packages/apps/Settings/src/com/android/settings/inputmethod/UserDictionaryList.java
@@ -73,11 +74,6 @@ public class UserDictionaryList extends CustomPreferenceFragment {
             }
         } finally {
             cursor.close();
-        }
-        if (!UserDictionarySettings.IS_SHORTCUT_API_SUPPORTED) {
-            // For ICS, we need to show "For all languages" in case that the keyboard locale
-            // is different from the system locale
-            localeSet.add("");
         }
 
         final InputMethodManager imm =

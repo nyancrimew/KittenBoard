@@ -16,13 +16,11 @@
 
 package com.android.inputmethod.dictionarypack;
 
-import com.android.inputmethod.latin.utils.FragmentUtils;
-
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+
+import com.android.inputmethod.latin.utils.FragmentUtils;
 
 /**
  * Preference screen.
@@ -46,7 +44,6 @@ public final class DictionarySettingsActivity extends PreferenceActivity {
         return modIntent;
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public boolean isValidFragment(String fragmentName) {
         return FragmentUtils.isValidFragment(fragmentName);

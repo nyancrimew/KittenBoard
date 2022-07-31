@@ -71,12 +71,8 @@ public class UserDictionaryAddWordContents {
     private String mSavedShortcut;
 
     /* package */ UserDictionaryAddWordContents(final View view, final Bundle args) {
-        mWordEditText = (EditText)view.findViewById(R.id.user_dictionary_add_word_text);
-        mShortcutEditText = (EditText)view.findViewById(R.id.user_dictionary_add_shortcut);
-        if (!UserDictionarySettings.IS_SHORTCUT_API_SUPPORTED) {
-            mShortcutEditText.setVisibility(View.GONE);
-            view.findViewById(R.id.user_dictionary_add_shortcut_label).setVisibility(View.GONE);
-        }
+        mWordEditText = (EditText) view.findViewById(R.id.user_dictionary_add_word_text);
+        mShortcutEditText = (EditText) view.findViewById(R.id.user_dictionary_add_shortcut);
         final String word = args.getString(EXTRA_WORD);
         if (null != word) {
             mWordEditText.setText(word);
@@ -84,17 +80,11 @@ public class UserDictionaryAddWordContents {
             // it's too long to be edited.
             mWordEditText.setSelection(mWordEditText.getText().length());
         }
-        final String shortcut;
-        if (UserDictionarySettings.IS_SHORTCUT_API_SUPPORTED) {
-            shortcut = args.getString(EXTRA_SHORTCUT);
-            if (null != shortcut && null != mShortcutEditText) {
-                mShortcutEditText.setText(shortcut);
-            }
-            mOldShortcut = args.getString(EXTRA_SHORTCUT);
-        } else {
-            shortcut = null;
-            mOldShortcut = null;
+        final String shortcut = args.getString(EXTRA_SHORTCUT);
+        if (null != shortcut && null != mShortcutEditText) {
+            mShortcutEditText.setText(shortcut);
         }
+        mOldShortcut = args.getString(EXTRA_SHORTCUT);
         mMode = args.getInt(EXTRA_MODE); // default return value for #getInt() is 0 = MODE_EDIT
         mOldWord = args.getString(EXTRA_WORD);
         updateLocale(args.getString(EXTRA_LOCALE));
@@ -147,9 +137,7 @@ public class UserDictionaryAddWordContents {
         }
         final String newWord = mWordEditText.getText().toString();
         final String newShortcut;
-        if (!UserDictionarySettings.IS_SHORTCUT_API_SUPPORTED) {
-            newShortcut = null;
-        } else if (null == mShortcutEditText) {
+        if (null == mShortcutEditText) {
             newShortcut = null;
         } else {
             final String tmpShortcut = mShortcutEditText.getText().toString();

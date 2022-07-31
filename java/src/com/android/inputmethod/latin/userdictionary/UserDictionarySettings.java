@@ -16,14 +16,11 @@
 
 package com.android.inputmethod.latin.userdictionary;
 
-import gay.crimew.inputmethod.latin.R;
-
 import android.app.ListFragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.UserDictionary;
 import android.text.TextUtils;
@@ -42,47 +39,26 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
+import gay.crimew.inputmethod.latin.R;
+
 // Caveat: This class is basically taken from
 // packages/apps/Settings/src/com/android/settings/inputmethod/UserDictionarySettings.java
 // in order to deal with some devices that have issues with the user dictionary handling
 
 public class UserDictionarySettings extends ListFragment {
-
-    public static final boolean IS_SHORTCUT_API_SUPPORTED =
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-
-    private static final String[] QUERY_PROJECTION_SHORTCUT_UNSUPPORTED =
-            { UserDictionary.Words._ID, UserDictionary.Words.WORD};
-    private static final String[] QUERY_PROJECTION_SHORTCUT_SUPPORTED =
-            { UserDictionary.Words._ID, UserDictionary.Words.WORD, UserDictionary.Words.SHORTCUT};
     private static final String[] QUERY_PROJECTION =
-            IS_SHORTCUT_API_SUPPORTED ?
-                    QUERY_PROJECTION_SHORTCUT_SUPPORTED : QUERY_PROJECTION_SHORTCUT_UNSUPPORTED;
+            {UserDictionary.Words._ID, UserDictionary.Words.WORD, UserDictionary.Words.SHORTCUT};
 
     // The index of the shortcut in the above array.
     private static final int INDEX_SHORTCUT = 2;
 
-    private static final String[] ADAPTER_FROM_SHORTCUT_UNSUPPORTED = {
-        UserDictionary.Words.WORD,
+    private static final String[] ADAPTER_FROM = {
+            UserDictionary.Words.WORD, UserDictionary.Words.SHORTCUT
     };
 
-    private static final String[] ADAPTER_FROM_SHORTCUT_SUPPORTED = {
-        UserDictionary.Words.WORD, UserDictionary.Words.SHORTCUT
+    private static final int[] ADAPTER_TO = {
+            android.R.id.text1, android.R.id.text2
     };
-
-    private static final String[] ADAPTER_FROM = IS_SHORTCUT_API_SUPPORTED ?
-            ADAPTER_FROM_SHORTCUT_SUPPORTED : ADAPTER_FROM_SHORTCUT_UNSUPPORTED;
-
-    private static final int[] ADAPTER_TO_SHORTCUT_UNSUPPORTED = {
-        android.R.id.text1,
-    };
-
-    private static final int[] ADAPTER_TO_SHORTCUT_SUPPORTED = {
-        android.R.id.text1, android.R.id.text2
-    };
-
-    private static final int[] ADAPTER_TO = IS_SHORTCUT_API_SUPPORTED ?
-            ADAPTER_TO_SHORTCUT_SUPPORTED : ADAPTER_TO_SHORTCUT_UNSUPPORTED;
 
     // Either the locale is empty (means the word is applicable to all locales)
     // or the word equals our current locale
@@ -213,15 +189,6 @@ public class UserDictionarySettings extends ListFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!UserDictionarySettings.IS_SHORTCUT_API_SUPPORTED) {
-            final Locale systemLocale = getResources().getConfiguration().locale;
-            if (!TextUtils.isEmpty(mLocale) && !mLocale.equals(systemLocale.toString())) {
-                // Hide the add button for ICS because it doesn't support specifying a locale
-                // for an entry. This new "locale"-aware API has been added in conjunction
-                // with the shortcut API.
-                return;
-            }
-        }
         MenuItem actionItem =
                 menu.add(0, OPTIONS_MENU_ADD, 0, R.string.user_dict_settings_add_menu_title)
                 .setIcon(R.drawable.ic_menu_add);
@@ -268,7 +235,6 @@ public class UserDictionarySettings extends ListFragment {
     }
 
     private String getShortcut(final int position) {
-        if (!IS_SHORTCUT_API_SUPPORTED) return null;
         if (null == mCursor) return null;
         mCursor.moveToPosition(position);
         // Handle a possible race-condition
@@ -280,17 +246,14 @@ public class UserDictionarySettings extends ListFragment {
 
     public static void deleteWord(final String word, final String shortcut,
             final ContentResolver resolver) {
-        if (!IS_SHORTCUT_API_SUPPORTED) {
-            resolver.delete(UserDictionary.Words.CONTENT_URI, DELETE_SELECTION_SHORTCUT_UNSUPPORTED,
-                    new String[] { word });
-        } else if (TextUtils.isEmpty(shortcut)) {
+        if (TextUtils.isEmpty(shortcut)) {
             resolver.delete(
                     UserDictionary.Words.CONTENT_URI, DELETE_SELECTION_WITHOUT_SHORTCUT,
-                    new String[] { word });
+                    new String[]{word});
         } else {
             resolver.delete(
                     UserDictionary.Words.CONTENT_URI, DELETE_SELECTION_WITH_SHORTCUT,
-                    new String[] { word, shortcut });
+                    new String[]{word, shortcut});
         }
     }
 
@@ -301,10 +264,6 @@ public class UserDictionarySettings extends ListFragment {
 
             @Override
             public boolean setViewValue(final View v, final Cursor c, final int columnIndex) {
-                if (!IS_SHORTCUT_API_SUPPORTED) {
-                    // just let SimpleCursorAdapter set the view values
-                    return false;
-                }
                 if (columnIndex == INDEX_SHORTCUT) {
                     final String shortcut = c.getString(INDEX_SHORTCUT);
                     if (TextUtils.isEmpty(shortcut)) {

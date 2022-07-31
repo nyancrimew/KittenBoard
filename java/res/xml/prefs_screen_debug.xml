@@ -20,28 +20,28 @@
     android:title="@string/prefs_debug_mode"
     android:key="english_ime_debug_settings"
 >
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="debug_mode"
         android:title="@string/prefs_debug_mode"
         android:defaultValue="false"
         android:persistent="true" />
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="force_non_distinct_multitouch"
         android:title="@string/prefs_force_non_distinct_multitouch"
         android:defaultValue="false"
         android:persistent="true" />
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="pref_should_show_lxx_suggestion_ui"
         android:title="@string/prefs_should_show_lxx_suggestion_ui"
         android:defaultValue="true"
         android:persistent="true" />
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="pref_sliding_key_input_preview"
         android:title="@string/sliding_key_input_preview"
         android:summary="@string/sliding_key_input_preview_summary"
         android:defaultValue="true"
         android:persistent="true" />
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="pref_has_custom_key_preview_animation_params"
         android:title="@string/prefs_customize_key_preview_animation"
         android:defaultValue="false"

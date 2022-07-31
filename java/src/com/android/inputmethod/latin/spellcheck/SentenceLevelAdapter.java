@@ -16,9 +16,7 @@
 
 package com.android.inputmethod.latin.spellcheck;
 
-import android.annotation.TargetApi;
 import android.content.res.Resources;
-import android.os.Build;
 import android.view.textservice.SentenceSuggestionsInfo;
 import android.view.textservice.SuggestionsInfo;
 import android.view.textservice.TextInfo;
@@ -158,7 +156,6 @@ public class SentenceLevelAdapter {
         return new SentenceTextInfoParams(originalTextInfo, wordItems);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static SentenceSuggestionsInfo reconstructSuggestions(
             SentenceTextInfoParams originalTextInfoParams, SuggestionsInfo[] results) {
         if (results == null || results.length == 0) {

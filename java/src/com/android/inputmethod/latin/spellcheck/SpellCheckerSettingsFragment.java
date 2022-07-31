@@ -16,6 +16,8 @@
 
 package com.android.inputmethod.latin.spellcheck;
 
+import static com.android.inputmethod.latin.permissions.PermissionsManager.get;
+
 import android.Manifest;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,14 +25,12 @@ import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.text.TextUtils;
 
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.permissions.PermissionsManager;
 import com.android.inputmethod.latin.permissions.PermissionsUtil;
 import com.android.inputmethod.latin.settings.SubScreenFragment;
-import com.android.inputmethod.latin.settings.TwoStatePreferenceHelper;
 import com.android.inputmethod.latin.utils.ApplicationUtils;
 
-import static com.android.inputmethod.latin.permissions.PermissionsManager.get;
+import gay.crimew.inputmethod.latin.R;
 
 /**
  * Preference screen.
@@ -48,7 +48,6 @@ public final class SpellCheckerSettingsFragment extends SubScreenFragment
         final PreferenceScreen preferenceScreen = getPreferenceScreen();
         preferenceScreen.setTitle(ApplicationUtils.getActivityTitleResId(
                 getActivity(), SpellCheckerSettingsActivity.class));
-        TwoStatePreferenceHelper.replaceCheckBoxPreferencesBySwitchPreferences(preferenceScreen);
 
         mLookupContactsPreference = (SwitchPreference) findPreference(
                 AndroidSpellCheckerService.PREF_USE_CONTACTS_KEY);

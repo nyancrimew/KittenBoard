@@ -16,10 +16,8 @@
 
 package com.android.inputmethod.latin.spellcheck;
 
-import android.annotation.TargetApi;
 import android.content.res.Resources;
 import android.os.Binder;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.textservice.SentenceSuggestionsInfo;
@@ -43,7 +41,6 @@ public final class AndroidSpellCheckerSession extends AndroidWordLevelSpellCheck
         mResources = service.getResources();
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private SentenceSuggestionsInfo fixWronglyInvalidatedWordWithSingleQuote(TextInfo ti,
             SentenceSuggestionsInfo ssi) {
         final CharSequence typedText = ti.getCharSequence();

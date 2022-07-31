@@ -19,13 +19,12 @@ package com.android.inputmethod.latin.settings;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
 
 import com.android.inputmethod.latin.AudioAndHapticFeedbackManager;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.RichInputMethodManager;
+
+import gay.crimew.inputmethod.latin.R;
 
 /**
  * "Preferences" settings sub screen.
@@ -39,9 +38,6 @@ import com.android.inputmethod.latin.RichInputMethodManager;
  * - Voice input key
  */
 public final class PreferencesSettingsFragment extends SubScreenFragment {
-
-    private static final boolean VOICE_IME_ENABLED =
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
 
     @Override
     public void onCreate(final Bundle icicle) {
@@ -74,13 +70,8 @@ public final class PreferencesSettingsFragment extends SubScreenFragment {
     @Override
     public void onResume() {
         super.onResume();
-        final Preference voiceInputKeyOption = findPreference(Settings.PREF_VOICE_INPUT_KEY);
-        if (voiceInputKeyOption != null) {
-            RichInputMethodManager.getInstance().refreshSubtypeCaches();
-            voiceInputKeyOption.setEnabled(VOICE_IME_ENABLED);
-            voiceInputKeyOption.setSummary(VOICE_IME_ENABLED
-                    ? null : getText(R.string.voice_input_disabled_summary));
-        }
+        // TODO: why is this here??
+        RichInputMethodManager.getInstance().refreshSubtypeCaches();
     }
 
     @Override
