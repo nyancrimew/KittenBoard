@@ -1,7 +1,8 @@
 # Gradle
 .externalNativeBuild/
 .gradle/
-.idea/
+.idea/*
+!.idea/codeStyles/
 LatinIME.iml
 build/
 local.properties
