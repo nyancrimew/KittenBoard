@@ -1,5 +1,6 @@
-use std::cmp::min;
+use std::cmp::{max, min};
 use std::iter;
+use std::ops::ControlFlow;
 
 use jni::objects::{JClass, JList, JObject, JString, JValue};
 use jni::sys::jboolean;
@@ -26,51 +27,51 @@ pub extern "C" fn Java_gay_crimew_inputmethod_latin_emojisearch_EmojiSearch_sear
     let len_query = query.chars().count();
     let mut results: Vec<(String, i32)> = EMOJI_DATA
         .iter()
-        // TODO: somehow exit early when score 100 reached
         .filter_map(|e| {
-            let score = e
-                .1
-                .iter()
-                .map(|&keyword| {
-                    if keyword == query {
-                        SCORE_MAX
-                    } else if !exact {
-                        let len_keyword = keyword.chars().count();
-                        if keyword.starts_with(query.as_str()) {
-                            let (len_long, len_short) = if len_keyword > len_query {
-                                (len_keyword, len_query)
-                            } else {
-                                (len_query, len_keyword)
-                            };
-                            SCORE_MAX - ((len_long as f32 / len_short as f32) * 10.0).round() as i32
-                        } else if keyword.contains(query.as_str()) {
-                            // TODO: calculate more appropriate score here
-                            90
+            let mut maxScore: i32 = 0;
+            e.1.iter().try_for_each(|&keyword| {
+                let score = if keyword == query {
+                    SCORE_MAX
+                } else if !exact {
+                    let len_keyword = keyword.chars().count();
+                    if keyword.starts_with(query.as_str()) {
+                        let (len_long, len_short) = if len_keyword > len_query {
+                            (len_keyword, len_query)
                         } else {
-                            // TODO: split up keyword/query for partial match calculation (?)
-                            let distance = levenshtein(query.as_str(), keyword);
-                            let lensum = len_query + len_keyword;
-                            let ratio = (lensum - distance) as f32 / lensum as f32;
-                            // boost result based on how much of the beginnings match
-                            let bonus = mismatch(query.as_bytes(), keyword.as_bytes()) as f32;
-                            min(SCORE_MAX, (ratio * 100.0 + bonus * 5.5).round() as i32)
-                        }
-                    } else if keyword.starts_with(format!("{}_", query).as_str()) {
-                        99
-                    } else if keyword.ends_with(format!("_{}", query).as_str()) {
-                        97
-                    } else if !should_ignore_exact_query(&query)
-                        && keyword.contains(format!("_{}_", query).as_str())
-                    {
-                        96
+                            (len_query, len_keyword)
+                        };
+                        SCORE_MAX - ((len_long as f32 / len_short as f32) * 10.0).round() as i32
+                    } else if keyword.contains(query.as_str()) {
+                        // TODO: calculate more appropriate score here
+                        90
                     } else {
-                        0
+                        // TODO: split up keyword/query for partial match calculation (?)
+                        let distance = levenshtein(query.as_str(), keyword);
+                        let lensum = len_query + len_keyword;
+                        let ratio = (lensum - distance) as f32 / lensum as f32;
+                        // boost result based on how much of the beginnings match
+                        let bonus = mismatch(query.as_bytes(), keyword.as_bytes()) as f32;
+                        min(SCORE_MAX, (ratio * 100.0 + bonus * 5.5).round() as i32)
                     }
-                })
-                .max()
-                .unwrap();
-            if score >= SCORE_CUTOFF {
-                Some((String::from(e.0), score))
+                } else if keyword.starts_with(format!("{}_", query).as_str()) {
+                    99
+                } else if keyword.ends_with(format!("_{}", query).as_str()) {
+                    97
+                } else if !should_ignore_exact_query(&query)
+                    && keyword.contains(format!("_{}_", query).as_str())
+                {
+                    96
+                } else {
+                    0
+                };
+                maxScore = max(maxScore, score);
+                if maxScore == SCORE_MAX {
+                    return ControlFlow::Break(());
+                }
+                ControlFlow::Continue(())
+            });
+            if maxScore >= SCORE_CUTOFF {
+                Some((String::from(e.0), maxScore))
             } else {
                 None
             }
