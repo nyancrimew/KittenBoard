@@ -16,6 +16,9 @@
 
 package com.android.inputmethod.latin.common;
 
+import android.icu.util.ULocale;
+import android.os.Build;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -188,8 +191,7 @@ public final class LocaleUtils {
             return locale;
         }
     }
-
-    // TODO: Get this information from the framework instead of maintaining here by ourselves.
+    
     private static final HashSet<String> sRtlLanguageCodes = new HashSet<>();
     static {
         // List of known Right-To-Left language codes.
@@ -205,6 +207,9 @@ public final class LocaleUtils {
     }
 
     public static boolean isRtlLanguage(@Nonnull final Locale locale) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return !locale.equals(Locale.ROOT) && ULocale.forLocale(locale).isRightToLeft();
+        }
         return sRtlLanguageCodes.contains(locale.getLanguage());
     }
 }

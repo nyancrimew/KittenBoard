@@ -45,15 +45,11 @@ public final class KeyboardTextsTable {
     private static final HashMap<String, Integer> sNameToIndexesMap = new HashMap<>();
     // Locale to texts table map.
     private static final HashMap<String, String[]> sLocaleToTextsTableMap = new HashMap<>();
-    // TODO: Remove this variable after debugging.
-    // Texts table to locale maps.
-    private static final HashMap<String[], String> sTextsTableToLocaleMap = new HashMap<>();
 
     public static String getText(final String name, final String[] textsTable) {
         final Integer indexObj = sNameToIndexesMap.get(name);
         if (indexObj == null) {
-            throw new RuntimeException("Unknown text name=" + name + " locale="
-                    + sTextsTableToLocaleMap.get(textsTable));
+            throw new RuntimeException("Unknown text name=" + name);
         }
         final int index = indexObj;
         final String text = (index < textsTable.length) ? textsTable[index] : null;
@@ -61,12 +57,11 @@ public final class KeyboardTextsTable {
             return text;
         }
         // Validity check.
-        if (index >= 0 && index < TEXTS_DEFAULT.length) {
+        if (index < TEXTS_DEFAULT.length) {
             return TEXTS_DEFAULT[index];
         }
         // Throw exception for debugging purpose.
-        throw new RuntimeException("Illegal index=" + index + " for name=" + name
-                + " locale=" + sTextsTableToLocaleMap.get(textsTable));
+        throw new RuntimeException("Illegal index=" + index + " for name=" + name);
     }
 
     public static String[] getTextsTable(final Locale locale) {
@@ -4247,7 +4242,6 @@ public final class KeyboardTextsTable {
             final String locale = (String)LOCALES_AND_TEXTS[i];
             final String[] textsTable = (String[])LOCALES_AND_TEXTS[i + 1];
             sLocaleToTextsTableMap.put(locale, textsTable);
-            sTextsTableToLocaleMap.put(textsTable, locale);
         }
     }
 }
