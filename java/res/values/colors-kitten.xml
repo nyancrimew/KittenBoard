@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="kitten_brand">#f8bed2</color>
+    <color name="kitten_brand_secondary">#efe6f1</color>
+    <color name="kitten_brand_tertiary">#ae4dbe</color>
+    <color name="kitten_brand_tertiary_muted">#9E78A5</color>
+    <color name="kitten_brand_dark">#66396E</color>
+</resources>

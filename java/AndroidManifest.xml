@@ -140,9 +140,17 @@
         </activity>
 
         <activity android:name="com.android.inputmethod.dictionarypack.DownloadOverMeteredDialog"
-             android:theme="@style/platformActivityTheme"
-             android:label="@string/dictionary_install_over_metered_network_prompt"
-             android:exported="true">
+            android:theme="@style/platformActivityTheme"
+            android:label="@string/dictionary_install_over_metered_network_prompt"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".setup.SetupWizard"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -150,11 +158,11 @@
 
         <!-- Unexported activity used for tests. -->
         <activity android:name="com.android.inputmethod.latin.settings.TestFragmentActivity"
-             android:exported="false"/>
+            android:exported="false"/>
 
         <!-- Broadcast receivers -->
         <receiver android:name="com.android.inputmethod.latin.SystemBroadcastReceiver"
-             android:exported="true">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

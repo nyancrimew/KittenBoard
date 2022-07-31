@@ -20,12 +20,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import gay.crimew.inputmethod.latin.setup.SetupWizard;
+
 public final class SetupActivity extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Intent intent = new Intent();
-        intent.setClass(this, SetupWizardActivity.class);
+        intent.setClass(this, SetupWizard.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

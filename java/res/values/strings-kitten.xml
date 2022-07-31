@@ -20,4 +20,5 @@
 
 <resources>
     <string name="language_switch_key_summary">Show when multiple languages are enabled, Emoji key is shown otherwise</string>
+    <string name="setup_lets_get_started">Meow! Let\'s get started :3</string>
 </resources>

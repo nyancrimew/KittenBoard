@@ -139,6 +139,7 @@ repositories {
     maven { url "../../../prebuilts/fullsdk-linux/extras/android/m2repository" }
     mavenCentral()
     google()
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -150,6 +151,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.emoji2:emoji2:$emoji_version"
     implementation "androidx.emoji2:emoji2-bundled:$emoji_version"
+    implementation "androidx.appcompat:appcompat:1.4.2"
+
+    implementation 'com.github.AppIntro:AppIntro:6.2.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation "org.mockito:mockito-core:4.4.0"
