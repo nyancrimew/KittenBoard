@@ -80,13 +80,10 @@ pub extern "C" fn Java_gay_crimew_inputmethod_latin_emojisearch_EmojiSearch_sear
     results.reverse();
 
     let output_list = JList::from_env(&env, outArray).expect("Couldn't wrap ArrayList");
-
     results.iter().for_each(|e| {
-        output_list
-            .add(JObject::from(
-                env.new_string(String::from(e.0.as_str())).unwrap(),
-            ))
-            .unwrap();
+        let entry = JObject::from(env.new_string(String::from(e.0.as_str())).unwrap());
+        output_list.add(entry).unwrap();
+        env.delete_local_ref(entry).unwrap();
     });
 }
 
