@@ -3,14 +3,6 @@ use std::env;
 use std::fs;
 use std::path::Path;
 
-const HEAD: &str = "use lazy_static::lazy_static;
-
-lazy_static! {
-    // emoji data (grabbed from https://github.com/muan/emojilib)
-    pub static ref EMOJI_DATA: Vec<(&'static str, Vec<&'static str>)> = vec![";
-const FOOT: &str = "];
-}";
-
 // embed the emoji data into the binary as a pre-populated vec
 fn main() {
     let out_dir = env::var_os("OUT_DIR").unwrap();
@@ -31,12 +23,16 @@ fn main() {
 
     fs::write(
         &dest_path,
-        [
-            String::from(HEAD),
-            entries.join(",\n        "),
-            String::from(FOOT),
-        ]
-        .join(""),
+        format!(
+            "use lazy_static::lazy_static;
+
+lazy_static! {{
+    // emoji data (grabbed from https://github.com/muan/emojilib)
+    pub static ref EMOJI_DATA: [(&'static str, Vec<&'static str>); {}] = [{}];
+}}",
+            entries.len(),
+            entries.join(",\n        ")
+        ),
     )
     .unwrap();
 
