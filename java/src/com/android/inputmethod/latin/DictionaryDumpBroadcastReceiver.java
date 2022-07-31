@@ -24,7 +24,7 @@ import android.util.Log;
 public class DictionaryDumpBroadcastReceiver extends BroadcastReceiver {
   private static final String TAG = DictionaryDumpBroadcastReceiver.class.getSimpleName();
 
-    private static final String DOMAIN = "com.android.inputmethod.latin";
+    private static final String DOMAIN = "gay.crimew.inputmethod.latin";
     public static final String DICTIONARY_DUMP_INTENT_ACTION = DOMAIN + ".DICT_DUMP";
     public static final String DICTIONARY_NAME_KEY = "dictName";
 
