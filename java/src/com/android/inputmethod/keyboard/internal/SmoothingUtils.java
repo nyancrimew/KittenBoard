@@ -16,10 +16,10 @@
 
 package com.android.inputmethod.keyboard.internal;
 
+import android.util.Log;
+
 import com.android.inputmethod.annotations.UsedForTesting;
 import com.android.inputmethod.keyboard.internal.MatrixUtils.MatrixOperationFailedException;
-
-import android.util.Log;
 
 import java.util.Arrays;
 
@@ -61,8 +61,8 @@ public class SmoothingUtils {
             Arrays.fill(m0[i], 0);
             for (int j = 0; j < COEFF_COUNT; ++j) {
                 final int pow = i + j;
-                for (int k = 0; k < N; ++k) {
-                    m0[i][j] += (float) Math.pow(xs[k], pow);
+                for (float x : xs) {
+                    m0[i][j] += (float) Math.pow(x, pow);
                 }
             }
         }

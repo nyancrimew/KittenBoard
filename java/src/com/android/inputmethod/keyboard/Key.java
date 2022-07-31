@@ -36,7 +36,6 @@ import com.android.inputmethod.keyboard.internal.KeyboardIconsSet;
 import com.android.inputmethod.keyboard.internal.KeyboardParams;
 import com.android.inputmethod.keyboard.internal.KeyboardRow;
 import com.android.inputmethod.keyboard.internal.MoreKeySpec;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.common.Constants;
 import com.android.inputmethod.latin.common.StringUtils;
 
@@ -45,6 +44,8 @@ import java.util.Locale;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import gay.crimew.inputmethod.latin.R;
 
 /**
  * Class for describing the position and characteristics of a single key in the keyboard.
@@ -942,8 +943,8 @@ public class Key implements Comparable<Key> {
         final int right = left + mWidth;
         final int top = getY();
         final int bottom = top + mHeight;
-        final int edgeX = x < left ? left : (x > right ? right : x);
-        final int edgeY = y < top ? top : (y > bottom ? bottom : y);
+        final int edgeX = x < left ? left : (Math.min(x, right));
+        final int edgeY = y < top ? top : (Math.min(y, bottom));
         final int dx = x - edgeX;
         final int dy = y - edgeY;
         return dx * dx + dy * dy;

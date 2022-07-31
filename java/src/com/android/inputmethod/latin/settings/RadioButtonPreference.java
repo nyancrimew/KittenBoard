@@ -40,12 +40,7 @@ public class RadioButtonPreference extends Preference {
     private boolean mIsSelected;
     private RadioButton mRadioButton;
     private OnRadioButtonClickedListener mListener;
-    private final View.OnClickListener mClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(final View v) {
-            callListenerOnRadioButtonClicked();
-        }
-    };
+    private final View.OnClickListener mClickListener = v -> callListenerOnRadioButtonClicked();
 
     public RadioButtonPreference(final Context context) {
         this(context, null);

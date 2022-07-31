@@ -102,21 +102,18 @@ public abstract class SubScreenFragment extends CustomPreferenceFragment
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(final SharedPreferences prefs, final String key) {
-                final SubScreenFragment fragment = SubScreenFragment.this;
-                final Context context = fragment.getActivity();
-                if (context == null || fragment.getPreferenceScreen() == null) {
-                    final String tag = fragment.getClass().getSimpleName();
-                    // TODO: Introduce a static function to register this class and ensure that
-                    // onCreate must be called before "onSharedPreferenceChanged" is called.
-                    Log.w(tag, "onSharedPreferenceChanged called before activity starts.");
-                    return;
-                }
-                new BackupManager(context).dataChanged();
-                fragment.onSharedPreferenceChanged(prefs, key);
+        mSharedPreferenceChangeListener = (prefs, key) -> {
+            final SubScreenFragment fragment = SubScreenFragment.this;
+            final Context context = fragment.getActivity();
+            if (context == null || fragment.getPreferenceScreen() == null) {
+                final String tag = fragment.getClass().getSimpleName();
+                // TODO: Introduce a static function to register this class and ensure that
+                // onCreate must be called before "onSharedPreferenceChanged" is called.
+                Log.w(tag, "onSharedPreferenceChanged called before activity starts.");
+                return;
             }
+            new BackupManager(context).dataChanged();
+            fragment.onSharedPreferenceChanged(prefs, key);
         };
         getSharedPreferences().registerOnSharedPreferenceChangeListener(
                 mSharedPreferenceChangeListener);

@@ -21,12 +21,13 @@ import android.content.res.Resources;
 import com.android.inputmethod.annotations.UsedForTesting;
 import com.android.inputmethod.keyboard.internal.MoreKeySpec;
 import com.android.inputmethod.latin.PunctuationSuggestions;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.common.Constants;
 import com.android.inputmethod.latin.common.StringUtils;
 
 import java.util.Arrays;
 import java.util.Locale;
+
+import gay.crimew.inputmethod.latin.R;
 
 public final class SpacingAndPunctuations {
     private final int[] mSortedSymbolsPrecededBySpace;
@@ -129,27 +130,26 @@ public final class SpacingAndPunctuations {
     }
 
     public String dump() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("mSortedSymbolsPrecededBySpace = ");
-        sb.append("" + Arrays.toString(mSortedSymbolsPrecededBySpace));
-        sb.append("\n   mSortedSymbolsFollowedBySpace = ");
-        sb.append("" + Arrays.toString(mSortedSymbolsFollowedBySpace));
-        sb.append("\n   mSortedWordConnectors = ");
-        sb.append("" + Arrays.toString(mSortedWordConnectors));
-        sb.append("\n   mSortedWordSeparators = ");
-        sb.append("" + Arrays.toString(mSortedWordSeparators));
-        sb.append("\n   mSuggestPuncList = ");
-        sb.append("" + mSuggestPuncList);
-        sb.append("\n   mSentenceSeparator = ");
-        sb.append("" + mSentenceSeparator);
-        sb.append("\n   mSentenceSeparatorAndSpace = ");
-        sb.append("" + mSentenceSeparatorAndSpace);
-        sb.append("\n   mCurrentLanguageHasSpaces = ");
-        sb.append("" + mCurrentLanguageHasSpaces);
-        sb.append("\n   mUsesAmericanTypography = ");
-        sb.append("" + mUsesAmericanTypography);
-        sb.append("\n   mUsesGermanRules = ");
-        sb.append("" + mUsesGermanRules);
-        return sb.toString();
+        String sb = "mSortedSymbolsPrecededBySpace = " +
+                "" + Arrays.toString(mSortedSymbolsPrecededBySpace) +
+                "\n   mSortedSymbolsFollowedBySpace = " +
+                "" + Arrays.toString(mSortedSymbolsFollowedBySpace) +
+                "\n   mSortedWordConnectors = " +
+                "" + Arrays.toString(mSortedWordConnectors) +
+                "\n   mSortedWordSeparators = " +
+                "" + Arrays.toString(mSortedWordSeparators) +
+                "\n   mSuggestPuncList = " +
+                "" + mSuggestPuncList +
+                "\n   mSentenceSeparator = " +
+                "" + mSentenceSeparator +
+                "\n   mSentenceSeparatorAndSpace = " +
+                "" + mSentenceSeparatorAndSpace +
+                "\n   mCurrentLanguageHasSpaces = " +
+                "" + mCurrentLanguageHasSpaces +
+                "\n   mUsesAmericanTypography = " +
+                "" + mUsesAmericanTypography +
+                "\n   mUsesGermanRules = " +
+                "" + mUsesGermanRules;
+        return sb;
     }
 }

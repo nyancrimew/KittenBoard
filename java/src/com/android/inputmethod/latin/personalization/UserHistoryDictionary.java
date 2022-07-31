@@ -24,7 +24,6 @@ import com.android.inputmethod.latin.BinaryDictionary;
 import com.android.inputmethod.latin.Dictionary;
 import com.android.inputmethod.latin.ExpandableBinaryDictionary;
 import com.android.inputmethod.latin.NgramContext;
-import com.android.inputmethod.latin.define.DecoderSpecificConstants;
 import com.android.inputmethod.latin.define.ProductionFlags;
 import com.android.inputmethod.latin.makedict.DictionaryHeader;
 

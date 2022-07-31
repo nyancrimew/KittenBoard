@@ -190,15 +190,12 @@ public final class DictionarySettingsFragment extends CustomPreferenceFragment
         // TODO: Report to the user if !succeeded
         final Activity activity = getActivity();
         if (null == activity) return;
-        activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // We have to re-read the db in case the description has changed, and to
-                    // find out what state it ended up if the download wasn't successful
-                    // TODO: don't redo everything, only re-read and set this word list status
-                    refreshInterface();
-                }
-            });
+        activity.runOnUiThread(() -> {
+            // We have to re-read the db in case the description has changed, and to
+            // find out what state it ended up if the download wasn't successful
+            // TODO: don't redo everything, only re-read and set this word list status
+            refreshInterface();
+        });
     }
 
     private WordListPreference findWordListPreference(final String id) {
@@ -236,21 +233,18 @@ public final class DictionarySettingsFragment extends CustomPreferenceFragment
         final Collection<? extends Preference> prefList =
                 createInstalledDictSettingsCollection(mClientId);
 
-        activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // TODO: display this somewhere
-                    // if (0 != lastUpdate) mUpdateNowPreference.setSummary(updateNowSummary);
-                    refreshNetworkState();
+        activity.runOnUiThread(() -> {
+            // TODO: display this somewhere
+            // if (0 != lastUpdate) mUpdateNowPreference.setSummary(updateNowSummary);
+            refreshNetworkState();
 
-                    removeAnyDictSettings(prefScreen);
-                    int i = 0;
-                    for (Preference preference : prefList) {
-                        preference.setOrder(i++);
-                        prefScreen.addPreference(preference);
-                    }
-                }
-            });
+            removeAnyDictSettings(prefScreen);
+            int i = 0;
+            for (Preference preference : prefList) {
+                preference.setOrder(i++);
+                prefScreen.addPreference(preference);
+            }
+        });
     }
 
     private static Preference createErrorMessage(final Activity activity, final int messageResource) {
@@ -417,21 +411,18 @@ public final class DictionarySettingsFragment extends CustomPreferenceFragment
         if (null == activity) return;
         final View loadingView = mLoadingView;
         final MenuItem updateNowMenu = mUpdateNowMenu;
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                loadingView.setVisibility(View.GONE);
-                preferenceView.setVisibility(View.VISIBLE);
-                loadingView.startAnimation(AnimationUtils.loadAnimation(
-                        activity, android.R.anim.fade_out));
-                preferenceView.startAnimation(AnimationUtils.loadAnimation(
-                        activity, android.R.anim.fade_in));
-                // The menu is created by the framework asynchronously after the activity,
-                // which means it's possible to have the activity running but the menu not
-                // created yet - hence the necessity for a null check here.
-                if (null != updateNowMenu) {
-                    updateNowMenu.setTitle(R.string.check_for_updates_now);
-                }
+        activity.runOnUiThread(() -> {
+            loadingView.setVisibility(View.GONE);
+            preferenceView.setVisibility(View.VISIBLE);
+            loadingView.startAnimation(AnimationUtils.loadAnimation(
+                    activity, android.R.anim.fade_out));
+            preferenceView.startAnimation(AnimationUtils.loadAnimation(
+                    activity, android.R.anim.fade_in));
+            // The menu is created by the framework asynchronously after the activity,
+            // which means it's possible to have the activity running but the menu not
+            // created yet - hence the necessity for a null check here.
+            if (null != updateNowMenu) {
+                updateNowMenu.setTitle(R.string.check_for_updates_now);
             }
         });
     }

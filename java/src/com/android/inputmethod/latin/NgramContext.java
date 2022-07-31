@@ -175,7 +175,7 @@ public class NgramContext {
                 }
             }
         }
-        final String[] contextStringArray = prevTermList.toArray(new String[prevTermList.size()]);
+        final String[] contextStringArray = prevTermList.toArray(new String[0]);
         return contextStringArray;
     }
 
@@ -267,7 +267,7 @@ public class NgramContext {
 
     @Override
     public String toString() {
-        final StringBuffer builder = new StringBuffer();
+        final StringBuilder builder = new StringBuilder();
         for (int i = 0; i < mPrevWordsCount; i++) {
             final WordInfo wordInfo = mPrevWordsInfo[i];
             builder.append("PrevWord[");

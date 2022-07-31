@@ -94,14 +94,9 @@ public class MetadataHandler {
             final String clientId) {
         // If clientId is null, we get a cursor on the default database (see
         // MetadataDbHelper#getInstance() for more on this)
-        final Cursor results = MetadataDbHelper.queryCurrentMetadata(context, clientId);
         // If null, we should return makeMetadataObject(null), so we go through.
-        try {
+        try (Cursor results = MetadataDbHelper.queryCurrentMetadata(context, clientId)) {
             return makeMetadataObject(results);
-        } finally {
-            if (null != results) {
-                results.close();
-            }
         }
     }
 

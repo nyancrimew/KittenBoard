@@ -132,12 +132,7 @@ class InputLogicHandler implements Handler.Callback {
                 return;
             }
             mInputLogic.mWordComposer.setBatchInputPointers(batchPointers);
-            final OnGetSuggestedWordsCallback callback = new OnGetSuggestedWordsCallback() {
-                @Override
-                public void onGetSuggestedWords(final SuggestedWords suggestedWords) {
-                    showGestureSuggestionsWithPreviewVisuals(suggestedWords, isTailBatchInput);
-                }
-            };
+            final OnGetSuggestedWordsCallback callback = suggestedWords -> showGestureSuggestionsWithPreviewVisuals(suggestedWords, isTailBatchInput);
             getSuggestedWords(isTailBatchInput ? SuggestedWords.INPUT_STYLE_TAIL_BATCH
                     : SuggestedWords.INPUT_STYLE_UPDATE_BATCH, sequenceNumber, callback);
         }

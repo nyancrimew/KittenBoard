@@ -27,7 +27,6 @@ import com.android.inputmethod.latin.settings.Settings;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -44,7 +43,7 @@ final class EmojiAltPhysicalKeyDetector {
 
     private static class HotKeySet extends HashSet<Pair<Integer, Integer>> { };
 
-    private abstract class EmojiHotKeys {
+    private static abstract class EmojiHotKeys {
         private final String mName;
         private final HotKeySet mKeySet;
 
@@ -123,7 +122,7 @@ final class EmojiAltPhysicalKeyDetector {
     }
 
     public EmojiAltPhysicalKeyDetector(@Nonnull final Resources resources) {
-        mHotKeysList = new ArrayList<EmojiHotKeys>();
+        mHotKeysList = new ArrayList<>();
 
         final HotKeySet emojiSwitchSet = parseHotKeys(
                 resources, R.array.keyboard_switcher_emoji);
@@ -196,7 +195,7 @@ final class EmojiAltPhysicalKeyDetector {
             }
             try {
                 final Integer keyCode = Integer.parseInt(valuePair[0]);
-                final Integer metaState = Integer.parseInt(valuePair[1]);
+                final int metaState = Integer.parseInt(valuePair[1]);
                 final Pair<Integer, Integer> key = Pair.create(
                         keyCode, KeyEvent.normalizeMetaState(metaState));
                 keySet.add(key);

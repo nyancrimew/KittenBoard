@@ -28,7 +28,6 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,7 +50,6 @@ import com.android.inputmethod.keyboard.internal.MoreKeySpec;
 import com.android.inputmethod.keyboard.internal.NonDistinctMultitouchHelper;
 import com.android.inputmethod.keyboard.internal.SlidingKeyInputDrawingPreview;
 import com.android.inputmethod.keyboard.internal.TimerHandler;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.RichInputMethodSubtype;
 import com.android.inputmethod.latin.SuggestedWords;
 import com.android.inputmethod.latin.common.Constants;
@@ -60,11 +58,12 @@ import com.android.inputmethod.latin.settings.DebugSettings;
 import com.android.inputmethod.latin.utils.LanguageOnSpacebarUtils;
 import com.android.inputmethod.latin.utils.TypefaceUtils;
 
-import java.util.Locale;
 import java.util.WeakHashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import gay.crimew.inputmethod.latin.R;
 
 /**
  * A view that is responsible for detecting key presses and touch movements.
@@ -873,7 +872,7 @@ public final class MainKeyboardView extends KeyboardView implements DrawingProxy
         // Draw language text with shadow
         final float descent = paint.descent();
         final float textHeight = -paint.ascent() + descent;
-        final float baseline = height / 2 + textHeight / 2;
+        final float baseline = height / 2f + textHeight / 2;
         if (mLanguageOnSpacebarTextShadowRadius > 0.0f) {
             paint.setShadowLayer(mLanguageOnSpacebarTextShadowRadius, 0, 0,
                     mLanguageOnSpacebarTextShadowColor);
@@ -882,7 +881,7 @@ public final class MainKeyboardView extends KeyboardView implements DrawingProxy
         }
         paint.setColor(mLanguageOnSpacebarTextColor);
         paint.setAlpha(mLanguageOnSpacebarAnimAlpha);
-        canvas.drawText(language, width / 2, baseline - descent, paint);
+        canvas.drawText(language, width / 2f, baseline - descent, paint);
         paint.clearShadowLayer();
         paint.setTextScaleX(1.0f);
     }

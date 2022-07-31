@@ -26,7 +26,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.inputmethod.latin.BinaryDictionaryFileDumper;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.common.LocaleUtils;
 
 import java.util.Locale;
@@ -36,6 +35,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
+
+import gay.crimew.inputmethod.latin.R;
 
 /**
  * Service that handles background tasks for the dictionary provider.
@@ -127,7 +128,7 @@ public final class DictionaryService extends Service {
         mExecutor = new ThreadPoolExecutor(1 /* corePoolSize */, 1 /* maximumPoolSize */,
                 WORKER_THREAD_TIMEOUT_SECONDS /* keepAliveTime */,
                 TimeUnit.SECONDS /* unit for keepAliveTime */,
-                new LinkedBlockingQueue<Runnable>() /* workQueue */);
+                new LinkedBlockingQueue<>() /* workQueue */);
         mExecutor.allowCoreThreadTimeOut(true);
     }
 
@@ -176,16 +177,13 @@ public final class DictionaryService extends Service {
             // if necessary, or reuse a thread that has become idle as appropriate.
             // DATE_CHANGED or UPDATE_NOW are examples of commands that can be done on another
             // thread.
-            mExecutor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    dispatchBroadcast(self, intent);
-                    // Since calls to onStartCommand are serialized, the submissions to the executor
-                    // are serialized. That means we are guaranteed to call the stopSelfResult()
-                    // in the same order that we got them, so we don't need to take care of the
-                    // order.
-                    stopSelfResult(startId);
-                }
+            mExecutor.submit(() -> {
+                dispatchBroadcast(self, intent);
+                // Since calls to onStartCommand are serialized, the submissions to the executor
+                // are serialized. That means we are guaranteed to call the stopSelfResult()
+                // in the same order that we got them, so we don't need to take care of the
+                // order.
+                stopSelfResult(startId);
             });
         }
         return Service.START_REDELIVER_INTENT;

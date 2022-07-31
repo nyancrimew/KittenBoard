@@ -187,16 +187,13 @@ public final class AccountsSettingsFragment extends SubScreenFragment {
         mClearSyncDataPreference.setOnPreferenceClickListener(mDeleteSyncDataListener);
 
         if (currentAccountName != null) {
-            mAccountSwitcher.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(final Preference preference) {
-                    if (accountsForLogin.length > 0) {
-                        // TODO: Add addition of account.
-                        createAccountPicker(accountsForLogin, getSignedInAccountName(),
-                                new AccountChangedListener(null)).show();
-                    }
-                    return true;
+            mAccountSwitcher.setOnPreferenceClickListener(preference -> {
+                if (accountsForLogin.length > 0) {
+                    // TODO: Add addition of account.
+                    createAccountPicker(accountsForLogin, getSignedInAccountName(),
+                            new AccountChangedListener(null)).show();
                 }
+                return true;
             });
         }
     }
@@ -440,15 +437,12 @@ public final class AccountsSettingsFragment extends SubScreenFragment {
                     .setTitle(R.string.clear_sync_data_title)
                     .setMessage(R.string.clear_sync_data_confirmation)
                     .setPositiveButton(R.string.clear_sync_data_ok,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(final DialogInterface dialog, final int which) {
-                                    if (which == DialogInterface.BUTTON_POSITIVE) {
-                                        AccountStateChangedListener.forceDelete(
-                                                getSignedInAccountName());
-                                    }
+                            (dialog, which) -> {
+                                if (which == DialogInterface.BUTTON_POSITIVE) {
+                                    AccountStateChangedListener.forceDelete(
+                                            getSignedInAccountName());
                                 }
-                             })
+                            })
                     .setNegativeButton(R.string.cloud_sync_cancel, null /* OnClickListener */)
                     .create();
             confirmationDialog.show();
@@ -473,21 +467,17 @@ public final class AccountsSettingsFragment extends SubScreenFragment {
                         .setTitle(R.string.cloud_sync_title)
                         .setMessage(R.string.cloud_sync_opt_in_text)
                         .setPositiveButton(R.string.account_select_ok,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(final DialogInterface dialog,
-                                                        final int which) {
-                                        if (which == DialogInterface.BUTTON_POSITIVE) {
-                                            final Context context = getActivity();
-                                            final String[] accountsForLogin =
-                                                    LoginAccountUtils.getAccountsForLogin(context);
-                                            createAccountPicker(accountsForLogin,
-                                                    getSignedInAccountName(),
-                                                    new AccountChangedListener(syncPreference))
-                                                    .show();
-                                        }
+                                (dialog, which) -> {
+                                    if (which == DialogInterface.BUTTON_POSITIVE) {
+                                        final Context context = getActivity();
+                                        final String[] accountsForLogin =
+                                                LoginAccountUtils.getAccountsForLogin(context);
+                                        createAccountPicker(accountsForLogin,
+                                                getSignedInAccountName(),
+                                                new AccountChangedListener(syncPreference))
+                                                .show();
                                     }
-                        })
+                                })
                         .setNegativeButton(R.string.cloud_sync_cancel, null)
                         .create();
                 optInDialog.setOnShowListener(this);

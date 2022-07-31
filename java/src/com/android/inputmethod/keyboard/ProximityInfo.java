@@ -23,7 +23,6 @@ import com.android.inputmethod.keyboard.internal.TouchPositionCorrection;
 import com.android.inputmethod.latin.common.Constants;
 import com.android.inputmethod.latin.utils.JniUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -358,11 +357,7 @@ y |---+---+---+---+-v-+-|-+---+---+---+---+---|          | thresholdBase and get
         for (int i = 0; i < gridSize; ++i) {
             final int indexStart = i * keyCount;
             final int indexEnd = indexStart + neighborCountPerCell[i];
-            final ArrayList<Key> neighbors = new ArrayList<>(indexEnd - indexStart);
-            for (int index = indexStart; index < indexEnd; index++) {
-                neighbors.add(neighborsFlatBuffer[index]);
-            }
-            mGridNeighbors[i] = Collections.unmodifiableList(neighbors);
+            mGridNeighbors[i] = Arrays.asList(neighborsFlatBuffer).subList(indexStart, indexEnd);
         }
     }
 

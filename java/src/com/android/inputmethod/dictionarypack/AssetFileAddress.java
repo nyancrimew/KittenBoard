@@ -45,7 +45,7 @@ final class AssetFileAddress {
         if (null == filename) return null;
         final File f = new File(filename);
         if (!f.isFile()) return null;
-        return new AssetFileAddress(filename, 0l, f.length());
+        return new AssetFileAddress(filename, 0L, f.length());
     }
 
     /**

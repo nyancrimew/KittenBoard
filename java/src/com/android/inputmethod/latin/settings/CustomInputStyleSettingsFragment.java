@@ -25,7 +25,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceGroup;
-import androidx.core.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,7 +36,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodSubtype;
 import android.widget.Toast;
 
-import gay.crimew.inputmethod.latin.R;
+import androidx.core.view.ViewCompat;
+
 import com.android.inputmethod.latin.RichInputMethodManager;
 import com.android.inputmethod.latin.utils.AdditionalSubtypeUtils;
 import com.android.inputmethod.latin.utils.DialogUtils;
@@ -45,6 +45,8 @@ import com.android.inputmethod.latin.utils.IntentUtils;
 import com.android.inputmethod.latin.utils.SubtypeLocaleUtils;
 
 import java.util.ArrayList;
+
+import gay.crimew.inputmethod.latin.R;
 
 public final class CustomInputStyleSettingsFragment extends CustomPreferenceFragment
         implements CustomInputStylePreference.Listener {
@@ -236,19 +238,16 @@ public final class CustomInputStyleSettingsFragment extends CustomPreferenceFrag
         builder.setTitle(R.string.custom_input_styles_title)
                 .setMessage(R.string.custom_input_style_note_message)
                 .setNegativeButton(R.string.not_now, null)
-                .setPositiveButton(R.string.enable, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final Intent intent = IntentUtils.getInputLanguageSelectionIntent(
-                                imeId,
-                                Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
-                                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        // TODO: Add newly adding subtype to extra value of the intent as a hint
-                        // for the input language selection activity.
-                        // intent.putExtra("newlyAddedSubtype", subtypePref.getSubtype());
-                        startActivity(intent);
-                    }
+                .setPositiveButton(R.string.enable, (dialog, which) -> {
+                    final Intent intent = IntentUtils.getInputLanguageSelectionIntent(
+                            imeId,
+                            Intent.FLAG_ACTIVITY_NEW_TASK
+                                    | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    // TODO: Add newly adding subtype to extra value of the intent as a hint
+                    // for the input language selection activity.
+                    // intent.putExtra("newlyAddedSubtype", subtypePref.getSubtype());
+                    startActivity(intent);
                 });
 
         return builder.create();
@@ -279,7 +278,7 @@ public final class CustomInputStyleSettingsFragment extends CustomPreferenceFrag
                 subtypes.add(subtypePref.getSubtype());
             }
         }
-        return subtypes.toArray(new InputMethodSubtype[subtypes.size()]);
+        return subtypes.toArray(new InputMethodSubtype[0]);
     }
 
     @Override

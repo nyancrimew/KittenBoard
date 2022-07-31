@@ -27,7 +27,6 @@ import com.android.inputmethod.keyboard.Key;
 import com.android.inputmethod.keyboard.Keyboard;
 import com.android.inputmethod.keyboard.KeyboardId;
 import com.android.inputmethod.keyboard.KeyboardLayoutSet;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.settings.Settings;
 
 import java.util.ArrayList;
@@ -36,6 +35,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
+import gay.crimew.inputmethod.latin.R;
 
 final class EmojiCategory {
     private final String TAG = EmojiCategory.class.getSimpleName();
@@ -59,9 +60,10 @@ final class EmojiCategory {
     private static final int ID_EIGHT_FLAGS = 15;
     private static final int ID_EIGHT_SMILEY_PEOPLE_BORING = 16;
 
-    public final class CategoryProperties {
+    public final static class CategoryProperties {
         public final int mCategoryId;
         public final int mPageCount;
+
         public CategoryProperties(final int categoryId, final int pageCount) {
             mCategoryId = categoryId;
             mPageCount = pageCount;
@@ -385,26 +387,23 @@ final class EmojiCategory {
         return sum;
     }
 
-    private static Comparator<Key> EMOJI_KEY_COMPARATOR = new Comparator<Key>() {
-        @Override
-        public int compare(final Key lhs, final Key rhs) {
-            final Rect lHitBox = lhs.getHitBox();
-            final Rect rHitBox = rhs.getHitBox();
-            if (lHitBox.top < rHitBox.top) {
-                return -1;
-            } else if (lHitBox.top > rHitBox.top) {
-                return 1;
-            }
-            if (lHitBox.left < rHitBox.left) {
-                return -1;
-            } else if (lHitBox.left > rHitBox.left) {
-                return 1;
-            }
-            if (lhs.getCode() == rhs.getCode()) {
-                return 0;
-            }
-            return lhs.getCode() < rhs.getCode() ? -1 : 1;
+    private static Comparator<Key> EMOJI_KEY_COMPARATOR = (lhs, rhs) -> {
+        final Rect lHitBox = lhs.getHitBox();
+        final Rect rHitBox = rhs.getHitBox();
+        if (lHitBox.top < rHitBox.top) {
+            return -1;
+        } else if (lHitBox.top > rHitBox.top) {
+            return 1;
         }
+        if (lHitBox.left < rHitBox.left) {
+            return -1;
+        } else if (lHitBox.left > rHitBox.left) {
+            return 1;
+        }
+        if (lhs.getCode() == rhs.getCode()) {
+            return 0;
+        }
+        return lhs.getCode() < rhs.getCode() ? -1 : 1;
     };
 
     private static Key[][] sortKeysIntoPages(final List<Key> inKeys, final int maxPageCount) {

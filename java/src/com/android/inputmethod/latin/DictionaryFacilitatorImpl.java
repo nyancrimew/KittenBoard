@@ -260,7 +260,7 @@ public class DictionaryFacilitatorImpl implements DictionaryFacilitator {
             final Method factoryMethod = dictClass.getMethod(DICT_FACTORY_METHOD_NAME,
                     DICT_FACTORY_METHOD_ARG_TYPES);
             final Object dict = factoryMethod.invoke(null /* obj */,
-                    new Object[] { context, locale, dictFile, dictNamePrefix, account });
+                    context, locale, dictFile, dictNamePrefix, account);
             return (ExpandableBinaryDictionary) dict;
         } catch (final NoSuchMethodException | SecurityException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException e) {
@@ -382,13 +382,8 @@ public class DictionaryFacilitatorImpl implements DictionaryFacilitator {
             final Locale locale, final DictionaryInitializationListener listener) {
         final CountDownLatch latchForWaitingLoadingMainDictionary = new CountDownLatch(1);
         mLatchForWaitingLoadingMainDictionaries = latchForWaitingLoadingMainDictionary;
-        ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute(new Runnable() {
-            @Override
-            public void run() {
-                doReloadUninitializedMainDictionaries(
-                        context, locale, listener, latchForWaitingLoadingMainDictionary);
-            }
-        });
+        ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute(() -> doReloadUninitializedMainDictionaries(
+                context, locale, listener, latchForWaitingLoadingMainDictionary));
     }
 
     void doReloadUninitializedMainDictionaries(final Context context, final Locale locale,

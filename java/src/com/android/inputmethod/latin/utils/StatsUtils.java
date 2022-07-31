@@ -23,8 +23,6 @@ import com.android.inputmethod.latin.RichInputMethodManager;
 import com.android.inputmethod.latin.SuggestedWords;
 import com.android.inputmethod.latin.settings.SettingsValues;
 
-import javax.annotation.Nullable;
-
 @SuppressWarnings("unused")
 public final class StatsUtils {
 

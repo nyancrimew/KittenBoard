@@ -147,7 +147,7 @@ public final class SetupWizardActivity extends Activity implements View.OnClickL
                 (SetupStepIndicatorView)findViewById(R.id.setup_step_indicator);
         mSetupStepGroup = new SetupStepGroup(indicatorView);
 
-        mStep1Bullet = (TextView)findViewById(R.id.setup_step1_bullet);
+        mStep1Bullet = (TextView) findViewById(R.id.setup_step1_bullet);
         mStep1Bullet.setOnClickListener(this);
         final SetupStep step1 = new SetupStep(STEP_1, applicationName,
                 mStep1Bullet, findViewById(R.id.setup_step1),
@@ -155,26 +155,18 @@ public final class SetupWizardActivity extends Activity implements View.OnClickL
                 R.string.setup_step1_finished_instruction, R.drawable.ic_setup_step1,
                 R.string.setup_step1_action);
         final SettingsPoolingHandler handler = mHandler;
-        step1.setAction(new Runnable() {
-            @Override
-            public void run() {
-                invokeLanguageAndInputSettings();
-                handler.startPollingImeSettings();
-            }
+        step1.setAction(() -> {
+            invokeLanguageAndInputSettings();
+            handler.startPollingImeSettings();
         });
         mSetupStepGroup.addStep(step1);
 
         final SetupStep step2 = new SetupStep(STEP_2, applicationName,
-                (TextView)findViewById(R.id.setup_step2_bullet), findViewById(R.id.setup_step2),
+                (TextView) findViewById(R.id.setup_step2_bullet), findViewById(R.id.setup_step2),
                 R.string.setup_step2_title, R.string.setup_step2_instruction,
                 0 /* finishedInstruction */, R.drawable.ic_setup_step2,
                 R.string.setup_step2_action);
-        step2.setAction(new Runnable() {
-            @Override
-            public void run() {
-                invokeInputMethodPicker();
-            }
-        });
+        step2.setAction(() -> invokeInputMethodPicker());
         mSetupStepGroup.addStep(step2);
 
         final SetupStep step3 = new SetupStep(STEP_3, applicationName,
@@ -182,12 +174,7 @@ public final class SetupWizardActivity extends Activity implements View.OnClickL
                 R.string.setup_step3_title, R.string.setup_step3_instruction,
                 0 /* finishedInstruction */, R.drawable.ic_setup_step3,
                 R.string.setup_step3_action);
-        step3.setAction(new Runnable() {
-            @Override
-            public void run() {
-                invokeSubtypeEnablerOfThisIme();
-            }
-        });
+        step3.setAction(() -> invokeSubtypeEnablerOfThisIme());
         mSetupStepGroup.addStep(step3);
 
         mWelcomeVideoUri = new Uri.Builder()
@@ -195,23 +182,17 @@ public final class SetupWizardActivity extends Activity implements View.OnClickL
                 .authority(getPackageName())
                 .path(Integer.toString(R.raw.setup_welcome_video))
                 .build();
-        final VideoView welcomeVideoView = (VideoView)findViewById(R.id.setup_welcome_video);
-        welcomeVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(final MediaPlayer mp) {
-                // Now VideoView has been laid-out and ready to play, remove background of it to
-                // reveal the video.
-                welcomeVideoView.setBackgroundResource(0);
-                mp.setLooping(true);
-            }
+        final VideoView welcomeVideoView = (VideoView) findViewById(R.id.setup_welcome_video);
+        welcomeVideoView.setOnPreparedListener(mp -> {
+            // Now VideoView has been laid-out and ready to play, remove background of it to
+            // reveal the video.
+            welcomeVideoView.setBackgroundResource(0);
+            mp.setLooping(true);
         });
-        welcomeVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(final MediaPlayer mp, final int what, final int extra) {
-                Log.e(TAG, "Playing welcome video causes error: what=" + what + " extra=" + extra);
-                hideWelcomeVideoAndShowWelcomeImage();
-                return true;
-            }
+        welcomeVideoView.setOnErrorListener((mp, what, extra) -> {
+            Log.e(TAG, "Playing welcome video causes error: what=" + what + " extra=" + extra);
+            hideWelcomeVideoAndShowWelcomeImage();
+            return true;
         });
         mWelcomeVideoView = welcomeVideoView;
         mWelcomeImageView = (ImageView) findViewById(R.id.setup_welcome_image);

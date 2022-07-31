@@ -234,9 +234,8 @@ public final class KeyboardLayoutSet {
                 || id.mElementId == KeyboardId.ELEMENT_ALPHABET_AUTOMATIC_SHIFTED)
                 && !mParams.mIsSpellChecker) {
             // We only forcibly cache the primary, "ALPHABET", layouts.
-            for (int i = sForcibleKeyboardCache.length - 1; i >= 1; --i) {
-                sForcibleKeyboardCache[i] = sForcibleKeyboardCache[i - 1];
-            }
+            if (sForcibleKeyboardCache.length - 1 >= 0)
+                System.arraycopy(sForcibleKeyboardCache, 0, sForcibleKeyboardCache, 1, sForcibleKeyboardCache.length - 1);
             sForcibleKeyboardCache[0] = keyboard;
             if (DEBUG_CACHE) {
                 Log.d(TAG, "forcing caching of keyboard with id=" + id);
@@ -340,8 +339,7 @@ public final class KeyboardLayoutSet {
             final String layoutSetName = KEYBOARD_LAYOUT_SET_RESOURCE_PREFIX
                     + SubtypeLocaleUtils.getKeyboardLayoutSetName(subtype);
             final int xmlId = getXmlId(resources, layoutSetName);
-            final XmlResourceParser parser = resources.getXml(xmlId);
-            try {
+            try (XmlResourceParser parser = resources.getXml(xmlId)) {
                 while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
                     // Bovinate through the XML stupidly searching for TAG_FEATURE, and read
                     // the script Id from it.
@@ -353,8 +351,6 @@ public final class KeyboardLayoutSet {
                 }
             } catch (final IOException | XmlPullParserException e) {
                 throw new RuntimeException(e.getMessage() + " in " + layoutSetName, e);
-            } finally {
-                parser.close();
             }
             // If the tag is not found, then the default script is Latin.
             return ScriptUtils.SCRIPT_LATIN;
@@ -396,8 +392,7 @@ public final class KeyboardLayoutSet {
 
         private void parseKeyboardLayoutSet(final Resources res, final int resId)
                 throws XmlPullParserException, IOException {
-            final XmlResourceParser parser = res.getXml(resId);
-            try {
+            try (XmlResourceParser parser = res.getXml(resId)) {
                 while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
                     final int event = parser.next();
                     if (event == XmlPullParser.START_TAG) {
@@ -409,8 +404,6 @@ public final class KeyboardLayoutSet {
                         }
                     }
                 }
-            } finally {
-                parser.close();
             }
         }
 

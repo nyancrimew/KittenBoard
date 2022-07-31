@@ -58,8 +58,8 @@ public final class LastComposedWord {
     private boolean mActive;
 
     public static final LastComposedWord NOT_A_COMPOSED_WORD =
-            new LastComposedWord(new ArrayList<Event>(), null, "", "",
-            NOT_A_SEPARATOR, null, WordComposer.CAPS_MODE_OFF);
+            new LastComposedWord(new ArrayList<>(), null, "", "",
+                    NOT_A_SEPARATOR, null, WordComposer.CAPS_MODE_OFF);
 
     // Warning: this is using the passed objects as is and fully expects them to be
     // immutable. Do not fiddle with their contents after you passed them to this constructor.

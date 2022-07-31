@@ -32,9 +32,9 @@ public class CompletionInfoUtils {
     public static CompletionInfo[] removeNulls(final CompletionInfo[] src) {
         int j = 0;
         final CompletionInfo[] dst = new CompletionInfo[src.length];
-        for (int i = 0; i < src.length; ++i) {
-            if (null != src[i] && !TextUtils.isEmpty(src[i].getText())) {
-                dst[j] = src[i];
+        for (CompletionInfo completionInfo : src) {
+            if (null != completionInfo && !TextUtils.isEmpty(completionInfo.getText())) {
+                dst[j] = completionInfo;
                 ++j;
             }
         }

@@ -109,7 +109,7 @@ public class KeyboardLayout {
     public static KeyboardLayout newKeyboardLayout(@Nonnull final List<Key> sortedKeys,
             int mostCommonKeyWidth, int mostCommonKeyHeight,
             int occupiedWidth, int occupiedHeight) {
-        final ArrayList<Key> layoutKeys = new ArrayList<Key>();
+        final ArrayList<Key> layoutKeys = new ArrayList<>();
         for (final Key key : sortedKeys) {
             if (!ProximityInfo.needsProximityInfo(key)) {
                 continue;

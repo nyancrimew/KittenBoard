@@ -53,7 +53,7 @@ public final class PunctuationSuggestions extends SuggestedWords {
     public static PunctuationSuggestions newPunctuationSuggestions(
             @Nullable final String[] punctuationSpecs) {
         if (punctuationSpecs == null || punctuationSpecs.length == 0) {
-            return new PunctuationSuggestions(new ArrayList<SuggestedWordInfo>(0));
+            return new PunctuationSuggestions(new ArrayList<>(0));
         }
         final ArrayList<SuggestedWordInfo> punctuationList =
                 new ArrayList<>(punctuationSpecs.length);

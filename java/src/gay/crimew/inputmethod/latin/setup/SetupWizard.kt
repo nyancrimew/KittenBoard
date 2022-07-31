@@ -35,7 +35,7 @@ class SetupWizard : AppIntro() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager;
+        imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         if (UncachedInputMethodManagerUtils.isThisImeEnabled(
                 this,

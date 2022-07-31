@@ -30,7 +30,6 @@ import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.Log;
 
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.common.LocaleUtils;
 import com.android.inputmethod.latin.utils.DebugLogUtils;
 
@@ -39,6 +38,8 @@ import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+
+import gay.crimew.inputmethod.latin.R;
 
 /**
  * Provider for dictionaries.
@@ -289,7 +290,7 @@ public final class DictionaryProvider extends ContentProvider {
      */
     @Override
     public AssetFileDescriptor openAssetFile(final Uri uri, final String mode) {
-        if (null == mode || !"r".equals(mode)) return null;
+        if (!"r".equals(mode)) return null;
 
         final int match = matchUri(uri);
         if (DICTIONARY_V1_DICT_INFO != match && DICTIONARY_V2_DATAFILE != match) {

@@ -50,8 +50,8 @@ public final class SpannableStringUtils {
             Spannable dest, int destoff) {
         Object[] spans = source.getSpans(start, end, SuggestionSpan.class);
 
-        for (int i = 0; i < spans.length; i++) {
-            int fl = source.getSpanFlags(spans[i]);
+        for (Object span : spans) {
+            int fl = source.getSpanFlags(span);
             // We don't care about the PARAGRAPH flag in LatinIME code. However, if this flag
             // is set, Spannable#setSpan will throw an exception unless the span is on the edge
             // of a word. But the spans have been split into two by the getText{Before,After}Cursor
@@ -59,16 +59,16 @@ public final class SpannableStringUtils {
             // Since we don't use them, we can just remove them and avoid crashing.
             fl &= ~Spanned.SPAN_PARAGRAPH;
 
-            int st = source.getSpanStart(spans[i]);
-            int en = source.getSpanEnd(spans[i]);
+            int st = source.getSpanStart(span);
+            int en = source.getSpanEnd(span);
 
             if (st < start)
                 st = start;
             if (en > end)
                 en = end;
 
-            dest.setSpan(spans[i], st - start + destoff, en - start + destoff,
-                         fl);
+            dest.setSpan(span, st - start + destoff, en - start + destoff,
+                    fl);
         }
     }
 
@@ -89,16 +89,16 @@ public final class SpannableStringUtils {
         }
 
         boolean spanned = false;
-        for (int i = 0; i < text.length; i++) {
-            if (text[i] instanceof Spanned) {
+        for (CharSequence charSequence : text) {
+            if (charSequence instanceof Spanned) {
                 spanned = true;
                 break;
             }
         }
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < text.length; i++) {
-            sb.append(text[i]);
+        for (CharSequence charSequence : text) {
+            sb.append(charSequence);
         }
 
         if (!spanned) {
@@ -107,11 +107,11 @@ public final class SpannableStringUtils {
 
         SpannableString ss = new SpannableString(sb);
         int off = 0;
-        for (int i = 0; i < text.length; i++) {
-            int len = text[i].length();
+        for (CharSequence charSequence : text) {
+            int len = charSequence.length();
 
-            if (text[i] instanceof Spanned) {
-                copyNonParagraphSuggestionSpansFrom((Spanned) text[i], 0, len, ss, off);
+            if (charSequence instanceof Spanned) {
+                copyNonParagraphSuggestionSpansFrom((Spanned) charSequence, 0, len, ss, off);
             }
 
             off += len;
@@ -178,6 +178,6 @@ public final class SpannableStringUtils {
                 sequences.remove(i);
             }
         }
-        return sequences.toArray(new CharSequence[sequences.size()]);
+        return sequences.toArray(new CharSequence[0]);
     }
 }

@@ -19,7 +19,6 @@ package com.android.inputmethod.latin.settings;
 import com.android.inputmethod.latin.permissions.PermissionsManager;
 import com.android.inputmethod.latin.utils.FragmentUtils;
 import com.android.inputmethod.latin.utils.StatsUtils;
-import com.android.inputmethod.latin.utils.StatsUtilsManager;
 
 import android.app.ActionBar;
 import android.content.Intent;

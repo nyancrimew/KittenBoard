@@ -244,18 +244,8 @@ public final class WordListPreference extends Preference {
             // The button is closed.
             buttonSwitcher.setStatusAndUpdateVisuals(ButtonSwitcher.STATUS_NO_BUTTON);
         }
-        buttonSwitcher.setInternalOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onActionButtonClicked();
-            }
-        });
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onWordListClicked(v);
-            }
-        });
+        buttonSwitcher.setInternalOnClickListener(v -> onActionButtonClicked());
+        view.setOnClickListener(v -> onWordListClicked(v));
     }
 
     void onWordListClicked(final View v) {

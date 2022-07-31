@@ -16,8 +16,8 @@
 
 package com.android.inputmethod.dictionarypack;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.MessageDigest;
 
 public final class MD5Calculator {
@@ -38,8 +38,8 @@ public final class MD5Calculator {
         }
         final byte[] digest = digester.digest();
         final StringBuilder s = new StringBuilder();
-        for (int i = 0; i < digest.length; ++i) {
-            s.append(String.format("%1$02x", digest[i]));
+        for (byte b : digest) {
+            s.append(String.format("%1$02x", b));
         }
         return s.toString();
     }

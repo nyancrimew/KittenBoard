@@ -25,7 +25,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.inputmethod.latin.common.Constants;
-import com.android.inputmethod.latin.common.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,7 +86,7 @@ public class ContactsManager {
                     Math.max(0, currentTime - mLastContactedTime),
                     TimeUnit.MILLISECONDS.convert(180, TimeUnit.DAYS));
             final float lastTimeWeight = (float) Math.pow(0.5,
-                    timeSinceLastContact / (TimeUnit.MILLISECONDS.convert(10, TimeUnit.DAYS)));
+                    timeSinceLastContact / ((float) TimeUnit.MILLISECONDS.convert(10, TimeUnit.DAYS)));
             final float visibleWeight = mInVisibleGroup ? 1.0f : 0.0f;
             mAffinity = (timesWeight + lastTimeWeight + visibleWeight) / 3;
         }
@@ -196,20 +195,14 @@ public class ContactsManager {
     public int getContactCount() {
         // TODO: consider switching to a rawQuery("select count(*)...") on the database if
         // performance is a bottleneck.
-        Cursor cursor = null;
-        try {
-            cursor = mContext.getContentResolver().query(Contacts.CONTENT_URI,
-                    ContactsDictionaryConstants.PROJECTION_ID_ONLY, null, null, null);
+        try (Cursor cursor = mContext.getContentResolver().query(Contacts.CONTENT_URI,
+                ContactsDictionaryConstants.PROJECTION_ID_ONLY, null, null, null)) {
             if (null == cursor) {
                 return 0;
             }
             return cursor.getCount();
         } catch (final SQLiteException e) {
             Log.e(TAG, "SQLiteException in the remote Contacts process.", e);
-        } finally {
-            if (null != cursor) {
-                cursor.close();
-            }
         }
         return 0;
     }

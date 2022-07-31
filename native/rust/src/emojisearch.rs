@@ -1,11 +1,12 @@
-include!(concat!(env!("OUT_DIR"), "/emoji_data.rs"));
+use std::cmp::min;
+use std::iter;
 
 use jni::objects::{JClass, JList, JObject, JString, JValue};
 use jni::sys::jboolean;
 use jni::JNIEnv;
 use levenshtein::levenshtein;
-use std::cmp::min;
-use std::iter;
+
+include!(concat!(env!("OUT_DIR"), "/emoji_data.rs"));
 
 const SCORE_CUTOFF: i32 = 87;
 const SCORE_MAX: i32 = 100;
@@ -103,6 +104,6 @@ fn mismatch_chunks<const N: usize>(xs: &[u8], ys: &[u8]) -> usize {
         .count()
 }
 
-fn should_ignore_exact_query(query: &String) -> bool {
-    vec!["with", "in", "no", "and", "of", "the", "me", "on", "a"].contains(&query.as_str())
+fn should_ignore_exact_query(query: &str) -> bool {
+    vec!["with", "in", "no", "and", "of", "the", "me", "on", "a"].contains(&query)
 }

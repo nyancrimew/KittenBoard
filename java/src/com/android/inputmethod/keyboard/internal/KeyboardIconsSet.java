@@ -22,12 +22,12 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.util.SparseIntArray;
 
-import gay.crimew.inputmethod.latin.R;
-
 import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import gay.crimew.inputmethod.latin.R;
 
 public final class KeyboardIconsSet {
     private static final String TAG = KeyboardIconsSet.class.getSimpleName();
@@ -115,7 +115,7 @@ public final class KeyboardIconsSet {
             try {
                 final Drawable icon = keyboardAttrs.getDrawable(attrId);
                 setDefaultBounds(icon);
-                final Integer iconId = ATTR_ID_TO_ICON_ID.get(attrId);
+                final int iconId = ATTR_ID_TO_ICON_ID.get(attrId);
                 mIcons[iconId] = icon;
                 mIconResourceIds[iconId] = keyboardAttrs.getResourceId(attrId, 0);
             } catch (Resources.NotFoundException e) {

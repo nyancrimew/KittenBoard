@@ -33,7 +33,6 @@ import com.android.inputmethod.keyboard.internal.GestureStrokeRecognitionParams;
 import com.android.inputmethod.keyboard.internal.PointerTrackerQueue;
 import com.android.inputmethod.keyboard.internal.TimerProxy;
 import com.android.inputmethod.keyboard.internal.TypingTimeRecorder;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.common.Constants;
 import com.android.inputmethod.latin.common.CoordinateUtils;
 import com.android.inputmethod.latin.common.InputPointers;
@@ -45,6 +44,8 @@ import java.util.ArrayList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import gay.crimew.inputmethod.latin.R;
 
 public final class PointerTracker implements PointerTrackerQueue.Element,
         BatchInputArbiterListener {
@@ -281,7 +282,7 @@ public final class PointerTracker implements PointerTrackerQueue.Element,
         if (DEBUG_LISTENER) {
             final String output = code == Constants.CODE_OUTPUT_TEXT
                     ? key.getOutputText() : Constants.printableCode(code);
-            Log.d(TAG, String.format("[%d] onCodeInput: %4d %4d %s%s%s", mPointerId, x, y,
+            Log.d(TAG, String.format("[%d] onCodeInput: %4d %4d %s%s%s%s", mPointerId, x, y,
                     output, ignoreModifierKey ? " ignoreModifier" : "",
                     altersCode ? " altersCode" : "", key.isEnabled() ? "" : " disabled"));
         }

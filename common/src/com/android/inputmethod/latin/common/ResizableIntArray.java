@@ -66,7 +66,7 @@ public final class ResizableIntArray {
         if (currentCapcity < minimumCapacity) {
             final int nextCapacity = currentCapcity * 2;
             // The following is the same as return Math.max(minimumCapacity, nextCapacity);
-            return minimumCapacity > nextCapacity ? minimumCapacity : nextCapacity;
+            return Math.max(minimumCapacity, nextCapacity);
         }
         return 0;
     }

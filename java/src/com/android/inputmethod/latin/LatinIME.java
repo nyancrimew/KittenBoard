@@ -255,7 +255,6 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
             if (latinIme == null) {
                 return;
             }
-            final KeyboardSwitcher switcher = latinIme.mKeyboardSwitcher;
             switch (msg.what) {
             case MSG_UPDATE_SUGGESTION_STRIP:
                 cancelUpdateSuggestionStrip();
@@ -263,7 +262,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
                         latinIme.mSettings.getCurrent(), msg.arg1 /* inputStyle */);
                 break;
             case MSG_UPDATE_SHIFT_STATE:
-                switcher.requestUpdatingShiftState(latinIme.getCurrentAutoCapsState(),
+                latinIme.mKeyboardSwitcher.requestUpdatingShiftState(latinIme.getCurrentAutoCapsState(),
                         latinIme.getCurrentRecapitalizeState());
                 break;
             case MSG_SHOW_GESTURE_PREVIEW_AND_SUGGESTION_STRIP:
@@ -276,10 +275,6 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
                 }
                 break;
             case MSG_RESUME_SUGGESTIONS:
-                latinIme.mInputLogic.restartSuggestionsOnWordTouchedByCursor(
-                        latinIme.mSettings.getCurrent(),
-                        latinIme.mKeyboardSwitcher.getCurrentKeyboardScriptId());
-                break;
             case MSG_RESUME_SUGGESTIONS_FOR_START_INPUT:
                 latinIme.mInputLogic.restartSuggestionsOnWordTouchedByCursor(
                         latinIme.mSettings.getCurrent(),
@@ -1802,7 +1797,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         if (!ProductionFlags.IS_HARDWARE_KEYBOARD_SUPPORTED) {
             return super.onKeyUp(keyCode, keyEvent);
         }
-        final long keyIdentifier = keyEvent.getDeviceId() << 32 + keyEvent.getKeyCode();
+        final long keyIdentifier = (long) keyEvent.getDeviceId() << 32 + keyEvent.getKeyCode();
         if (mInputLogic.mCurrentlyPressedHardwareKeys.remove(keyIdentifier)) {
             return true;
         }
@@ -1862,29 +1857,26 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         final CharSequence title = getString(R.string.english_ime_input_options);
         // TODO: Should use new string "Select active input modes".
         final CharSequence languageSelectionTitle = getString(R.string.language_selection_title);
-        final CharSequence[] items = new CharSequence[] {
+        final CharSequence[] items = new CharSequence[]{
                 languageSelectionTitle,
                 getString(ApplicationUtils.getActivityTitleResId(this, SettingsActivity.class))
         };
         final String imeId = mRichImm.getInputMethodIdOfThisIme();
-        final OnClickListener listener = new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface di, int position) {
-                di.dismiss();
-                switch (position) {
-                case 0:
-                    final Intent intent = IntentUtils.getInputLanguageSelectionIntent(
-                            imeId,
-                            Intent.FLAG_ACTIVITY_NEW_TASK
-                                    | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
-                                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra(Intent.EXTRA_TITLE, languageSelectionTitle);
-                    startActivityOnTheSameDisplay(intent);
-                    break;
-                case 1:
-                    launchSettings(SettingsActivity.EXTRA_ENTRY_VALUE_LONG_PRESS_COMMA);
-                    break;
-                }
+        final OnClickListener listener = (di, position) -> {
+            di.dismiss();
+            switch (position) {
+            case 0:
+                final Intent intent = IntentUtils.getInputLanguageSelectionIntent(
+                        imeId,
+                        Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra(Intent.EXTRA_TITLE, languageSelectionTitle);
+                startActivityOnTheSameDisplay(intent);
+                break;
+            case 1:
+                launchSettings(SettingsActivity.EXTRA_ENTRY_VALUE_LONG_PRESS_COMMA);
+                break;
             }
         };
         final AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -1947,7 +1939,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
     @UsedForTesting
     List<InputMethodSubtype> getEnabledSubtypesForTest() {
         return (mRichImm != null) ? mRichImm.getMyEnabledInputMethodSubtypeList(
-                true /* allowsImplicitlySelectedSubtypes */) : new ArrayList<InputMethodSubtype>();
+                true /* allowsImplicitlySelectedSubtypes */) : new ArrayList<>();
     }
 
     public void dumpDictionaryForDebug(final String dictName) {
@@ -1959,10 +1951,9 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
 
     public void debugDumpStateAndCrashWithException(final String context) {
         final SettingsValues settingsValues = mSettings.getCurrent();
-        final StringBuilder s = new StringBuilder(settingsValues.toString());
-        s.append("\nAttributes : ").append(settingsValues.mInputAttributes)
-                .append("\nContext : ").append(context);
-        throw new RuntimeException(s.toString());
+        String s = settingsValues.toString() + "\nAttributes : " + settingsValues.mInputAttributes +
+                "\nContext : " + context;
+        throw new RuntimeException(s);
     }
 
     @Override

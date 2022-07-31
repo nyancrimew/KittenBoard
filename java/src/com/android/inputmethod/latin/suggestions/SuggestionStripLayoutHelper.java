@@ -48,7 +48,6 @@ import androidx.emoji2.text.EmojiCompat;
 import com.android.inputmethod.accessibility.AccessibilityUtils;
 import com.android.inputmethod.annotations.UsedForTesting;
 import com.android.inputmethod.latin.PunctuationSuggestions;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.SuggestedWords;
 import com.android.inputmethod.latin.SuggestedWords.SuggestedWordInfo;
 import com.android.inputmethod.latin.settings.Settings;
@@ -60,6 +59,8 @@ import java.util.ArrayList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import gay.crimew.inputmethod.latin.R;
 
 final class SuggestionStripLayoutHelper {
     private static final int DEFAULT_SUGGESTIONS_COUNT_IN_STRIP = 3;
@@ -192,7 +193,7 @@ final class SuggestionStripLayoutHelper {
         final int height = Math.round(bounds.height() + 0.5f);
         final Bitmap buffer = Bitmap.createBitmap(width, (height * 3 / 2), Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(buffer);
-        canvas.drawText(MORE_SUGGESTIONS_HINT, width / 2, height, paint);
+        canvas.drawText(MORE_SUGGESTIONS_HINT, width / 2f, height, paint);
         BitmapDrawable bitmapDrawable = new BitmapDrawable(res, buffer);
         bitmapDrawable.setTargetDensity(canvas);
         return bitmapDrawable;

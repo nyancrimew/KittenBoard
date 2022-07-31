@@ -48,13 +48,12 @@ public class AppWorkaroundsUtils {
         if (null == mPackageInfo || null == mPackageInfo.applicationInfo) {
             return "";
         }
-        final StringBuilder s = new StringBuilder();
-        s.append("Target application : ")
-                .append(mPackageInfo.applicationInfo.name)
-                .append("\nPackage : ")
-                .append(mPackageInfo.applicationInfo.packageName)
-                .append("\nTarget app sdk version : ")
-                .append(mPackageInfo.applicationInfo.targetSdkVersion);
-        return s.toString();
+        String s = "Target application : " +
+                mPackageInfo.applicationInfo.name +
+                "\nPackage : " +
+                mPackageInfo.applicationInfo.packageName +
+                "\nTarget app sdk version : " +
+                mPackageInfo.applicationInfo.targetSdkVersion;
+        return s;
     }
 }

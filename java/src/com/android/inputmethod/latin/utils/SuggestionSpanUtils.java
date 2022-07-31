@@ -73,7 +73,7 @@ public final class SuggestionSpanUtils {
             }
             final String word = suggestedWords.getWord(i);
             if (!TextUtils.equals(pickedWord, word)) {
-                suggestionsList.add(word.toString());
+                suggestionsList.add(word);
             }
         }
         final SuggestionSpan suggestionSpan = new SuggestionSpan(context, locale,

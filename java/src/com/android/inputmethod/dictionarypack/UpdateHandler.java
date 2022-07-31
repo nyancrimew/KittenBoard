@@ -113,7 +113,7 @@ public final class UpdateHandler {
      * The list of currently registered listeners.
      */
     private static List<UpdateEventListener> sUpdateEventListeners
-            = Collections.synchronizedList(new LinkedList<UpdateEventListener>());
+            = Collections.synchronizedList(new LinkedList<>());
 
     /**
      * Register a new listener to be notified of updates.
@@ -542,10 +542,7 @@ public final class UpdateHandler {
             // Can't read the file... disk damage?
             Log.e(TAG, "Can't read a file", e);
             // TODO: Check with UX how we should warn the user.
-        } catch (IllegalStateException e) {
-            // The format of the downloaded file is incorrect. We should maybe report upstream?
-            Log.e(TAG, "Incorrect data received", e);
-        } catch (BadFormatException e) {
+        } catch (IllegalStateException | BadFormatException e) {
             // The format of the downloaded file is incorrect. We should maybe report upstream?
             Log.e(TAG, "Incorrect data received", e);
         }
@@ -588,12 +585,9 @@ public final class UpdateHandler {
             final String clientId) throws IOException, BadFormatException {
         DebugLogUtils.l("Entering handleMetadata");
         final List<WordListMetadata> newMetadata;
-        final InputStreamReader reader = new InputStreamReader(stream);
-        try {
+        try (InputStreamReader reader = new InputStreamReader(stream)) {
             // According to the doc InputStreamReader buffers, so no need to add a buffering layer
             newMetadata = MetadataHandler.readMetadata(reader);
-        } finally {
-            reader.close();
         }
 
         DebugLogUtils.l("Downloaded metadata :", newMetadata);
@@ -749,9 +743,9 @@ public final class UpdateHandler {
         DebugLogUtils.l("Comparing dictionaries");
         final Set<String> wordListIds = new TreeSet<>();
         // TODO: Can these be null?
-        final List<WordListMetadata> fromList = (from == null) ? new ArrayList<WordListMetadata>()
+        final List<WordListMetadata> fromList = (from == null) ? new ArrayList<>()
                 : from;
-        final List<WordListMetadata> toList = (to == null) ? new ArrayList<WordListMetadata>()
+        final List<WordListMetadata> toList = (to == null) ? new ArrayList<>()
                 : to;
         for (WordListMetadata wlData : fromList) wordListIds.add(wlData.mId);
         for (WordListMetadata wlData : toList) wordListIds.add(wlData.mId);

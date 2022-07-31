@@ -127,7 +127,7 @@ public final class AdditionalSubtypeUtils {
             }
             subtypesList.add(subtype);
         }
-        return subtypesList.toArray(new InputMethodSubtype[subtypesList.size()]);
+        return subtypesList.toArray(new InputMethodSubtype[0]);
     }
 
     public static String createPrefSubtypes(final InputMethodSubtype[] subtypes) {

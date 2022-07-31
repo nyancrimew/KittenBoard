@@ -17,18 +17,19 @@
 package com.android.inputmethod.keyboard;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.android.inputmethod.compat.BuildCompatUtils;
-import gay.crimew.inputmethod.latin.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import gay.crimew.inputmethod.latin.R;
 
 public final class KeyboardTheme implements Comparable<KeyboardTheme> {
     private static final String TAG = KeyboardTheme.class.getSimpleName();
@@ -150,7 +151,7 @@ public final class KeyboardTheme implements Comparable<KeyboardTheme> {
                 }
             }
             AVAILABLE_KEYBOARD_THEMES = availableThemeList.toArray(
-                    new KeyboardTheme[availableThemeList.size()]);
+                    new KeyboardTheme[0]);
             Arrays.sort(AVAILABLE_KEYBOARD_THEMES);
         }
         return AVAILABLE_KEYBOARD_THEMES;

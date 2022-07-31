@@ -1468,24 +1468,21 @@ public final class InputLogic {
 
         final AsyncResultHolder<SuggestedWords> holder = new AsyncResultHolder<>("Suggest");
         mInputLogicHandler.getSuggestedWords(inputStyle, SuggestedWords.NOT_A_SEQUENCE_NUMBER,
-                new OnGetSuggestedWordsCallback() {
-                    @Override
-                    public void onGetSuggestedWords(final SuggestedWords suggestedWords) {
-                        final String typedWordString = mWordComposer.getTypedWord();
-                        final SuggestedWordInfo typedWordInfo = new SuggestedWordInfo(
-                                typedWordString, "" /* prevWordsContext */,
-                                SuggestedWordInfo.MAX_SCORE,
-                                SuggestedWordInfo.KIND_TYPED, Dictionary.DICTIONARY_USER_TYPED,
-                                SuggestedWordInfo.NOT_AN_INDEX /* indexOfTouchPointOfSecondWord */,
-                                SuggestedWordInfo.NOT_A_CONFIDENCE);
-                        // Show new suggestions if we have at least one. Otherwise keep the old
-                        // suggestions with the new typed word. Exception: if the length of the
-                        // typed word is <= 1 (after a deletion typically) we clear old suggestions.
-                        if (suggestedWords.size() > 1 || typedWordString.length() <= 1) {
-                            holder.set(suggestedWords);
-                        } else {
-                            holder.set(retrieveOlderSuggestions(typedWordInfo, mSuggestedWords));
-                        }
+                suggestedWords -> {
+                    final String typedWordString = mWordComposer.getTypedWord();
+                    final SuggestedWordInfo typedWordInfo = new SuggestedWordInfo(
+                            typedWordString, "" /* prevWordsContext */,
+                            SuggestedWordInfo.MAX_SCORE,
+                            SuggestedWordInfo.KIND_TYPED, Dictionary.DICTIONARY_USER_TYPED,
+                            SuggestedWordInfo.NOT_AN_INDEX /* indexOfTouchPointOfSecondWord */,
+                            SuggestedWordInfo.NOT_A_CONFIDENCE);
+                    // Show new suggestions if we have at least one. Otherwise keep the old
+                    // suggestions with the new typed word. Exception: if the length of the
+                    // typed word is <= 1 (after a deletion typically) we clear old suggestions.
+                    if (suggestedWords.size() > 1 || typedWordString.length() <= 1) {
+                        holder.set(suggestedWords);
+                    } else {
+                        holder.set(retrieveOlderSuggestions(typedWordInfo, mSuggestedWords));
                     }
                 }
         );
@@ -1593,11 +1590,7 @@ public final class InputLogic {
             // if shouldIncludeResumedWordInSuggestions is true, 0 otherwise. In this case, we
             // have no useful suggestions, so we will try to compute some for it instead.
             mInputLogicHandler.getSuggestedWords(Suggest.SESSION_ID_TYPING,
-                    SuggestedWords.NOT_A_SEQUENCE_NUMBER, new OnGetSuggestedWordsCallback() {
-                        @Override
-                        public void onGetSuggestedWords(final SuggestedWords suggestedWords) {
-                            doShowSuggestionsAndClearAutoCorrectionIndicator(suggestedWords);
-                        }});
+                    SuggestedWords.NOT_A_SEQUENCE_NUMBER, suggestedWords -> doShowSuggestionsAndClearAutoCorrectionIndicator(suggestedWords));
         } else {
             // We found suggestion spans in the word. We'll create the SuggestedWords out of
             // them, and make willAutoCorrect false. We make typedWordValid false, because the
@@ -1689,9 +1682,9 @@ public final class InputLogic {
             }
             // Add the suggestion list to the list of suggestions.
             textToCommit.setSpan(new SuggestionSpan(mLatinIME /* context */,
-                    inputTransaction.mSettingsValues.mLocale,
-                    suggestions.toArray(new String[suggestions.size()]), 0 /* flags */,
-                    null /* notificationTargetClass */),
+                            inputTransaction.mSettingsValues.mLocale,
+                            suggestions.toArray(new String[0]), 0 /* flags */,
+                            null /* notificationTargetClass */),
                     0 /* start */, lastCharIndex /* end */, 0 /* flags */);
         }
 

@@ -32,7 +32,6 @@ import com.android.inputmethod.keyboard.Key;
 import com.android.inputmethod.keyboard.Keyboard;
 import com.android.inputmethod.keyboard.KeyboardId;
 import com.android.inputmethod.keyboard.KeyboardTheme;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.common.Constants;
 import com.android.inputmethod.latin.common.StringUtils;
 import com.android.inputmethod.latin.utils.ResourceUtils;
@@ -47,6 +46,8 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import javax.annotation.Nonnull;
+
+import gay.crimew.inputmethod.latin.R;
 
 /**
  * Keyboard Building helper.
@@ -167,8 +168,7 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
 
     public KeyboardBuilder<KP> load(final int xmlId, final KeyboardId id) {
         mParams.mId = id;
-        final XmlResourceParser parser = mResources.getXml(xmlId);
-        try {
+        try (XmlResourceParser parser = mResources.getXml(xmlId)) {
             parseKeyboard(parser);
         } catch (XmlPullParserException e) {
             Log.w(BUILDER_TAG, "keyboard XML parse error", e);
@@ -176,8 +176,6 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
         } catch (IOException e) {
             Log.w(BUILDER_TAG, "keyboard XML parse error", e);
             throw new RuntimeException(e.getMessage(), e);
-        } finally {
-            parser.close();
         }
         return this;
     }
@@ -247,30 +245,30 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
             params.mOccupiedWidth = width;
             params.mTopPadding = (int)keyboardAttr.getFraction(
                     R.styleable.Keyboard_keyboardTopPadding, height, height, 0);
-            params.mBottomPadding = (int)keyboardAttr.getFraction(
+            params.mBottomPadding = (int) keyboardAttr.getFraction(
                     R.styleable.Keyboard_keyboardBottomPadding, height, height, 0);
-            params.mLeftPadding = (int)keyboardAttr.getFraction(
+            params.mLeftPadding = (int) keyboardAttr.getFraction(
                     R.styleable.Keyboard_keyboardLeftPadding, width, width, 0);
-            params.mRightPadding = (int)keyboardAttr.getFraction(
+            params.mRightPadding = (int) keyboardAttr.getFraction(
                     R.styleable.Keyboard_keyboardRightPadding, width, width, 0);
 
             final int baseWidth =
                     params.mOccupiedWidth - params.mLeftPadding - params.mRightPadding;
             params.mBaseWidth = baseWidth;
-            params.mDefaultKeyWidth = (int)keyAttr.getFraction(R.styleable.Keyboard_Key_keyWidth,
-                    baseWidth, baseWidth, baseWidth / DEFAULT_KEYBOARD_COLUMNS);
-            params.mHorizontalGap = (int)keyboardAttr.getFraction(
+            params.mDefaultKeyWidth = (int) keyAttr.getFraction(R.styleable.Keyboard_Key_keyWidth,
+                    baseWidth, baseWidth, baseWidth / (float) DEFAULT_KEYBOARD_COLUMNS);
+            params.mHorizontalGap = (int) keyboardAttr.getFraction(
                     R.styleable.Keyboard_horizontalGap, baseWidth, baseWidth, 0);
             // TODO: Fix keyboard geometry calculation clearer. Historically vertical gap between
             // rows are determined based on the entire keyboard height including top and bottom
             // paddings.
-            params.mVerticalGap = (int)keyboardAttr.getFraction(
+            params.mVerticalGap = (int) keyboardAttr.getFraction(
                     R.styleable.Keyboard_verticalGap, height, height, 0);
             final int baseHeight = params.mOccupiedHeight - params.mTopPadding
                     - params.mBottomPadding + params.mVerticalGap;
             params.mBaseHeight = baseHeight;
-            params.mDefaultRowHeight = (int)ResourceUtils.getDimensionOrFraction(keyboardAttr,
-                    R.styleable.Keyboard_rowHeight, baseHeight, baseHeight / DEFAULT_KEYBOARD_ROWS);
+            params.mDefaultRowHeight = (int) ResourceUtils.getDimensionOrFraction(keyboardAttr,
+                    R.styleable.Keyboard_rowHeight, baseHeight, baseHeight / (float) DEFAULT_KEYBOARD_ROWS);
 
             params.mKeyVisualAttributes = KeyVisualAttributes.newInstance(keyAttr);
 
@@ -552,15 +550,13 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
             startEndTag("<%s keyboardLayout=%s />",TAG_INCLUDE,
                     mResources.getResourceEntryName(keyboardLayout));
         }
-        final XmlResourceParser parserForInclude = mResources.getXml(keyboardLayout);
-        try {
+        try (XmlResourceParser parserForInclude = mResources.getXml(keyboardLayout)) {
             parseMerge(parserForInclude, row, skip);
         } finally {
             if (row != null) {
                 // Restore Row attributes.
                 row.popRowAttributes();
             }
-            parserForInclude.close();
         }
     }
 

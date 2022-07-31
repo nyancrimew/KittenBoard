@@ -25,7 +25,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.utils.DebugLogUtils;
 
 import java.io.File;
@@ -35,6 +34,8 @@ import java.util.List;
 import java.util.TreeMap;
 
 import javax.annotation.Nullable;
+
+import gay.crimew.inputmethod.latin.R;
 
 /**
  * Various helper functions for the state database
@@ -343,8 +344,6 @@ public class MetadataDbHelper extends SQLiteOpenHelper {
         return null != getMetadataUriAsString(context, clientId);
     }
 
-    private static final MetadataUriGetter sMetadataUriGetter = new MetadataUriGetter();
-
     /**
      * Returns the metadata URI as a string.
      *
@@ -357,15 +356,12 @@ public class MetadataDbHelper extends SQLiteOpenHelper {
      */
     public static String getMetadataUriAsString(final Context context, final String clientId) {
         SQLiteDatabase defaultDb = MetadataDbHelper.getDb(context, null);
-        final Cursor cursor = defaultDb.query(MetadataDbHelper.CLIENT_TABLE_NAME,
-                new String[] { MetadataDbHelper.CLIENT_METADATA_URI_COLUMN },
-                MetadataDbHelper.CLIENT_CLIENT_ID_COLUMN + " = ?", new String[] { clientId },
-                null, null, null, null);
-        try {
+        try (Cursor cursor = defaultDb.query(MetadataDbHelper.CLIENT_TABLE_NAME,
+                new String[]{MetadataDbHelper.CLIENT_METADATA_URI_COLUMN},
+                MetadataDbHelper.CLIENT_CLIENT_ID_COLUMN + " = ?", new String[]{clientId},
+                null, null, null, null)) {
             if (!cursor.moveToFirst()) return null;
-            return sMetadataUriGetter.getUri(context, cursor.getString(0));
-        } finally {
-            cursor.close();
+            return MetadataUriGetter.getUri(context, cursor.getString(0));
         }
     }
 
@@ -416,16 +412,13 @@ public class MetadataDbHelper extends SQLiteOpenHelper {
      */
     public static long getLastUpdateDateForClient(final Context context, final String clientId) {
         SQLiteDatabase defaultDb = getDb(context, null);
-        final Cursor cursor = defaultDb.query(CLIENT_TABLE_NAME,
-                new String[] { CLIENT_LAST_UPDATE_DATE_COLUMN },
+        try (Cursor cursor = defaultDb.query(CLIENT_TABLE_NAME,
+                new String[]{CLIENT_LAST_UPDATE_DATE_COLUMN},
                 CLIENT_CLIENT_ID_COLUMN + " = ?",
-                new String[] { null == clientId ? "" : clientId },
-                null, null, null, null);
-        try {
+                new String[]{null == clientId ? "" : clientId},
+                null, null, null, null)) {
             if (!cursor.moveToFirst()) return 0;
             return cursor.getLong(0); // Only one column, return it
-        } finally {
-            cursor.close();
         }
     }
 
@@ -442,24 +435,20 @@ public class MetadataDbHelper extends SQLiteOpenHelper {
     public static DownloadIdAndStartDate getMetadataDownloadIdAndStartDateForURI(
             final Context context, final String uri) {
         SQLiteDatabase defaultDb = getDb(context, null);
-        final Cursor cursor = defaultDb.query(CLIENT_TABLE_NAME,
-                new String[] { CLIENT_PENDINGID_COLUMN, CLIENT_LAST_UPDATE_DATE_COLUMN },
-                CLIENT_METADATA_URI_COLUMN + " = ?", new String[] { uri },
-                null, null, null, null);
-        try {
+        try (Cursor cursor = defaultDb.query(CLIENT_TABLE_NAME,
+                new String[]{CLIENT_PENDINGID_COLUMN, CLIENT_LAST_UPDATE_DATE_COLUMN},
+                CLIENT_METADATA_URI_COLUMN + " = ?", new String[]{uri},
+                null, null, null, null)) {
             if (!cursor.moveToFirst()) return null;
             return new DownloadIdAndStartDate(cursor.getInt(0), cursor.getLong(1));
-        } finally {
-            cursor.close();
         }
     }
 
     public static long getOldestUpdateTime(final Context context) {
         SQLiteDatabase defaultDb = getDb(context, null);
-        final Cursor cursor = defaultDb.query(CLIENT_TABLE_NAME,
-                new String[] { CLIENT_LAST_UPDATE_DATE_COLUMN },
-                null, null, null, null, null);
-        try {
+        try (Cursor cursor = defaultDb.query(CLIENT_TABLE_NAME,
+                new String[]{CLIENT_LAST_UPDATE_DATE_COLUMN},
+                null, null, null, null, null)) {
             if (!cursor.moveToFirst()) return 0;
             final int columnIndex = 0; // Only one column queried
             // Initialize the earliestTime to the largest possible value.
@@ -469,8 +458,6 @@ public class MetadataDbHelper extends SQLiteOpenHelper {
                 earliestTime = Math.min(thisTime, earliestTime);
             } while (cursor.moveToNext());
             return earliestTime;
-        } finally {
-            cursor.close();
         }
     }
 
@@ -674,9 +661,8 @@ public class MetadataDbHelper extends SQLiteOpenHelper {
             final long downloadId) {
         final SQLiteDatabase defaultDb = getDb(context, "");
         final ArrayList<DownloadRecord> results = new ArrayList<>();
-        final Cursor cursor = defaultDb.query(CLIENT_TABLE_NAME, CLIENT_TABLE_COLUMNS,
-                null, null, null, null, null);
-        try {
+        try (Cursor cursor = defaultDb.query(CLIENT_TABLE_NAME, CLIENT_TABLE_COLUMNS,
+                null, null, null, null, null)) {
             if (!cursor.moveToFirst()) return results;
             final int clientIdIndex = cursor.getColumnIndex(CLIENT_CLIENT_ID_COLUMN);
             final int pendingIdColumn = cursor.getColumnIndex(CLIENT_PENDINGID_COLUMN);
@@ -692,8 +678,6 @@ public class MetadataDbHelper extends SQLiteOpenHelper {
                     results.add(new DownloadRecord(clientId, valuesForThisClient));
                 }
             } while (cursor.moveToNext());
-        } finally {
-            cursor.close();
         }
         return results;
     }
@@ -960,35 +944,32 @@ public class MetadataDbHelper extends SQLiteOpenHelper {
     public static void markEntryAsFinishedDownloadingAndInstalled(final SQLiteDatabase db,
             final ContentValues r) {
         switch (r.getAsInteger(TYPE_COLUMN)) {
-            case TYPE_BULK:
-                DebugLogUtils.l("Ended processing a wordlist");
-                // Updating a bulk word list is a three-step operation:
-                // - Add the new entry to the table
-                // - Remove the old entry from the table
-                // - Erase the old file
-                // We start by gathering the names of the files we should delete.
-                final List<String> filenames = new LinkedList<>();
-                final Cursor c = db.query(METADATA_TABLE_NAME,
-                        new String[] { LOCAL_FILENAME_COLUMN },
-                        LOCALE_COLUMN + " = ? AND " +
-                        WORDLISTID_COLUMN + " = ? AND " + STATUS_COLUMN + " = ?",
-                        new String[] { r.getAsString(LOCALE_COLUMN),
-                                r.getAsString(WORDLISTID_COLUMN),
-                                Integer.toString(STATUS_INSTALLED) },
-                        null, null, null);
-                try {
-                    if (c.moveToFirst()) {
-                        // There should never be more than one file, but if there are, it's a bug
-                        // and we should remove them all. I think it might happen if the power of
-                        // the phone is suddenly cut during an update.
-                        final int filenameIndex = c.getColumnIndex(LOCAL_FILENAME_COLUMN);
-                        do {
-                            DebugLogUtils.l("Setting for removal", c.getString(filenameIndex));
-                            filenames.add(c.getString(filenameIndex));
-                        } while (c.moveToNext());
-                    }
-                } finally {
-                    c.close();
+        case TYPE_BULK:
+            DebugLogUtils.l("Ended processing a wordlist");
+            // Updating a bulk word list is a three-step operation:
+            // - Add the new entry to the table
+            // - Remove the old entry from the table
+            // - Erase the old file
+            // We start by gathering the names of the files we should delete.
+            final List<String> filenames = new LinkedList<>();
+            try (Cursor c = db.query(METADATA_TABLE_NAME,
+                    new String[]{LOCAL_FILENAME_COLUMN},
+                    LOCALE_COLUMN + " = ? AND " +
+                            WORDLISTID_COLUMN + " = ? AND " + STATUS_COLUMN + " = ?",
+                    new String[]{r.getAsString(LOCALE_COLUMN),
+                            r.getAsString(WORDLISTID_COLUMN),
+                            Integer.toString(STATUS_INSTALLED)},
+                    null, null, null)) {
+                if (c.moveToFirst()) {
+                    // There should never be more than one file, but if there are, it's a bug
+                    // and we should remove them all. I think it might happen if the power of
+                    // the phone is suddenly cut during an update.
+                    final int filenameIndex = c.getColumnIndex(LOCAL_FILENAME_COLUMN);
+                    do {
+                        DebugLogUtils.l("Setting for removal", c.getString(filenameIndex));
+                        filenames.add(c.getString(filenameIndex));
+                    } while (c.moveToNext());
+                }
                 }
                 r.put(STATUS_COLUMN, STATUS_INSTALLED);
                 db.beginTransactionNonExclusive();

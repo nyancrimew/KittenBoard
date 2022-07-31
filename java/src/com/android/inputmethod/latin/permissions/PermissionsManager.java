@@ -70,7 +70,7 @@ public class PermissionsManager {
         // otherwise request the permissions.
         int requestId = getNextRequestId();
         String[] permissionsArray = deniedPermissions.toArray(
-                new String[deniedPermissions.size()]);
+                new String[0]);
 
         mRequestIdToCallback.put(requestId, callback);
         if (activity != null) {

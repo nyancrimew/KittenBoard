@@ -214,15 +214,7 @@ final public class BinaryDictionaryGetter {
             // Version 18 is the first one to include the allowlist. 
             // Obviously this is a big ## HACK ##
             return Integer.parseInt(version) >= 18;
-        } catch (java.io.FileNotFoundException e) {
-            return false;
-        } catch (java.io.IOException e) {
-            return false;
-        } catch (NumberFormatException e) {
-            return false;
-        } catch (BufferUnderflowException e) {
-            return false;
-        } catch (UnsupportedFormatException e) {
+        } catch (IOException | NumberFormatException | BufferUnderflowException | UnsupportedFormatException e) {
             return false;
         }
     }

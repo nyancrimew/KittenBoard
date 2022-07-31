@@ -20,12 +20,13 @@ import android.text.TextUtils;
 import android.util.SparseIntArray;
 
 import com.android.inputmethod.keyboard.Key;
-import com.android.inputmethod.latin.common.CollectionUtils;
 import com.android.inputmethod.latin.common.Constants;
 import com.android.inputmethod.latin.common.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.Nonnull;
@@ -225,7 +226,7 @@ public final class MoreKeySpec {
         if (remain != null) {
             list.add(remain);
         }
-        return list.toArray(new String[list.size()]);
+        return list.toArray(new String[0]);
     }
 
     @Nonnull
@@ -236,12 +237,12 @@ public final class MoreKeySpec {
         if (array == null) {
             return EMPTY_STRING_ARRAY;
         }
-        ArrayList<String> out = null;
+        List<String> out = null;
         for (int i = 0; i < array.length; i++) {
             final String entry = array[i];
             if (TextUtils.isEmpty(entry)) {
                 if (out == null) {
-                    out = CollectionUtils.arrayAsList(array, 0, i);
+                    out = new ArrayList<>(Arrays.asList(array).subList(0, i));
                 }
             } else if (out != null) {
                 out.add(entry);
@@ -250,7 +251,7 @@ public final class MoreKeySpec {
         if (out == null) {
             return array;
         }
-        return out.toArray(new String[out.size()]);
+        return out.toArray(new String[0]);
     }
 
     public static String[] insertAdditionalMoreKeys(@Nullable final String[] moreKeySpecs,
@@ -276,7 +277,7 @@ public final class MoreKeySpec {
                 } else {
                     // Filter out excessive '%' marker.
                     if (out == null) {
-                        out = CollectionUtils.arrayAsList(moreKeys, 0, moreKeyIndex);
+                        out = new ArrayList<>(Arrays.asList(moreKeys).subList(0, moreKeyIndex));
                     }
                 }
             } else {
@@ -288,22 +289,18 @@ public final class MoreKeySpec {
         if (additionalCount > 0 && additionalIndex == 0) {
             // No '%' marker is found in more keys.
             // Insert all additional more keys to the head of more keys.
-            out = CollectionUtils.arrayAsList(additionalMoreKeys, additionalIndex, additionalCount);
-            for (int i = 0; i < moreKeysCount; i++) {
-                out.add(moreKeys[i]);
-            }
+            out = new ArrayList<>(Arrays.asList(additionalMoreKeys));
+            out.addAll(Arrays.asList(moreKeys));
         } else if (additionalIndex < additionalCount) {
             // The number of '%' markers are less than additional more keys.
             // Append remained additional more keys to the tail of more keys.
-            out = CollectionUtils.arrayAsList(moreKeys, 0, moreKeysCount);
-            for (int i = additionalIndex; i < additionalCount; i++) {
-                out.add(additionalMoreKeys[additionalIndex]);
-            }
+            out = new ArrayList<>(Arrays.asList(moreKeys));
+            out.addAll(Arrays.asList(additionalMoreKeys).subList(additionalIndex, additionalCount));
         }
         if (out == null && moreKeysCount > 0) {
             return moreKeys;
         } else if (out != null && out.size() > 0) {
-            return out.toArray(new String[out.size()]);
+            return out.toArray(new String[0]);
         } else {
             return null;
         }

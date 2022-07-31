@@ -209,13 +209,8 @@ public class DictionaryInfoUtils {
 
     @Nullable
     public static File[] getUnusedDictionaryList(final Context context) {
-        return context.getFilesDir().listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String filename) {
-                return !TextUtils.isEmpty(filename) && filename.endsWith(".dict")
-                        && filename.contains(TEMP_DICT_FILE_SUB);
-            }
-        });
+        return context.getFilesDir().listFiles((dir, filename) -> !TextUtils.isEmpty(filename) && filename.endsWith(".dict")
+                && filename.contains(TEMP_DICT_FILE_SUB));
     }
 
     /**
@@ -409,9 +404,7 @@ public class DictionaryInfoUtils {
             final DictionaryHeader header =
                     BinaryDictionaryUtils.getHeaderWithOffsetAndLength(file, offset, length);
             return header;
-        } catch (UnsupportedFormatException e) {
-            return null;
-        } catch (IOException e) {
+        } catch (UnsupportedFormatException | IOException e) {
             return null;
         }
     }

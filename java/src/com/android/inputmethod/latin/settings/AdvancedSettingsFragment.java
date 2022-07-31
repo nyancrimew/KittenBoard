@@ -22,12 +22,10 @@ import android.content.res.Resources;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.ListPreference;
-import android.preference.Preference;
 
 import com.android.inputmethod.latin.AudioAndHapticFeedbackManager;
 import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.SystemBroadcastReceiver;
-import com.android.inputmethod.latin.define.ProductionFlags;
 
 import java.util.Locale;
 

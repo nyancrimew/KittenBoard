@@ -173,12 +173,7 @@ final class EmojiPageKeyboardView extends KeyboardView implements
             return false;
         }
         // Do not trigger key-down effect right now in case this is actually a fling action.
-        mPendingKeyDown = new Runnable() {
-            @Override
-            public void run() {
-                callListenerOnPressKey(key);
-            }
-        };
+        mPendingKeyDown = () -> callListenerOnPressKey(key);
         mHandler.postDelayed(mPendingKeyDown, KEY_PRESS_DELAY_TIME);
         return false;
     }
@@ -200,12 +195,7 @@ final class EmojiPageKeyboardView extends KeyboardView implements
         if (key == currentKey && pendingKeyDown != null) {
             pendingKeyDown.run();
             // Trigger key-release event a little later so that a user can see visual feedback.
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    callListenerOnReleaseKey(key, true /* withRegistering */);
-                }
-            }, KEY_RELEASE_DELAY_TIME);
+            mHandler.postDelayed(() -> callListenerOnReleaseKey(key, true /* withRegistering */), KEY_RELEASE_DELAY_TIME);
         } else {
             callListenerOnReleaseKey(key, true /* withRegistering */);
         }
