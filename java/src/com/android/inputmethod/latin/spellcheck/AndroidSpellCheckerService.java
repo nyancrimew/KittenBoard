@@ -31,7 +31,6 @@ import com.android.inputmethod.keyboard.KeyboardLayoutSet;
 import com.android.inputmethod.latin.DictionaryFacilitator;
 import com.android.inputmethod.latin.DictionaryFacilitatorLruCache;
 import com.android.inputmethod.latin.NgramContext;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.RichInputMethodSubtype;
 import com.android.inputmethod.latin.SuggestedWords;
 import com.android.inputmethod.latin.common.ComposedData;
@@ -47,6 +46,8 @@ import java.util.concurrent.Semaphore;
 
 import javax.annotation.Nonnull;
 
+import gay.crimew.inputmethod.latin.R;
+
 /**
  * Service for spell checking, using LatinIME's dictionaries and mechanisms.
  */
@@ -56,6 +57,7 @@ public final class AndroidSpellCheckerService extends SpellCheckerService
     private static final boolean DEBUG = false;
 
     public static final String PREF_USE_CONTACTS_KEY = "pref_spellcheck_use_contacts";
+    public static final String PREF_BLOCK_OFFENSIVE_KEY = "pref_spellcheck_block_offensive";
 
     private static final int SPELLCHECKER_DUMMY_KEYBOARD_WIDTH = 480;
     private static final int SPELLCHECKER_DUMMY_KEYBOARD_HEIGHT = 301;
@@ -76,9 +78,7 @@ public final class AndroidSpellCheckerService extends SpellCheckerService
 
     // The threshold for a suggestion to be considered "recommended".
     private float mRecommendedThreshold;
-    // TODO: make a spell checker option to block offensive words or not
-    private final SettingsValuesForSuggestion mSettingsValuesForSuggestion =
-            new SettingsValuesForSuggestion(true /* blockPotentiallyOffensive */);
+    private boolean mBlockPotentiallyOffensive;
 
     public static final String SINGLE_QUOTE = "\u0027";
     public static final String APOSTROPHE = "\u2019";
@@ -98,6 +98,7 @@ public final class AndroidSpellCheckerService extends SpellCheckerService
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(this);
         onSharedPreferenceChanged(prefs, PREF_USE_CONTACTS_KEY);
+        onSharedPreferenceChanged(prefs, PREF_BLOCK_OFFENSIVE_KEY);
     }
 
     public float getRecommendedThreshold() {
@@ -130,9 +131,15 @@ public final class AndroidSpellCheckerService extends SpellCheckerService
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences prefs, final String key) {
-        if (!PREF_USE_CONTACTS_KEY.equals(key)) return;
-        final boolean useContactsDictionary = prefs.getBoolean(PREF_USE_CONTACTS_KEY, true);
-        mDictionaryFacilitatorCache.setUseContactsDictionary(useContactsDictionary);
+        switch (key) {
+        case PREF_USE_CONTACTS_KEY:
+            final boolean useContactsDictionary = prefs.getBoolean(PREF_USE_CONTACTS_KEY, true);
+            mDictionaryFacilitatorCache.setUseContactsDictionary(useContactsDictionary);
+            break;
+        case PREF_BLOCK_OFFENSIVE_KEY:
+            mBlockPotentiallyOffensive = prefs.getBoolean(PREF_BLOCK_OFFENSIVE_KEY, true);
+            break;
+        }
     }
 
     @Override
@@ -182,7 +189,7 @@ public final class AndroidSpellCheckerService extends SpellCheckerService
             DictionaryFacilitator dictionaryFacilitatorForLocale =
                     mDictionaryFacilitatorCache.get(locale);
             return dictionaryFacilitatorForLocale.getSuggestionResults(composedData, ngramContext,
-                    keyboard, mSettingsValuesForSuggestion,
+                    keyboard, new SettingsValuesForSuggestion(mBlockPotentiallyOffensive),
                     sessionId, SuggestedWords.INPUT_STYLE_TYPING);
         } finally {
             if (sessionId != null) {
