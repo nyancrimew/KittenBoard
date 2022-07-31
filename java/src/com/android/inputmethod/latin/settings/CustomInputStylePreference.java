@@ -33,13 +33,13 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
 import com.android.inputmethod.compat.InputMethodSubtypeCompatUtils;
-import com.android.inputmethod.compat.ViewCompatUtils;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.RichInputMethodManager;
 import com.android.inputmethod.latin.utils.AdditionalSubtypeUtils;
 import com.android.inputmethod.latin.utils.SubtypeLocaleUtils;
 
 import java.util.TreeSet;
+
+import gay.crimew.inputmethod.latin.R;
 
 final class CustomInputStylePreference extends DialogPreference
         implements DialogInterface.OnCancelListener {
@@ -125,8 +125,7 @@ final class CustomInputStylePreference extends DialogPreference
         // the view would align them to the left even if the system locale is RTL, but that
         // would look strange. To fix this, we align them to the view's start, which will be
         // natural for any direction.
-        ViewCompatUtils.setTextAlignment(
-                mKeyboardLayoutSetSpinner, ViewCompatUtils.TEXT_ALIGNMENT_VIEW_START);
+        mKeyboardLayoutSetSpinner.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
         return v;
     }
 

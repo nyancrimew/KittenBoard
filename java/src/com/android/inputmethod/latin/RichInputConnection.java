@@ -32,10 +32,9 @@ import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
-import com.android.inputmethod.compat.InputConnectionCompatUtils;
 import com.android.inputmethod.latin.common.Constants;
-import com.android.inputmethod.latin.common.UnicodeSurrogate;
 import com.android.inputmethod.latin.common.StringUtils;
+import com.android.inputmethod.latin.common.UnicodeSurrogate;
 import com.android.inputmethod.latin.inputlogic.PrivateCommandPerformer;
 import com.android.inputmethod.latin.settings.SpacingAndPunctuations;
 import com.android.inputmethod.latin.utils.CapsModeUtils;
@@ -1027,7 +1026,8 @@ public final class RichInputConnection implements PrivateCommandPerformer {
         if (!isConnected()) {
             return false;
         }
-        return InputConnectionCompatUtils.requestCursorUpdates(
-                mIC, enableMonitor, requestImmediateCallback);
+        final int cursorUpdateMode = (enableMonitor ? InputConnection.CURSOR_UPDATE_MONITOR : 0)
+                | (requestImmediateCallback ? InputConnection.CURSOR_UPDATE_IMMEDIATE : 0);
+        return mIC.requestCursorUpdates(cursorUpdateMode);
     }
 }

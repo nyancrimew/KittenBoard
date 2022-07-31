@@ -30,16 +30,13 @@ import android.util.Xml;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodSubtype;
 
-import com.android.inputmethod.compat.EditorInfoCompatUtils;
 import com.android.inputmethod.compat.InputMethodSubtypeCompatUtils;
 import com.android.inputmethod.compat.UserManagerCompatUtils;
 import com.android.inputmethod.keyboard.internal.KeyboardBuilder;
 import com.android.inputmethod.keyboard.internal.KeyboardParams;
 import com.android.inputmethod.keyboard.internal.UniqueKeysCache;
 import com.android.inputmethod.latin.InputAttributes;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.RichInputMethodSubtype;
-import com.android.inputmethod.latin.define.DebugFlags;
 import com.android.inputmethod.latin.utils.InputTypeUtils;
 import com.android.inputmethod.latin.utils.ScriptUtils;
 import com.android.inputmethod.latin.utils.SubtypeLocaleUtils;
@@ -54,6 +51,8 @@ import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import gay.crimew.inputmethod.latin.R;
 
 /**
  * This class represents a set of keyboard layouts. Each of them represents a different keyboard
@@ -297,12 +296,11 @@ public final class KeyboardLayoutSet {
         public Builder setSubtype(@Nonnull final RichInputMethodSubtype subtype) {
             final boolean asciiCapable = InputMethodSubtypeCompatUtils.isAsciiCapable(subtype);
             // TODO: Consolidate with {@link InputAttributes}.
-            @SuppressWarnings("deprecation")
-            final boolean deprecatedForceAscii = InputAttributes.inPrivateImeOptions(
+            @SuppressWarnings("deprecation") final boolean deprecatedForceAscii = InputAttributes.inPrivateImeOptions(
                     mPackageName, FORCE_ASCII, mParams.mEditorInfo);
-            final boolean forceAscii = EditorInfoCompatUtils.hasFlagForceAscii(
-                    mParams.mEditorInfo.imeOptions)
-                    || deprecatedForceAscii;
+            final boolean forceAscii =
+                    (mParams.mEditorInfo.imeOptions & EditorInfo.IME_FLAG_FORCE_ASCII) != 0
+                            || deprecatedForceAscii;
             final RichInputMethodSubtype keyboardSubtype = (forceAscii && !asciiCapable)
                     ? RichInputMethodSubtype.getNoLanguageSubtype()
                     : subtype;

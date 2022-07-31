@@ -26,7 +26,6 @@ import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
 
-import com.android.inputmethod.compat.InputMethodServiceCompatUtils;
 import com.android.inputmethod.event.Event;
 import com.android.inputmethod.keyboard.KeyboardLayoutSet.KeyboardLayoutSetException;
 import com.android.inputmethod.keyboard.emoji.EmojiPalettesView;
@@ -34,7 +33,6 @@ import com.android.inputmethod.keyboard.internal.KeyboardState;
 import com.android.inputmethod.keyboard.internal.KeyboardTextsSet;
 import com.android.inputmethod.latin.InputView;
 import com.android.inputmethod.latin.LatinIME;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.RichInputMethodManager;
 import com.android.inputmethod.latin.WordComposer;
 import com.android.inputmethod.latin.define.ProductionFlags;
@@ -47,6 +45,8 @@ import com.android.inputmethod.latin.utils.ResourceUtils;
 import com.android.inputmethod.latin.utils.ScriptUtils;
 
 import javax.annotation.Nonnull;
+
+import gay.crimew.inputmethod.latin.R;
 
 public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
     private static final String TAG = KeyboardSwitcher.class.getSimpleName();
@@ -86,8 +86,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         mLatinIME = latinIme;
         mRichImm = RichInputMethodManager.getInstance();
         mState = new KeyboardState(this);
-        mIsHardwareAcceleratedDrawingEnabled =
-                InputMethodServiceCompatUtils.enableHardwareAcceleration(mLatinIME);
+        mIsHardwareAcceleratedDrawingEnabled = mLatinIME.enableHardwareAcceleration();
     }
 
     public void updateKeyboardTheme(@NonNull Context displayContext) {

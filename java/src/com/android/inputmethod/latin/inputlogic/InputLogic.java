@@ -29,7 +29,6 @@ import android.view.KeyEvent;
 import android.view.inputmethod.CorrectionInfo;
 import android.view.inputmethod.EditorInfo;
 
-import com.android.inputmethod.compat.SuggestionSpanUtils;
 import com.android.inputmethod.event.Event;
 import com.android.inputmethod.event.InputTransaction;
 import com.android.inputmethod.keyboard.Keyboard;
@@ -57,6 +56,7 @@ import com.android.inputmethod.latin.utils.AsyncResultHolder;
 import com.android.inputmethod.latin.utils.InputTypeUtils;
 import com.android.inputmethod.latin.utils.RecapitalizeStatus;
 import com.android.inputmethod.latin.utils.StatsUtils;
+import com.android.inputmethod.latin.utils.SuggestionSpanUtils;
 import com.android.inputmethod.latin.utils.TextRange;
 
 import java.util.ArrayList;

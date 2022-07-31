@@ -36,7 +36,6 @@ import android.view.inputmethod.InputMethodSubtype;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import com.android.inputmethod.compat.InputMethodSubtypeCompatUtils;
 import com.android.inputmethod.event.Event;
 import com.android.inputmethod.keyboard.Key;
 import com.android.inputmethod.keyboard.Keyboard;
@@ -381,11 +380,11 @@ public class InputTestsBase extends ServiceTestCase<LatinIMEForTests> {
         // that {@link InputMethodSubtype#isAsciiCapable} can return the correct value.
         final String EXTRA_VALUE_FOR_TEST =
                 "KeyboardLayoutSet=" + SubtypeLocaleUtils.QWERTY
-                + "," + Constants.Subtype.ExtraValue.ASCII_CAPABLE
-                + "," + Constants.Subtype.ExtraValue.ENABLED_WHEN_DEFAULT_IS_NOT_ASCII_CAPABLE
-                + "," + Constants.Subtype.ExtraValue.EMOJI_CAPABLE
-                + null == combiningSpec ? "" : ("," + combiningSpec);
-        final InputMethodSubtype subtype = InputMethodSubtypeCompatUtils.newInputMethodSubtype(
+                        + "," + Constants.Subtype.ExtraValue.ASCII_CAPABLE
+                        + "," + Constants.Subtype.ExtraValue.ENABLED_WHEN_DEFAULT_IS_NOT_ASCII_CAPABLE
+                        + "," + Constants.Subtype.ExtraValue.EMOJI_CAPABLE
+                        + null == combiningSpec ? "" : ("," + combiningSpec);
+        final InputMethodSubtype subtype = new InputMethodSubtype(
                 R.string.subtype_no_language_qwerty,
                 R.drawable.ic_ime_switcher_dark,
                 locale,

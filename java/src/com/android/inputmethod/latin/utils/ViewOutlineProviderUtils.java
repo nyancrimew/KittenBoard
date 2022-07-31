@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package com.android.inputmethod.compat;
+package com.android.inputmethod.latin.utils;
 
-import android.annotation.TargetApi;
 import android.graphics.Outline;
 import android.inputmethodservice.InputMethodService;
-import android.os.Build;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 
-import com.android.inputmethod.compat.ViewOutlineProviderCompatUtils.InsetsUpdater;
-
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-class ViewOutlineProviderCompatUtilsLXX {
-    private ViewOutlineProviderCompatUtilsLXX() {
+public class ViewOutlineProviderUtils {
+    private ViewOutlineProviderUtils() {
         // This utility class is not publicly instantiable.
     }
 
-    static InsetsUpdater setInsetsOutlineProvider(final View view) {
+    public interface InsetsUpdater {
+        void setInsets(final InputMethodService.Insets insets);
+    }
+
+    public static InsetsUpdater setInsetsOutlineProvider(final View view) {
         final InsetsOutlineProvider provider = new InsetsOutlineProvider(view);
         view.setOutlineProvider(provider);
         return provider;
@@ -65,8 +64,7 @@ class ViewOutlineProviderCompatUtilsLXX {
                 return;
             }
             // TODO: Revisit this when floating/resize keyboard is supported.
-            outline.setRect(
-                    view.getLeft(), mLastVisibleTopInsets, view.getRight(), view.getBottom());
+            outline.setRect(view.getLeft(), mLastVisibleTopInsets, view.getRight(), view.getBottom());
         }
     }
 }

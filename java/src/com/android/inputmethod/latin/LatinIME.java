@@ -63,9 +63,6 @@ import com.android.inputmethod.accessibility.AccessibilityUtils;
 import com.android.inputmethod.annotations.UsedForTesting;
 import com.android.inputmethod.compat.BuildCompatUtils;
 import com.android.inputmethod.compat.EditorInfoCompatUtils;
-import com.android.inputmethod.compat.InputMethodServiceCompatUtils;
-import com.android.inputmethod.compat.ViewOutlineProviderCompatUtils;
-import com.android.inputmethod.compat.ViewOutlineProviderCompatUtils.InsetsUpdater;
 import com.android.inputmethod.dictionarypack.DictionaryPackConstants;
 import com.android.inputmethod.event.Event;
 import com.android.inputmethod.event.HardwareEventDecoder;
@@ -102,6 +99,8 @@ import com.android.inputmethod.latin.utils.StatsUtils;
 import com.android.inputmethod.latin.utils.StatsUtilsManager;
 import com.android.inputmethod.latin.utils.SubtypeLocaleUtils;
 import com.android.inputmethod.latin.utils.ViewLayoutUtils;
+import com.android.inputmethod.latin.utils.ViewOutlineProviderUtils;
+import com.android.inputmethod.latin.utils.ViewOutlineProviderUtils.InsetsUpdater;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -114,7 +113,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import gay.crimew.inputmethod.latin.R;
-import gay.crimew.inputmethod.latin.emojisearch.EmojiSearch;
 
 /**
  * Input method implementation for Qwerty'ish keyboard.
@@ -593,8 +591,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         mSettings = Settings.getInstance();
         mKeyboardSwitcher = KeyboardSwitcher.getInstance();
         mStatsUtilsManager = StatsUtilsManager.getInstance();
-        mIsHardwareAcceleratedDrawingEnabled =
-                InputMethodServiceCompatUtils.enableHardwareAcceleration(this);
+        mIsHardwareAcceleratedDrawingEnabled = enableHardwareAcceleration();
         Log.i(TAG, "Hardware accelerated drawing: " + mIsHardwareAcceleratedDrawingEnabled);
     }
 
@@ -846,7 +843,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
     public void setInputView(final View view) {
         super.setInputView(view);
         mInputView = view;
-        mInsetsUpdater = ViewOutlineProviderCompatUtils.setInsetsOutlineProvider(view);
+        mInsetsUpdater = ViewOutlineProviderUtils.setInsetsOutlineProvider(view);
         updateSoftInputWindowLayoutParameters();
         mSuggestionStripView = (SuggestionStripView)view.findViewById(R.id.suggestion_strip_view);
         if (hasSuggestionStripView()) {
@@ -1990,15 +1987,11 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
     }
 
     public boolean shouldSwitchToOtherInputMethods() {
-        // TODO: Revisit here to reorganize the settings. Probably we can/should use different
-        // strategy once the implementation of
-        // {@link InputMethodManager#shouldOfferSwitchingToNextInputMethod} is defined well.
-        final boolean fallbackValue = mSettings.getCurrent().mIncludesOtherImesInLanguageSwitchList;
         final IBinder token = getWindow().getWindow().getAttributes().token;
         if (token == null) {
-            return fallbackValue;
+            return true;
         }
-        return mRichImm.shouldOfferSwitchingToNextInputMethod(token, fallbackValue);
+        return mRichImm.shouldOfferSwitchingToNextInputMethod(token);
     }
 
     public boolean shouldShowLanguageSwitchKey() {
@@ -2014,7 +2007,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         if (token == null) {
             return true;
         }
-        return mRichImm.shouldOfferSwitchingToNextInputMethod(token, true);
+        return mRichImm.shouldOfferSwitchingToNextInputMethod(token);
     }
 
     private void setNavigationBarVisibility(final boolean visible) {

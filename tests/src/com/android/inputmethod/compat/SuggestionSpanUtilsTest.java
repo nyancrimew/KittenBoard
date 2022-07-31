@@ -32,6 +32,7 @@ import androidx.test.runner.AndroidJUnit4;
 
 import com.android.inputmethod.latin.SuggestedWords;
 import com.android.inputmethod.latin.SuggestedWords.SuggestedWordInfo;
+import com.android.inputmethod.latin.utils.SuggestionSpanUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

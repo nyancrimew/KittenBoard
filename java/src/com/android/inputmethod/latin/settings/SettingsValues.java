@@ -21,13 +21,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 
 import com.android.inputmethod.compat.AppWorkaroundsUtils;
 import com.android.inputmethod.latin.InputAttributes;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.RichInputMethodManager;
 import com.android.inputmethod.latin.utils.AsyncResultHolder;
 import com.android.inputmethod.latin.utils.ResourceUtils;
@@ -38,6 +36,8 @@ import java.util.Locale;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import gay.crimew.inputmethod.latin.R;
 
 /**
  * When you call the constructor of this class, you may want to change the current system locale by
@@ -67,7 +67,6 @@ public class SettingsValues {
     public final boolean mSoundOn;
     public final boolean mKeyPreviewPopupOn;
     public final boolean mShowsVoiceInputKey;
-    public final boolean mIncludesOtherImesInLanguageSwitchList;
     public final boolean mShowsLanguageSwitchKey;
     public final boolean mUseContactsDict;
     public final boolean mUsePersonalizedDicts;
@@ -136,12 +135,7 @@ public class SettingsValues {
         mKeyPreviewPopupOn = Settings.readKeyPreviewPopupEnabled(prefs, res);
         mSlidingKeyInputPreviewEnabled = prefs.getBoolean(
                 DebugSettings.PREF_SLIDING_KEY_INPUT_PREVIEW, true);
-        mShowsVoiceInputKey = needsToShowVoiceInputKey(prefs, res)
-                && mInputAttributes.mShouldShowVoiceInputKey
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-        mIncludesOtherImesInLanguageSwitchList = Settings.ENABLE_SHOW_LANGUAGE_SWITCH_KEY_SETTINGS
-                ? prefs.getBoolean(Settings.PREF_INCLUDE_OTHER_IMES_IN_LANGUAGE_SWITCH_LIST, false)
-                : true /* forcibly */;
+        mShowsVoiceInputKey = needsToShowVoiceInputKey(prefs, res) && mInputAttributes.mShouldShowVoiceInputKey;
         mShowsLanguageSwitchKey = Settings.readShowsLanguageSwitchKey(prefs);
         mUseContactsDict = prefs.getBoolean(Settings.PREF_KEY_USE_CONTACTS_DICT, true);
         mUsePersonalizedDicts = prefs.getBoolean(Settings.PREF_KEY_USE_PERSONALIZED_DICTS, true);
@@ -273,10 +267,7 @@ public class SettingsValues {
             return false;
         }
         final RichInputMethodManager imm = RichInputMethodManager.getInstance();
-        if (mIncludesOtherImesInLanguageSwitchList) {
-            return imm.hasMultipleEnabledIMEsOrSubtypes(false /* include aux subtypes */);
-        }
-        return imm.hasMultipleEnabledSubtypesInThisIme(false /* include aux subtypes */);
+        return imm.hasMultipleEnabledIMEsOrSubtypes(false /* include aux subtypes */);
     }
 
     public boolean isSameInputType(final EditorInfo editorInfo) {
@@ -290,13 +281,13 @@ public class SettingsValues {
     public boolean isBeforeJellyBean() {
         final AppWorkaroundsUtils appWorkaroundUtils
                 = mAppWorkarounds.get(null, TIMEOUT_TO_GET_TARGET_PACKAGE);
-        return null == appWorkaroundUtils ? false : appWorkaroundUtils.isBeforeJellyBean();
+        return appWorkaroundUtils != null && appWorkaroundUtils.isBeforeJellyBean();
     }
 
     public boolean isBrokenByRecorrection() {
         final AppWorkaroundsUtils appWorkaroundUtils
                 = mAppWorkarounds.get(null, TIMEOUT_TO_GET_TARGET_PACKAGE);
-        return null == appWorkaroundUtils ? false : appWorkaroundUtils.isBrokenByRecorrection();
+        return appWorkaroundUtils != null && appWorkaroundUtils.isBrokenByRecorrection();
     }
 
     private static final String SUGGESTIONS_VISIBILITY_HIDE_VALUE_OBSOLETE = "2";
@@ -384,8 +375,6 @@ public class SettingsValues {
         sb.append("" + mKeyPreviewPopupOn);
         sb.append("\n   mShowsVoiceInputKey = ");
         sb.append("" + mShowsVoiceInputKey);
-        sb.append("\n   mIncludesOtherImesInLanguageSwitchList = ");
-        sb.append("" + mIncludesOtherImesInLanguageSwitchList);
         sb.append("\n   mShowsLanguageSwitchKey = ");
         sb.append("" + mShowsLanguageSwitchKey);
         sb.append("\n   mUseContactsDict = ");

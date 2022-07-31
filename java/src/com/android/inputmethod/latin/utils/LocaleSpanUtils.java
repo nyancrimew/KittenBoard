@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.inputmethod.compat;
+package com.android.inputmethod.latin.utils;
 
 import android.text.Spannable;
 import android.text.Spanned;
@@ -23,56 +23,22 @@ import android.util.Log;
 
 import com.android.inputmethod.annotations.UsedForTesting;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
 
 @UsedForTesting
-public final class LocaleSpanCompatUtils {
-    private static final String TAG = LocaleSpanCompatUtils.class.getSimpleName();
-
-    // Note that LocaleSpan(Locale locale) has been introduced in API level 17
-    // (Build.VERSION_CODE.JELLY_BEAN_MR1).
-    private static Class<?> getLocaleSpanClass() {
-        try {
-            return Class.forName("android.text.style.LocaleSpan");
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
-    }
-    private static final Class<?> LOCALE_SPAN_TYPE;
-    private static final Constructor<?> LOCALE_SPAN_CONSTRUCTOR;
-    private static final Method LOCALE_SPAN_GET_LOCALE;
-    static {
-        LOCALE_SPAN_TYPE = getLocaleSpanClass();
-        LOCALE_SPAN_CONSTRUCTOR = CompatUtils.getConstructor(LOCALE_SPAN_TYPE, Locale.class);
-        LOCALE_SPAN_GET_LOCALE = CompatUtils.getMethod(LOCALE_SPAN_TYPE, "getLocale");
-    }
-
-    @UsedForTesting
-    public static boolean isLocaleSpanAvailable() {
-        return (LOCALE_SPAN_CONSTRUCTOR != null && LOCALE_SPAN_GET_LOCALE != null);
-    }
-
-    @UsedForTesting
-    public static Object newLocaleSpan(final Locale locale) {
-        return CompatUtils.newInstance(LOCALE_SPAN_CONSTRUCTOR, locale);
-    }
-
-    @UsedForTesting
-    public static Locale getLocaleFromLocaleSpan(final Object localeSpan) {
-        return (Locale) CompatUtils.invoke(localeSpan, null, LOCALE_SPAN_GET_LOCALE);
-    }
+public final class LocaleSpanUtils {
+    private static final String TAG = LocaleSpanUtils.class.getSimpleName();
 
     /**
      * Ensures that the specified range is covered with only one {@link LocaleSpan} with the given
      * locale. If the region is already covered by one or more {@link LocaleSpan}, their ranges are
      * updated so that each character has only one locale.
+     *
      * @param spannable the spannable object to be updated.
-     * @param start the start index from which {@link LocaleSpan} is attached (inclusive).
-     * @param end the end index to which {@link LocaleSpan} is attached (exclusive).
-     * @param locale the locale to be attached to the specified range.
+     * @param start     the start index from which {@link LocaleSpan} is attached (inclusive).
+     * @param end       the end index to which {@link LocaleSpan} is attached (exclusive).
+     * @param locale    the locale to be attached to the specified range.
      */
     @UsedForTesting
     public static void updateLocaleSpan(final Spannable spannable, final int start,
@@ -81,9 +47,7 @@ public final class LocaleSpanCompatUtils {
             Log.e(TAG, "Invalid range: start=" + start + " end=" + end);
             return;
         }
-        if (!isLocaleSpanAvailable()) {
-            return;
-        }
+
         // A brief summary of our strategy;
         //   1. Enumerate all LocaleSpans between [start - 1, end + 1].
         //   2. For each LocaleSpan S:
@@ -95,16 +59,16 @@ public final class LocaleSpanCompatUtils {
         final int searchStart = Math.max(start - 1, 0);
         final int searchEnd = Math.min(end + 1, spannable.length());
         // LocaleSpans found in the target range. See the step 1 in the above comment.
-        final Object[] existingLocaleSpans = spannable.getSpans(searchStart, searchEnd,
-                LOCALE_SPAN_TYPE);
+        final LocaleSpan[] existingLocaleSpans = spannable.getSpans(searchStart, searchEnd,
+                LocaleSpan.class);
         // LocaleSpans that are marked as "to be merged". See the step 2 in the above comment.
-        final ArrayList<Object> existingLocaleSpansToBeMerged = new ArrayList<>();
+        final ArrayList<LocaleSpan> existingLocaleSpansToBeMerged = new ArrayList<>();
         boolean isStartExclusive = true;
         boolean isEndExclusive = true;
         int newStart = start;
         int newEnd = end;
-        for (final Object existingLocaleSpan : existingLocaleSpans) {
-            final Locale attachedLocale = getLocaleFromLocaleSpan(existingLocaleSpan);
+        for (final LocaleSpan existingLocaleSpan : existingLocaleSpans) {
+            final Locale attachedLocale = existingLocaleSpan.getLocale();
             if (!locale.equals(attachedLocale)) {
                 // This LocaleSpan does not have the expected locale. Update its range if it has
                 // an intersection with the range [start, end] (the first case of the step 2 in the
@@ -140,10 +104,10 @@ public final class LocaleSpanCompatUtils {
         }
 
         int originalLocaleSpanFlag = 0;
-        Object localeSpan = null;
+        LocaleSpan localeSpan;
         if (existingLocaleSpansToBeMerged.isEmpty()) {
             // If there is no LocaleSpan that is marked as to be merged, create a new one.
-            localeSpan = newLocaleSpan(locale);
+            localeSpan = new LocaleSpan(locale);
         } else {
             // Reuse the first LocaleSpan to avoid unnecessary object instantiation.
             localeSpan = existingLocaleSpansToBeMerged.get(0);
@@ -158,11 +122,8 @@ public final class LocaleSpanCompatUtils {
         spannable.setSpan(localeSpan, newStart, newEnd, localeSpanFlag);
     }
 
-    private static void removeLocaleSpanFromRange(final Object localeSpan,
+    private static void removeLocaleSpanFromRange(final LocaleSpan localeSpan,
             final Spannable spannable, final int removeStart, final int removeEnd) {
-        if (!isLocaleSpanAvailable()) {
-            return;
-        }
         final int spanStart = spannable.getSpanStart(localeSpan);
         final int spanEnd = spannable.getSpanEnd(localeSpan);
         if (spanStart > spanEnd) {
@@ -181,9 +142,9 @@ public final class LocaleSpanCompatUtils {
         if (spanStart < removeStart) {
             if (removeEnd < spanEnd) {
                 // spanStart < removeStart < removeEnd < spanEnd
-                final Locale locale = getLocaleFromLocaleSpan(localeSpan);
+                final Locale locale = localeSpan.getLocale();
                 spannable.setSpan(localeSpan, spanStart, removeStart, spanFlags);
-                final Object attionalLocaleSpan = newLocaleSpan(locale);
+                final LocaleSpan attionalLocaleSpan = new LocaleSpan(locale);
                 spannable.setSpan(attionalLocaleSpan, removeEnd, spanEnd, spanFlags);
                 return;
             }
