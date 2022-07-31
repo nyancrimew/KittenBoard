@@ -17,19 +17,14 @@
 ** limitations under the License.
 */
 -->
-<!-- TODO: Remove paddingRight, layout_marginLeft, layout_marginRight for API version 17+ -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:gravity="center_vertical"
-    android:paddingRight="?android:attr/scrollbarSize"
-    android:paddingEnd="?android:attr/scrollbarSize"
     android:background="?android:attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="15dip"
     android:layout_marginStart="15dip"
-    android:layout_marginRight="6dip"
     android:layout_marginEnd="6dip"
     android:layout_marginTop="6dip"
     android:layout_marginBottom="6dip"
@@ -43,7 +38,6 @@
 
     <TextView
         android:id="@android:id/title"
-        android:layout_marginLeft="5dip"
         android:layout_marginStart="5dip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,8 +49,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dip"
-        android:layout_marginLeft="5dip">
+        android:layout_marginStart="5dip">
 
       <TextView
           android:id="@android:id/summary"
@@ -64,7 +57,7 @@
           android:layout_height="wrap_content"
           android:textAppearance="?android:attr/textAppearanceSmall"
           android:textColor="?android:attr/textColorSecondary"
-          android:maxLines="1" />
+          android:maxLines="1"/>
 
       <com.android.inputmethod.dictionarypack.DictionaryDownloadProgressBar
           android:id="@+id/dictionary_line_progress_bar"
@@ -80,14 +73,13 @@
       android:id="@+id/wordlist_button_switcher"
       android:layout_weight="0"
       android:layout_marginStart="13dip"
-      android:layout_marginLeft="13dip"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content">
     <Button
         android:id="@+id/dict_install_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|center_vertical"
+        android:layout_gravity="end|center_vertical"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/install_dict" />
@@ -95,7 +87,7 @@
         android:id="@+id/dict_cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|center_vertical"
+        android:layout_gravity="end|center_vertical"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/cancel_download_dict" />
@@ -103,7 +95,7 @@
         android:id="@+id/dict_delete_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|center_vertical"
+        android:layout_gravity="end|center_vertical"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/delete_dict" />

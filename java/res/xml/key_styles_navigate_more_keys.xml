@@ -18,51 +18,17 @@
 */
 -->
 
-<merge
-    xmlns:latin="http://schemas.android.com/apk/res/gay.crimew.inputmethod.latin"
->
+<merge xmlns:latin="http://schemas.android.com/apk/res/gay.crimew.inputmethod.latin">
     <switch>
-        <case latin:keyboardTheme="ICS|KLP">
+        <case latin:languageSwitchKeyEnabled="true">
             <key-style
                 latin:styleName="navigateNextMoreKeysStyle"
                 latin:keyLabelFlags="hasPopupHint|preserveCase"
-                latin:moreKeys="!text/keyspec_action_next" />
+                latin:moreKeys="!icon/next_key|!code/key_action_next"/>
             <key-style
                 latin:styleName="navigatePreviousMoreKeysStyle"
                 latin:keyLabelFlags="hasPopupHint|preserveCase"
-                latin:moreKeys="!text/keyspec_action_previous" />
-            <key-style
-                latin:styleName="navigatePreviousNextMoreKeysStyle"
-                latin:keyLabelFlags="hasPopupHint|preserveCase"
-                latin:moreKeys="!fixedColumnOrder!2,!needsDividers!,!text/keyspec_action_previous,!text/keyspec_action_next" />
-            <key-style
-                latin:styleName="navigateEmojiMoreKeysStyle"
-                latin:keyLabelFlags="hasPopupHint|preserveCase"
-                latin:moreKeys="!text/keyspec_emoji_action_key" />
-            <key-style
-                latin:styleName="navigateEmojiNextMoreKeysStyle"
-                latin:keyLabelFlags="hasPopupHint|preserveCase"
-                latin:moreKeys="!fixedColumnOrder!2,!needsDividers!,!text/keyspec_emoji_action_key,!text/keyspec_action_next" />
-            <key-style
-                latin:styleName="navigateEmojiPreviousMoreKeysStyle"
-                latin:keyLabelFlags="hasPopupHint|preserveCase"
-                latin:moreKeys="!fixedColumnOrder!2,!needsDividers!,!text/keyspec_emoji_action_key,!text/keyspec_action_previous" />
-            <key-style
-                latin:styleName="navigateEmojiPreviousNextMoreKeysStyle"
-                latin:keyLabelFlags="hasPopupHint|preserveCase"
-                latin:moreKeys="!fixedColumnOrder!3,!needsDividers!,!text/keyspec_emoji_action_key,!text/keyspec_action_previous,!text/keyspec_action_next" />
-        </case>
-        <case
-            latin:languageSwitchKeyEnabled="true"
-        >
-            <key-style
-                latin:styleName="navigateNextMoreKeysStyle"
-                latin:keyLabelFlags="hasPopupHint|preserveCase"
-                latin:moreKeys="!icon/next_key|!code/key_action_next" />
-            <key-style
-                latin:styleName="navigatePreviousMoreKeysStyle"
-                latin:keyLabelFlags="hasPopupHint|preserveCase"
-                latin:moreKeys="!icon/previous_key|!code/key_action_previous" />
+                latin:moreKeys="!icon/previous_key|!code/key_action_previous"/>
             <key-style
                 latin:styleName="navigatePreviousNextMoreKeysStyle"
                 latin:keyLabelFlags="hasPopupHint|preserveCase"

@@ -102,32 +102,19 @@
             <key-style
                 latin:styleName="searchActionKeyStyle"
                 latin:keySpec="!icon/search_key|!code/key_enter"
-                latin:parentStyle="defaultEnterKeyStyle" />
+                latin:parentStyle="defaultEnterKeyStyle"/>
         </case>
         <default>
             <key-style
                 latin:styleName="searchActionKeyStyle"
                 latin:keySpec="!text/label_search_key|!code/key_enter"
-                latin:parentStyle="defaultEnterKeyStyle" />
+                latin:parentStyle="defaultEnterKeyStyle"/>
         </default>
     </switch>
-    <switch>
-        <case latin:keyboardTheme="ICS|KLP">
-            <key-style
-                latin:styleName="customLabelActionKeyStyle"
-                latin:keySpec="dummy_label|!code/key_enter"
-                latin:keyLabelFlags="fromCustomActionLabel"
-                latin:backgroundType="action"
-                latin:parentStyle="defaultEnterKeyStyle" />
-        </case>
-        <!-- keyboardTheme="LXXLight|LXXDark" -->
-        <default>
-            <key-style
-                latin:styleName="customLabelActionKeyStyle"
-                latin:keySpec="dummy_label|!code/key_enter"
-                latin:keyLabelFlags="fromCustomActionLabel"
-                latin:backgroundType="functional"
-                latin:parentStyle="defaultEnterKeyStyle" />
-        </default>
-    </switch>
+    <key-style
+        latin:styleName="customLabelActionKeyStyle"
+        latin:keySpec="dummy_label|!code/key_enter"
+        latin:keyLabelFlags="fromCustomActionLabel"
+        latin:backgroundType="functional"
+        latin:parentStyle="defaultEnterKeyStyle"/>
 </merge>
