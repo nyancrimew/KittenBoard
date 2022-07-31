@@ -24,17 +24,19 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.android.inputmethod.keyboard.Key;
-import gay.crimew.inputmethod.latin.R;
 
 import java.util.HashSet;
+
+import gay.crimew.inputmethod.latin.R;
 
 /**
  * The pop up key preview view.
  */
-public class KeyPreviewView extends TextView {
+public class KeyPreviewView extends AppCompatTextView {
     public static final int POSITION_MIDDLE = 0;
     public static final int POSITION_LEFT = 1;
     public static final int POSITION_RIGHT = 2;

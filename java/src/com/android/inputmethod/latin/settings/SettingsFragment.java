@@ -18,7 +18,6 @@ package com.android.inputmethod.latin.settings;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
@@ -29,12 +28,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.define.ProductionFlags;
 import com.android.inputmethod.latin.utils.ApplicationUtils;
 import com.android.inputmethod.latin.utils.FeedbackUtils;
 import com.android.inputmethod.latin.utils.JniUtils;
 import com.android.inputmethodcommon.InputMethodSettingsFragment;
+
+import gay.crimew.inputmethod.latin.R;
 
 public final class SettingsFragment extends InputMethodSettingsFragment {
     // We don't care about menu grouping.
@@ -110,9 +110,6 @@ public final class SettingsFragment extends InputMethodSettingsFragment {
     }
 
     private static boolean isUserSetupComplete(final Activity activity) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return true;
-        }
         return Secure.getInt(activity.getContentResolver(), "user_setup_complete", 0) != 0;
     }
 }

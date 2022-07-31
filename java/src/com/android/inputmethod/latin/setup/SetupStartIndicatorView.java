@@ -21,12 +21,13 @@ import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import androidx.core.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.view.ViewCompat;
 
 import gay.crimew.inputmethod.latin.R;
 
@@ -40,7 +41,7 @@ public final class SetupStartIndicatorView extends LinearLayout {
         labelView.setIndicatorView(findViewById(R.id.setup_start_indicator));
     }
 
-    public static final class LabelView extends TextView {
+    public static final class LabelView extends AppCompatTextView {
         private View mIndicatorView;
 
         public LabelView(final Context context, final AttributeSet attrs) {

@@ -23,20 +23,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.text.TextUtils;
 
 import com.android.inputmethod.dictionarypack.DictionarySettingsActivity;
-import gay.crimew.inputmethod.latin.R;
 import com.android.inputmethod.latin.permissions.PermissionsManager;
 import com.android.inputmethod.latin.permissions.PermissionsUtil;
 import com.android.inputmethod.latin.userdictionary.UserDictionaryList;
 import com.android.inputmethod.latin.userdictionary.UserDictionarySettings;
 
 import java.util.TreeSet;
+
+import gay.crimew.inputmethod.latin.R;
 
 /**
  * "Text correction" settings sub screen.
@@ -56,9 +56,7 @@ public final class CorrectionSettingsFragment extends SubScreenFragment
             PermissionsManager.PermissionsResultCallback {
 
     private static final boolean DBG_USE_INTERNAL_PERSONAL_DICTIONARY_SETTINGS = false;
-    private static final boolean USE_INTERNAL_PERSONAL_DICTIONARY_SETTINGS =
-            DBG_USE_INTERNAL_PERSONAL_DICTIONARY_SETTINGS
-            || Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2;
+    private static final boolean USE_INTERNAL_PERSONAL_DICTIONARY_SETTINGS = DBG_USE_INTERNAL_PERSONAL_DICTIONARY_SETTINGS;
 
     private SwitchPreference mUseContactsPreference;
 

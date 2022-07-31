@@ -28,7 +28,6 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodSubtype;
 
 import com.android.inputmethod.annotations.UsedForTesting;
-import com.android.inputmethod.compat.InputMethodSubtypeCompatUtils;
 import com.android.inputmethod.latin.common.StringUtils;
 
 import java.util.ArrayList;
@@ -62,17 +61,19 @@ public final class AdditionalSubtypeUtils {
             final String localeString, final String keyboardLayoutSetName,
             final boolean isAsciiCapable, final boolean isEmojiCapable) {
         final int nameId = SubtypeLocaleUtils.getSubtypeNameId(localeString, keyboardLayoutSetName);
-        final String platformVersionDependentExtraValues = getPlatformVersionDependentExtraValue(
-                localeString, keyboardLayoutSetName, isAsciiCapable, isEmojiCapable);
+        final String platformVersionDependentExtraValues = getPlatformVersionDependentExtraValue(localeString,
+                keyboardLayoutSetName, isEmojiCapable);
         final int platformVersionIndependentSubtypeId =
                 getPlatformVersionIndependentSubtypeId(localeString, keyboardLayoutSetName);
-        // NOTE: In KitKat and later, InputMethodSubtypeBuilder#setIsAsciiCapable is also available.
-        // TODO: Use InputMethodSubtypeBuilder#setIsAsciiCapable when appropriate.
-        return InputMethodSubtypeCompatUtils.newInputMethodSubtype(nameId,
-                R.drawable.ic_ime_switcher_dark, localeString, KEYBOARD_MODE,
-                platformVersionDependentExtraValues,
-                false /* isAuxiliary */, false /* overrideImplicitlyEnabledSubtype */,
-                platformVersionIndependentSubtypeId);
+        return new InputMethodSubtype.InputMethodSubtypeBuilder()
+                .setSubtypeNameResId(nameId)
+                .setSubtypeIconResId(R.drawable.ic_ime_switcher_dark)
+                .setSubtypeLocale(localeString)
+                .setSubtypeMode(KEYBOARD_MODE)
+                .setSubtypeExtraValue(platformVersionDependentExtraValues)
+                .setIsAsciiCapable(isAsciiCapable)
+                .setSubtypeId(platformVersionIndependentSubtypeId)
+                .build();
     }
 
     public static InputMethodSubtype createDummyAdditionalSubtype(
@@ -168,19 +169,14 @@ public final class AdditionalSubtypeUtils {
      * </p>
      * @param localeString the locale string (e.g., "en_US").
      * @param keyboardLayoutSetName the keyboard layout set name (e.g., "dvorak").
-     * @param isAsciiCapable true when ASCII characters are supported with this layout.
      * @param isEmojiCapable true when Unicode Emoji characters are supported with this layout.
      * @return extra value that is optimized for the running OS.
      * @see #getPlatformVersionIndependentSubtypeId(String, String)
      */
     private static String getPlatformVersionDependentExtraValue(final String localeString,
-            final String keyboardLayoutSetName, final boolean isAsciiCapable,
-            final boolean isEmojiCapable) {
+            final String keyboardLayoutSetName, final boolean isEmojiCapable) {
         final ArrayList<String> extraValueItems = new ArrayList<>();
         extraValueItems.add(KEYBOARD_LAYOUT_SET + "=" + keyboardLayoutSetName);
-        if (isAsciiCapable) {
-            extraValueItems.add(ASCII_CAPABLE);
-        }
         if (SubtypeLocaleUtils.isExceptionalLocale(localeString)) {
             extraValueItems.add(UNTRANSLATABLE_STRING_IN_SUBTYPE_NAME + "=" +
                     SubtypeLocaleUtils.getKeyboardLayoutSetDisplayName(keyboardLayoutSetName));
