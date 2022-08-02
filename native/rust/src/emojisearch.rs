@@ -7,6 +7,8 @@ use jni::sys::jboolean;
 use jni::JNIEnv;
 use levenshtein::levenshtein;
 
+use crate::expect_droid::ResultExt;
+
 include!(concat!(env!("OUT_DIR"), "/emoji_data.rs"));
 
 const SCORE_CUTOFF: i32 = 87;
@@ -21,8 +23,13 @@ pub extern "C" fn Java_gay_crimew_inputmethod_latin_emojisearch_EmojiSearch_sear
     exact: jboolean,
     outArray: JObject,
 ) {
-    let query: String = env.get_string(query).unwrap().into();
-    let exact: bool = JValue::Bool(exact).z().unwrap();
+    let query: String = env
+        .get_string(query)
+        .expect_droid(&env, "Couldn't get 'query' in rust context")
+        .into();
+    let exact: bool = JValue::Bool(exact)
+        .z()
+        .expect_droid(&env, "Couldn't get 'exact' in rust context");
 
     let len_query = query.chars().count();
     let mut results: Vec<(String, i32)> = EMOJI_DATA
@@ -80,11 +87,17 @@ pub extern "C" fn Java_gay_crimew_inputmethod_latin_emojisearch_EmojiSearch_sear
     results.sort_by_key(|e| e.1);
     results.reverse();
 
-    let output_list = JList::from_env(&env, outArray).expect("Couldn't wrap ArrayList");
+    let output_list = JList::from_env(&env, outArray).expect_droid(&env, "Couldn't wrap ArrayList");
     results.iter().for_each(|e| {
-        let entry = JObject::from(env.new_string(String::from(e.0.as_str())).unwrap());
-        output_list.add(entry).unwrap();
-        env.delete_local_ref(entry).unwrap();
+        let entry = JObject::from(
+            env.new_string(String::from(e.0.as_str()))
+                .expect_droid(&env, "Couldn't turn entry into jni string"),
+        );
+        output_list
+            .add(entry)
+            .expect_droid(&env, "Couldn't add to output list");
+        env.delete_local_ref(entry)
+            .expect_droid(&env, "Couldn't delete local ref to entry");
     });
 }
 
