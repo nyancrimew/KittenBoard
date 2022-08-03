@@ -44,10 +44,12 @@ void ProximityInfoState::initInputParams(const int pointerId, const float maxPoi
         const int *const xCoordinates, const int *const yCoordinates, const int *const times,
         const int *const pointerIds, const bool isGeometric, const std::vector<int> *locale) {
     ASSERT(isGeometric || (inputSize < MAX_WORD_LENGTH));
-    mIsContinuousSuggestionPossible = (mHasBeenUpdatedByGeometricInput != isGeometric) ?
-            false : ProximityInfoStateUtils::checkAndReturnIsContinuousSuggestionPossible(
-                    inputSize, xCoordinates, yCoordinates, times, mSampledInputSize,
-                    &mSampledInputXs, &mSampledInputYs, &mSampledTimes, &mSampledInputIndice);
+    mIsContinuousSuggestionPossible = mHasBeenUpdatedByGeometricInput == isGeometric &&
+                                      ProximityInfoStateUtils::checkAndReturnIsContinuousSuggestionPossible(
+                                              inputSize, xCoordinates, yCoordinates, times,
+                                              mSampledInputSize,
+                                              &mSampledInputXs, &mSampledInputYs, &mSampledTimes,
+                                              &mSampledInputIndice);
     if (DEBUG_DICT) {
         AKLOGI("isContinuousSuggestionPossible = %s",
                 (mIsContinuousSuggestionPossible ? "true" : "false"));

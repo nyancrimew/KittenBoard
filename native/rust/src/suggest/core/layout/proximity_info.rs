@@ -1,8 +1,8 @@
 use std::cmp::{min, Ordering};
 use std::collections::HashMap;
 
-use jni::JNIEnv;
 use jni::sys::{jfloat, jfloatArray, jint, jintArray};
+use jni::JNIEnv;
 
 use crate::defines::{KEYCODE_SPACE, MAX_KEY_COUNT_IN_A_KEYBOARD};
 use crate::expect_droid::ResultExt;
@@ -235,26 +235,24 @@ impl ProximityInfo {
 
     pub fn initialize_proximities(
         &self,
-        input_codes: Vec<char>,
-        input_x_coordinates: Vec<i32>,
-        input_y_coordinates: Vec<i32>,
-        input_size: i32,
-        // alias: all_input_codes
-        // TODO: this feels like a very cpp way of doing things, we probably wanna do this in another way
-        mut input_proximities: Vec<char>,
-        locale: &str,
-    ) {
+        input_codes: &Vec<char>,
+        input_x_coordinates: &Vec<i32>,
+        input_y_coordinates: &Vec<i32>,
+        input_size: &usize,
+        locale: &String,
+    ) -> Vec<Vec<char>> {
         // Initialize
         // - mInputCodes
         // - mNormalizedSquaredDistances
         // TODO: Merge
-        for i in 0..input_size as usize {
-            let primary_key = input_codes[i];
-            let x = input_x_coordinates[i];
-            let y = input_y_coordinates[i];
-            let proximities = &mut input_proximities[..i * MAX_PROXIMITY_CHARS_SIZE];
-            self.calculate_proximities(x, y, primary_key, locale, proximities);
-        }
+        (0..*input_size)
+            .map(|i| {
+                let primary_key = input_codes[i];
+                let x = input_x_coordinates[i];
+                let y = input_y_coordinates[i];
+                self.calculate_proximities(x, y, primary_key, locale)
+            })
+            .collect()
     }
 
     fn calculate_proximities(
@@ -262,16 +260,15 @@ impl ProximityInfo {
         x: i32,
         y: i32,
         primary_key: char,
-        locale: &str,
-        proximities: &mut [char],
-    ) {
+        locale: &String,
+    ) -> Vec<char> {
         let mut insert_pos = 0;
-        proximities[insert_pos] = primary_key;
+        let mut proximities = vec![primary_key];
         insert_pos += 1;
 
         if x < 0 || y < 0 {
             // TODO: panic or handle properly
-            return;
+            return proximities;
         }
 
         let start_index = get_start_index_from_coordinates(
@@ -290,16 +287,16 @@ impl ProximityInfo {
             let on_key = self.is_on_key(key_id, x, y);
             let distance = self.squared_length_to_edge(key_id, x, y);
             if on_key || distance < self.most_common_key_width_square {
-                proximities[insert_pos] = c;
-                insert_pos += 1;
-                if insert_pos >= MAX_PROXIMITY_CHARS_SIZE {
+                proximities.push(c);
+                if proximities.len() >= MAX_PROXIMITY_CHARS_SIZE {
                     // TODO: panic
-                    return;
+                    return proximities;
                 }
             }
         }
         // TODO: additional proximities
         // TODO: do we also need delimiters??
+        proximities
     }
 
     fn squared_length_to_edge(&self, key_id: usize, x: i32, y: i32) -> i32 {
