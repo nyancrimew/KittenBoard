@@ -1,16 +1,18 @@
+use std::cmp::min;
 use std::collections::HashMap;
 
 use indexmap::IndexMap;
 
 use crate::defines::DoubleLetterLevel;
 use crate::math::{get_angle, get_angle_diff, get_distance_int};
-use crate::suggest::core::layout::proximity_info::{MAX_PROXIMITY_CHARS_SIZE, ProximityInfo};
+use crate::suggest::core::layout::proximity_info::ProximityInfo;
 use crate::suggest::core::layout::proximity_info_params::{
     CORNER_ANGLE_THRESHOLD_FOR_POINT_SCORE, CORNER_CHECK_DISTANCE_THRESHOLD_SCALE, CORNER_SCORE,
     CORNER_SUM_ANGLE_THRESHOLD, DISTANCE_BASE_SCALE, LAST_POINT_SKIP_DISTANCE_SCALE,
     LOCALMIN_DISTANCE_AND_NEAR_TO_KEY_SCORE, MARGIN_FOR_PREV_LOCAL_MIN,
     MIN_DOUBLE_LETTER_BEELINE_SPEED_PERCENTILE, NEAR_KEY_THRESHOLD_FOR_DISTANCE,
     NEAR_KEY_THRESHOLD_FOR_POINT_SCORE, NOT_LOCALMIN_DISTANCE_SCORE,
+    NUM_POINTS_FOR_SPEED_CALCULATION,
 };
 
 type NearKeysDistanceMap = IndexMap<usize, f32>;
@@ -73,11 +75,11 @@ impl ProximityInfoState {
         self.is_continuous_suggestion_possible = self.has_been_updated_by_geometric_input
             == is_geometric
             && self.check_and_return_is_continuos_suggestion_possible(
-                &input_size,
-                &x_coordinates,
-                &y_coordinates,
-                times,
-            );
+            &input_size,
+            &x_coordinates,
+            &y_coordinates,
+            &times,
+        );
 
         self.proximity_info = proximity_info;
 
@@ -118,8 +120,28 @@ impl ProximityInfoState {
             self.char_probabilities.clear();
             self.directions.clear();
         }
+
         // TODO: we assume that we always have x coordinates and y coordinates, the cpp code doesnt
-        //self.sampled_input_size =
+        self.sampled_input_size = self.update_touch_points(
+            x_coordinates,
+            y_coordinates,
+            &times,
+            pointer_ids,
+            input_size,
+            is_geometric,
+            pointer_id,
+            push_touch_point_start_index,
+        );
+
+        if self.sampled_input_size > 0 && is_geometric {
+            self.average_speed = self.refresh_speed_rates(
+                input_size,
+                &x_coordinates,
+                &y_coordinates,
+                &times,
+                last_saved_input_size,
+            )
+        }
     }
 
     #[inline]
@@ -267,7 +289,7 @@ impl ProximityInfoState {
         input_size: &usize,
         x_coordinates: &Vec<i32>,
         y_coordinates: &Vec<i32>,
-        times: Option<Vec<i32>>,
+        times: &Option<Vec<i32>>,
     ) -> bool {
         if input_size < &self.sampled_input_size {
             return false;
@@ -282,7 +304,7 @@ impl ProximityInfoState {
             {
                 return false;
             }
-            if let Some(t) = &times {
+            if let Some(t) = times {
                 if t[index] != self.sampled_times[i] {
                     return false;
                 }
@@ -310,7 +332,7 @@ impl ProximityInfoState {
         &mut self,
         x_coordinates: Vec<i32>,
         y_coordinates: Vec<i32>,
-        times: Vec<i32>,
+        times: &Option<Vec<i32>>,
         // TODO: this appears to be assumed nullable in cpp, for now we require it
         pointer_ids: Vec<usize>,
         input_size: usize,
@@ -349,8 +371,11 @@ impl ProximityInfoState {
                 } else {
                     (x_coordinates[i], y_coordinates[i])
                 };
-                // TODO: times appears to be optional in cpp impl, for now pretend it isnt
-                let time = times[i];
+                let time = if let Some(times) = times {
+                    times[i]
+                } else {
+                    -1
+                };
 
                 if i > 1 {
                     // TODO: this literally does not make sense with the assumption that x and y can be -1 ???????
@@ -362,6 +387,41 @@ impl ProximityInfoState {
                     );
                     let current_angle = get_angle(x_coordinates[i - 1], y_coordinates[i - 1], x, y);
                     sum_angle += get_angle_diff(prev_angle, current_angle);
+                }
+
+                if self.push_touch_point(
+                    i,
+                    c,
+                    x,
+                    y,
+                    time,
+                    is_geometric,
+                    is_geometric,
+                    i == last_input_index,
+                    sum_angle,
+                    &mut current_near_keys_distances,
+                    &mut prev_near_keys_distances,
+                    &mut prev_prev_near_keys_distances,
+                ) {
+                    // previous point information was popped
+                    std::mem::swap(
+                        &mut prev_near_keys_distances,
+                        &mut current_near_keys_distances,
+                    );
+                } else {
+                    // TODO: is there an easier way to do this?
+                    // prev prev is now prev, prev is prev prev
+                    std::mem::swap(
+                        &mut prev_near_keys_distances,
+                        &mut prev_prev_near_keys_distances,
+                    );
+                    // current is now prev prev, prev is current
+                    std::mem::swap(
+                        &mut prev_near_keys_distances,
+                        &mut current_near_keys_distances,
+                    );
+
+                    sum_angle = 0.0;
                 }
             }
         }
@@ -446,12 +506,13 @@ impl ProximityInfoState {
         // Pushing point information
         if size > 0 {
             self.sampled_length_cache.push(
-                self.sampled_length_cache.last().unwrap() + get_distance_int(
+                self.sampled_length_cache.last().unwrap()
+                    + get_distance_int(
                     x,
                     y,
                     *self.sampled_input_xs.last().unwrap(),
-                    *self.sampled_input_ys.last().unwrap()
-                )
+                    *self.sampled_input_ys.last().unwrap(),
+                ),
             );
         } else {
             self.sampled_length_cache.push(0);
@@ -579,5 +640,77 @@ impl ProximityInfoState {
             }
         }
         false
+    }
+
+    fn refresh_speed_rates(
+        &mut self,
+        input_size: usize,
+        x_coordinates: &Vec<i32>,
+        y_coordinates: &Vec<i32>,
+        times: &Option<Vec<i32>>,
+        last_saved_input_size: usize,
+    ) -> f32 {
+        // TODO: idfk how the hell this function is supposed to work in cpp if times is null,
+        // i am genuinely so confused by how across the one function all of these are called from times
+        // changes between being explicitly nullable and being definitely required.
+        // TODO: lmao idk what the fuck im doing anymore i have been staring at cursed cpp and rust all day
+        // fuck this part
+        let times = if let Some(times) = times {
+            times
+        } else {
+            panic!("bro idk")
+        };
+
+        // Relative speed calculation
+        let sum_duration = self.sampled_times.last().unwrap() - self.sampled_times.first().unwrap();
+        let sum_length =
+            self.sampled_length_cache.last().unwrap() - self.sampled_length_cache.first().unwrap();
+        let average_speed = sum_length as f32 / sum_duration as f32;
+        self.speed_rates.resize(self.sampled_input_size, 0.0);
+        for i in last_saved_input_size..self.sampled_input_size {
+            let index = self.sampled_input_indice[i];
+            let mut length = 0;
+            let mut duration = 0;
+
+            // Calculate velocity by using distances and durations of
+            // ProximityInfoParams::NUM_POINTS_FOR_SPEED_CALCULATION points for both forward and
+            // backward.
+            let forward_num_points = min(input_size - 1, index + NUM_POINTS_FOR_SPEED_CALCULATION);
+            for j in index..forward_num_points {
+                if i < self.sampled_input_size - 1 && j >= self.sampled_input_indice[i + 1] {
+                    break;
+                }
+                length += get_distance_int(
+                    x_coordinates[j],
+                    y_coordinates[j],
+                    x_coordinates[j + 1],
+                    y_coordinates[j + 1],
+                );
+                duration += times[j + 1] - times[j];
+            }
+            let backward_num_points = min(0, index - NUM_POINTS_FOR_SPEED_CALCULATION);
+            for j in backward_num_points..index - 1 {
+                if i > 0 && j < self.sampled_input_indice[i - 1] {
+                    break;
+                }
+                // TODO: use self.sampled_length_cache instead?
+                length += get_distance_int(
+                    x_coordinates[j],
+                    y_coordinates[j],
+                    x_coordinates[j + 1],
+                    y_coordinates[j + 1],
+                );
+                duration += times[j + 1] - times[j];
+            }
+
+            if duration == 0 || sum_duration == 0 {
+                // Cannot calculate speed; thus, it gives an average value (1.0);
+                self.speed_rates[i] = 1.0;
+            } else {
+                let speed = length as f32 / duration as f32;
+                self.speed_rates[i] = speed / average_speed;
+            }
+        }
+        average_speed
     }
 }

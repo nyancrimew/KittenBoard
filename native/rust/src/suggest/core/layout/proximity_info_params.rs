@@ -18,6 +18,8 @@ pub const CORNER_ANGLE_THRESHOLD_FOR_POINT_SCORE: f32 = PI * 2.0 / 3.0;
 pub const CORNER_SUM_ANGLE_THRESHOLD: f32 = PI / 4.0;
 pub const CORNER_SCORE: f32 = 1.0;
 
+pub const NUM_POINTS_FOR_SPEED_CALCULATION: usize = 2;
+
 pub const LAST_POINT_SKIP_DISTANCE_SCALE: i32 = 4;
 
 // TODO: add the rest when we get to them
