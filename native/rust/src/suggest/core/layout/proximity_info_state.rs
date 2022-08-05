@@ -1,18 +1,19 @@
-use std::cmp::min;
+use std::cmp::{max, min};
 use std::collections::HashMap;
 
 use indexmap::IndexMap;
 
-use crate::defines::DoubleLetterLevel;
+use crate::defines::{DoubleLetterLevel, MAX_PERCENTILE, MAX_VALUE_FOR_WEIGHTING};
 use crate::math::{get_angle, get_angle_diff, get_distance_int};
 use crate::suggest::core::layout::proximity_info::ProximityInfo;
 use crate::suggest::core::layout::proximity_info_params::{
     CORNER_ANGLE_THRESHOLD_FOR_POINT_SCORE, CORNER_CHECK_DISTANCE_THRESHOLD_SCALE, CORNER_SCORE,
-    CORNER_SUM_ANGLE_THRESHOLD, DISTANCE_BASE_SCALE, LAST_POINT_SKIP_DISTANCE_SCALE,
-    LOCALMIN_DISTANCE_AND_NEAR_TO_KEY_SCORE, MARGIN_FOR_PREV_LOCAL_MIN,
+    CORNER_SUM_ANGLE_THRESHOLD, DISTANCE_BASE_SCALE, FIRST_POINT_TIME_OFFSET_MILLIS,
+    LAST_POINT_SKIP_DISTANCE_SCALE, LOCALMIN_DISTANCE_AND_NEAR_TO_KEY_SCORE,
+    LOOKUP_RADIUS_PERCENTILE, MARGIN_FOR_PREV_LOCAL_MIN, MAX_SKIP_PROBABILITY,
     MIN_DOUBLE_LETTER_BEELINE_SPEED_PERCENTILE, NEAR_KEY_THRESHOLD_FOR_DISTANCE,
     NEAR_KEY_THRESHOLD_FOR_POINT_SCORE, NOT_LOCALMIN_DISTANCE_SCORE,
-    NUM_POINTS_FOR_SPEED_CALCULATION,
+    NUM_POINTS_FOR_SPEED_CALCULATION, STRONG_DOUBLE_LETTER_TIME_MILLIS,
 };
 
 type NearKeysDistanceMap = IndexMap<usize, f32>;
@@ -123,8 +124,8 @@ impl ProximityInfoState {
 
         // TODO: we assume that we always have x coordinates and y coordinates, the cpp code doesnt
         self.sampled_input_size = self.update_touch_points(
-            x_coordinates,
-            y_coordinates,
+            &x_coordinates,
+            &y_coordinates,
             &times,
             pointer_ids,
             input_size,
@@ -140,7 +141,15 @@ impl ProximityInfoState {
                 &y_coordinates,
                 &times,
                 last_saved_input_size,
-            )
+            );
+            self.refresh_beeline_speed_rates(input_size, &x_coordinates, &y_coordinates, &times);
+        }
+
+        if self.sampled_input_size > 0 {
+            self.init_geometric_distance_infos(last_saved_input_size, is_geometric);
+            if is_geometric {
+                // updates probabilities of skipping or mapping each key for all points
+            }
         }
     }
 
@@ -330,8 +339,8 @@ impl ProximityInfoState {
 
     fn update_touch_points(
         &mut self,
-        x_coordinates: Vec<i32>,
-        y_coordinates: Vec<i32>,
+        x_coordinates: &Vec<i32>,
+        y_coordinates: &Vec<i32>,
         times: &Option<Vec<i32>>,
         // TODO: this appears to be assumed nullable in cpp, for now we require it
         pointer_ids: Vec<usize>,
@@ -711,6 +720,181 @@ impl ProximityInfoState {
                 self.speed_rates[i] = speed / average_speed;
             }
         }
+
+        // Direction calculation.
+        self.directions.resize(self.sampled_input_size - 1, 0.0);
+        for i in max(0, last_saved_input_size - 1)..self.sampled_input_size - 1 {
+            self.directions[i] = self.get_direction_between(i, i + 1);
+        }
         average_speed
+    }
+
+    fn refresh_beeline_speed_rates(
+        &mut self,
+        input_size: usize,
+        x_coordinates: &Vec<i32>,
+        y_coordinates: &Vec<i32>,
+        times: &Option<Vec<i32>>,
+    ) {
+        self.beeline_speed_percentiles
+            .resize(self.sampled_input_size, 0);
+        for i in 0..self.sampled_input_size {
+            self.beeline_speed_percentiles[i] = (self.calculate_beeline_speed_rate(
+                i,
+                input_size,
+                x_coordinates,
+                y_coordinates,
+                times,
+            ) * MAX_PERCENTILE as f32) as i32
+        }
+    }
+
+    fn calculate_beeline_speed_rate(
+        &self,
+        id: usize,
+        input_size: usize,
+        x_coordinates: &Vec<i32>,
+        y_coordinates: &Vec<i32>,
+        times: &Option<Vec<i32>>,
+    ) -> f32 {
+        if self.sampled_input_size == 0 || self.average_speed < 0.001 {
+            // invalid state
+            return 1.0;
+        }
+
+        let lookup_radius = self.proximity_info.get_most_common_key_width()
+            * LOOKUP_RADIUS_PERCENTILE
+            / MAX_PERCENTILE;
+        let x0 = self.sampled_input_xs[id];
+        let y0 = self.sampled_input_ys[id];
+        let actual_input_index = self.sampled_input_indice[id];
+
+        // let mut temp_time = 0;
+        let mut temp_beeline_distance = 0;
+        let mut start = actual_input_index;
+
+        // lookup forward
+        while start > 0 && temp_beeline_distance < lookup_radius {
+            // temp_time += times[start] - times[start - 1]
+            start -= 1;
+            temp_beeline_distance =
+                get_distance_int(x0, y0, x_coordinates[start], y_coordinates[start]);
+        }
+        // Exclusive unless this is an edge point
+        if start > 0 && start < actual_input_index {
+            start += 1;
+        }
+        // temp_time = 0;
+        temp_beeline_distance = 0;
+        let mut end = actual_input_index;
+        // lookup backward
+        while end < input_size - 1 && temp_beeline_distance < lookup_radius {
+            // temp_time += times[end + 1] - times[end]
+            end += 1;
+            temp_beeline_distance =
+                get_distance_int(x0, y0, x_coordinates[end], y_coordinates[end]);
+        }
+        // Exclusive unless this is an edge point
+        if end > actual_input_index && end < input_size - 1 {
+            end -= 1;
+        }
+
+        if start >= end {
+            // double letter start == end
+            return 1.0;
+        }
+
+        let x_start = x_coordinates[start];
+        let y_start = y_coordinates[start];
+        let x_end = x_coordinates[end];
+        let y_end = y_coordinates[end];
+
+        let beeline_distance = get_distance_int(x_start, y_start, x_end, y_end);
+        let (mut adjusted_start_time, mut adjusted_end_time) = if let Some(times) = times {
+            (times[start], times[end])
+        } else {
+            return 1.0;
+        };
+        if start == 0 && actual_input_index == 0 && input_size > 1 {
+            adjusted_start_time += FIRST_POINT_TIME_OFFSET_MILLIS;
+        }
+        if end == input_size - 1 && input_size > 1 {
+            adjusted_end_time -= FIRST_POINT_TIME_OFFSET_MILLIS;
+        }
+        let time = adjusted_end_time - adjusted_start_time;
+
+        if time >= STRONG_DOUBLE_LETTER_TIME_MILLIS {
+            return 0.0;
+        }
+
+        // Offset 1%
+        // TODO: Detect double letter more smartly
+        0.01 + beeline_distance as f32 / time as f32 / self.average_speed
+    }
+
+    fn init_geometric_distance_infos(&mut self, last_saved_input_size: usize, is_geometric: bool) {
+        let key_count = self.proximity_info.get_key_count();
+        self.sampled_normalized_squared_length_cache
+            .resize(self.sampled_input_size * key_count, 0.0);
+        for i in last_saved_input_size..self.sampled_input_size {
+            for k in 0..key_count {
+                let index = i * key_count + k;
+                let x = self.sampled_input_xs[i];
+                let y = self.sampled_input_ys[i];
+                self.sampled_normalized_squared_length_cache[index] = self
+                    .proximity_info
+                    .get_normalized_square_distance_from_center_float_g(k, x, y, is_geometric);
+            }
+        }
+    }
+
+    // Updates probabilities of aligning to some keys and skipping.
+    // Word suggestion should be based on this probabilities.
+    fn update_align_point_probabilities(&mut self, last_saved_input_size: usize) {
+        self.char_probabilities
+            .resize(self.sampled_input_size, HashMap::default());
+        // Calculates probabilities of using a point as a correlated point with the character
+        // for each point.
+        for i in last_saved_input_size..self.sampled_input_size {
+            self.char_probabilities[i].clear();
+            // First, calculates skip probability. Starts from MAX_SKIP_PROBABILITY.
+            // Note that all values that are multiplied to this probability should be in [0.0, 1.0];
+            let mut skip_probability = MAX_SKIP_PROBABILITY;
+
+            let current_angle = self.get_point_angle(i);
+            let speed_rate = self.speed_rates[i];
+
+            let mut nearest_key_distance = MAX_VALUE_FOR_WEIGHTING as f32;
+            for j in 0..self.proximity_info.get_key_count() {
+                //let distance = self.getpointto
+            }
+        }
+    }
+
+    fn get_point_angle(&self, index: usize) -> f32 {
+        if index == 0 || index >= self.sampled_input_xs.len() - 1 {
+            return 0.0;
+        }
+        let previous_direction = self.get_direction_between(index - 1, index);
+        let next_direction = self.get_direction_between(index, index + 1);
+        get_angle_diff(previous_direction, next_direction)
+    }
+
+    fn get_direction_between(&self, index0: usize, index1: usize) -> f32 {
+        let sampled_input_size = self.sampled_input_xs.len();
+        if index0 == 0
+            || index0 > sampled_input_size - 1
+            || index1 == 0
+            || index1 > sampled_input_size - 1
+        {
+            return 0.0;
+        }
+
+        get_angle(
+            self.sampled_input_xs[index0],
+            self.sampled_input_ys[index0],
+            self.sampled_input_xs[index1],
+            self.sampled_input_ys[index1],
+        )
     }
 }
