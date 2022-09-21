@@ -13,8 +13,27 @@
 
 ## Installation
 
-For now there are no prebuilt releases of KittenBoard available, but it should be fairly simple to 
-build using the latest AndroidStudio version.
+For now there are no prebuilt releases of KittenBoard available, but you can build it yourself!
+
+## Building
+
+### Requirements
+
+- Android Studio
+- Rust
+- Python 3
+
+### Instructions
+
+- Verify that `rustc`, `rustup` and `python` are available in your PATH.
+  - Python on Ubuntu: you can install `python-is-python3` with apt to route the `python` command to `python3`.
+- Install the Android ARM and ARM64 Rust targets
+
+```
+rustup target add armv7-linux-androideabi 
+rustup target add aarch64-linux-android
+```
+- Open the project in Android Studio and run it or build it.
 
 ## Contributions
 
